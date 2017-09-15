@@ -1,0 +1,361 @@
+<Thelen2003Muscle name="iliacus">
+  <!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
+  <isDisabled>false</isDisabled>
+  <!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
+  <min_control>0</min_control>
+  <!--Maximum allowed value for control signal. Used primarily when solving for control values.-->
+  <max_control>1</max_control>
+  <!--The set of points defining the path of the muscle.-->
+  <GeometryPath>
+    <!--The set of points defining the path-->
+    <PathPointSet>
+      <objects>
+        <PathPoint name="iliacus-P1">
+          <location> 0.00079 0.01237 0.07501</location>
+          <body>pelvis</body>
+        </PathPoint>
+        <PathPoint name="iliacus-P2">
+          <location> 0.04247 -0.10131 0.064</location>
+          <body>pelvis</body>
+        </PathPoint>
+        <PathPoint name="iliacus-P3">
+          <location> -0.01491 -0.04064 0.00957</location>
+          <body>r_femur</body>
+        </PathPoint>
+        <PathPoint name="iliacus-P4">
+          <location> -0.01986 -0.04246 0.02547</location>
+          <body>r_femur</body>
+        </PathPoint>
+      </objects>
+      <groups />
+    </PathPointSet>
+    <!--The wrap objecs that are associated with this path-->
+    <PathWrapSet>
+      <objects>
+        <PathWrap>
+          <wrap_object>iliacus_at_brim</wrap_object>
+          <method>hybrid</method>
+          <range> 2 3</range>
+        </PathWrap>
+      </objects>
+      <groups />
+    </PathWrapSet>
+    <!--Used to display the path in the 3D window-->
+    <VisibleObject name="display">
+      <!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
+      <GeometrySet>
+        <objects />
+        <groups />
+      </GeometrySet>
+      <!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
+      <scale_factors> 1 1 1</scale_factors>
+      <!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
+      <transform> -0 0 -0 0 0 0</transform>
+      <!--Whether to show a coordinate frame-->
+      <show_axes>false</show_axes>
+      <!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
+      <display_preference>4</display_preference>
+    </VisibleObject>
+  </GeometryPath>
+  <!--The maximum force this actuator can produce.-->
+  <optimal_force>1</optimal_force>
+  <!--Maximum isometric force that the fibers can generate-->
+  <max_isometric_force>270.9</max_isometric_force>
+  <!--Optimal length of the muscle fibers-->
+  <optimal_fiber_length>0.106</optimal_fiber_length>
+  <!--Resting length of the tendon-->
+  <tendon_slack_length>0.086</tendon_slack_length>
+  <!--Angle between tendon and fibers at optimal fiber length expressed in radians-->
+  <pennation_angle_at_optimal>0.279252680319</pennation_angle_at_optimal>
+  <!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
+  <max_contraction_velocity>10</max_contraction_velocity>
+  <!--tendon strain at maximum isometric muscle force-->
+  <FmaxTendonStrain>0.033</FmaxTendonStrain>
+</Thelen2003Muscle>
+<Thelen2003Muscle name="psoas">
+  <!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
+  <isDisabled>false</isDisabled>
+  <!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
+  <min_control>0</min_control>
+  <!--Maximum allowed value for control signal. Used primarily when solving for control values.-->
+  <max_control>1</max_control>
+  <!--The set of points defining the path of the muscle.-->
+  <GeometryPath>
+    <!--The set of points defining the path-->
+    <PathPointSet>
+      <objects>
+        <PathPoint name="psoas-P1">
+          <location> 0.00537 0.08337 0.01833</location>
+          <body>pelvis</body>
+        </PathPoint>
+        <PathPoint name="psoas-P2">
+          <location> 0.04206 -0.09974 0.05384</location>
+          <body>pelvis</body>
+        </PathPoint>
+        <PathPoint name="psoas-P3">
+          <location> -0.01288 -0.03452 6e-05</location>
+          <body>r_femur</body>
+        </PathPoint>
+        <PathPoint name="psoas-P4">
+          <location> -0.02053 -0.03854 0.02484</location>
+          <body>r_femur</body>
+        </PathPoint>
+      </objects>
+      <groups />
+    </PathPointSet>
+    <!--The wrap objecs that are associated with this path-->
+    <PathWrapSet>
+      <objects>
+        <PathWrap>
+          <wrap_object>psoas_at_brim</wrap_object>
+          <method>hybrid</method>
+          <range> -1 -1</range>
+        </PathWrap>
+      </objects>
+      <groups />
+    </PathWrapSet>
+    <!--Used to display the path in the 3D window-->
+    <VisibleObject name="display">
+      <!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
+      <GeometrySet>
+        <objects />
+        <groups />
+      </GeometrySet>
+      <!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
+      <scale_factors> 1 1 1</scale_factors>
+      <!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
+      <transform> -0 0 -0 0 0 0</transform>
+      <!--Whether to show a coordinate frame-->
+      <show_axes>false</show_axes>
+      <!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
+      <display_preference>4</display_preference>
+    </VisibleObject>
+  </GeometryPath>
+  <!--The maximum force this actuator can produce.-->
+  <optimal_force>1</optimal_force>
+  <!--Maximum isometric force that the fibers can generate-->
+  <max_isometric_force>718.2</max_isometric_force>
+  <!--Optimal length of the muscle fibers-->
+  <optimal_fiber_length>0.088</optimal_fiber_length>
+  <!--Resting length of the tendon-->
+  <tendon_slack_length>0.19</tendon_slack_length>
+  <!--Angle between tendon and fibers at optimal fiber length expressed in radians-->
+  <pennation_angle_at_optimal>0.349065850399</pennation_angle_at_optimal>
+  <!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
+  <max_contraction_velocity>10</max_contraction_velocity>
+  <!--tendon strain at maximum isometric muscle force-->
+  <FmaxTendonStrain>0.033</FmaxTendonStrain>
+</Thelen2003Muscle>
+<Thelen2003Muscle name="glmed1">
+  <!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
+  <isDisabled>false</isDisabled>
+  <!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
+  <min_control>0</min_control>
+  <!--Maximum allowed value for control signal. Used primarily when solving for control values.-->
+  <max_control>1</max_control>
+  <!--The set of points defining the path of the muscle.-->
+  <GeometryPath>
+    <!--The set of points defining the path-->
+    <PathPointSet>
+      <objects>
+        <PathPoint name="glmed1-P1">
+          <location> 0.00437 0.00341 0.11969</location>
+          <body>pelvis</body>
+        </PathPoint>
+        <PathPoint name="glmed1-P2">
+          <location> 0.01603 -0.00131 0.05146</location>
+          <body>r_femur</body>
+        </PathPoint>
+      </objects>
+      <groups />
+    </PathPointSet>
+    <!--The wrap objecs that are associated with this path-->
+    <PathWrapSet>
+      <objects>
+        <PathWrap>
+          <wrap_object>glmed1_at_ilium</wrap_object>
+          <method>hybrid</method>
+          <range> -1 -1</range>
+        </PathWrap>
+        <PathWrap>
+          <wrap_object>glmed3_at_femur</wrap_object>
+          <method>hybrid</method>
+          <range> -1 -1</range>
+        </PathWrap>
+      </objects>
+      <groups />
+    </PathWrapSet>
+    <!--Used to display the path in the 3D window-->
+    <VisibleObject name="display">
+      <!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
+      <GeometrySet>
+        <objects />
+        <groups />
+      </GeometrySet>
+      <!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
+      <scale_factors> 1 1 1</scale_factors>
+      <!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
+      <transform> -0 0 -0 0 0 0</transform>
+      <!--Whether to show a coordinate frame-->
+      <show_axes>false</show_axes>
+      <!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
+      <display_preference>4</display_preference>
+    </VisibleObject>
+  </GeometryPath>
+  <!--The maximum force this actuator can produce.-->
+  <optimal_force>1</optimal_force>
+  <!--Maximum isometric force that the fibers can generate-->
+  <max_isometric_force>400.1</max_isometric_force>
+  <!--Optimal length of the muscle fibers-->
+  <optimal_fiber_length>0.095</optimal_fiber_length>
+  <!--Resting length of the tendon-->
+  <tendon_slack_length>0.031</tendon_slack_length>
+  <!--Angle between tendon and fibers at optimal fiber length expressed in radians-->
+  <pennation_angle_at_optimal>0</pennation_angle_at_optimal>
+  <!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
+  <max_contraction_velocity>10</max_contraction_velocity>
+  <!--tendon strain at maximum isometric muscle force-->
+  <FmaxTendonStrain>0.033</FmaxTendonStrain>
+</Thelen2003Muscle>
+<Thelen2003Muscle name="glmed2">
+  <!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
+  <isDisabled>false</isDisabled>
+  <!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
+  <min_control>0</min_control>
+  <!--Maximum allowed value for control signal. Used primarily when solving for control values.-->
+  <max_control>1</max_control>
+  <!--The set of points defining the path of the muscle.-->
+  <GeometryPath>
+    <!--The set of points defining the path-->
+    <PathPointSet>
+      <objects>
+        <PathPoint name="glmed2-P1">
+          <location> -0.01161 0.03556 0.05844</location>
+          <body>pelvis</body>
+        </PathPoint>
+        <PathPoint name="glmed2-P2">
+          <location> 0.01182 0.00387 0.05185</location>
+          <body>r_femur</body>
+        </PathPoint>
+      </objects>
+      <groups />
+    </PathPointSet>
+    <!--The wrap objecs that are associated with this path-->
+    <PathWrapSet>
+      <objects>
+        <PathWrap>
+          <wrap_object>glmed2_at_ilium</wrap_object>
+          <method>hybrid</method>
+          <range> -1 -1</range>
+        </PathWrap>
+        <PathWrap>
+          <wrap_object>glmed3_at_femur</wrap_object>
+          <method>hybrid</method>
+          <range> -1 -1</range>
+        </PathWrap>
+      </objects>
+      <groups />
+    </PathWrapSet>
+    <!--Used to display the path in the 3D window-->
+    <VisibleObject name="display">
+      <!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
+      <GeometrySet>
+        <objects />
+        <groups />
+      </GeometrySet>
+      <!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
+      <scale_factors> 1 1 1</scale_factors>
+      <!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
+      <transform> -0 0 -0 0 0 0</transform>
+      <!--Whether to show a coordinate frame-->
+      <show_axes>false</show_axes>
+      <!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
+      <display_preference>4</display_preference>
+    </VisibleObject>
+  </GeometryPath>
+  <!--The maximum force this actuator can produce.-->
+  <optimal_force>1</optimal_force>
+  <!--Maximum isometric force that the fibers can generate-->
+  <max_isometric_force>400.1</max_isometric_force>
+  <!--Optimal length of the muscle fibers-->
+  <optimal_fiber_length>0.118</optimal_fiber_length>
+  <!--Resting length of the tendon-->
+  <tendon_slack_length>0.046</tendon_slack_length>
+  <!--Angle between tendon and fibers at optimal fiber length expressed in radians-->
+  <pennation_angle_at_optimal>0</pennation_angle_at_optimal>
+  <!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
+  <max_contraction_velocity>10</max_contraction_velocity>
+  <!--tendon strain at maximum isometric muscle force-->
+  <FmaxTendonStrain>0.033</FmaxTendonStrain>
+</Thelen2003Muscle>
+<Thelen2003Muscle name="glmed3">
+  <!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
+  <isDisabled>false</isDisabled>
+  <!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
+  <min_control>0</min_control>
+  <!--Maximum allowed value for control signal. Used primarily when solving for control values.-->
+  <max_control>1</max_control>
+  <!--The set of points defining the path of the muscle.-->
+  <GeometryPath>
+    <!--The set of points defining the path-->
+    <PathPointSet>
+      <objects>
+        <PathPoint name="glmed3-P1">
+          <location> -0.01984 -0.02987 0.04523</location>
+          <body>pelvis</body>
+        </PathPoint>
+        <PathPoint name="glmed3-P2">
+          <location> 0.00619 0.00868 0.05038</location>
+          <body>r_femur</body>
+        </PathPoint>
+      </objects>
+      <groups />
+    </PathPointSet>
+    <!--The wrap objecs that are associated with this path-->
+    <PathWrapSet>
+      <objects>
+        <PathWrap>
+          <wrap_object>glmed3_at_ilium</wrap_object>
+          <method>axial</method>
+          <range> -1 -1</range>
+        </PathWrap>
+        <PathWrap>
+          <wrap_object>glmed3_at_femur</wrap_object>
+          <method>hybrid</method>
+          <range> -1 -1</range>
+        </PathWrap>
+      </objects>
+      <groups />
+    </PathWrapSet>
+    <!--Used to display the path in the 3D window-->
+    <VisibleObject name="display">
+      <!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
+      <GeometrySet>
+        <objects />
+        <groups />
+      </GeometrySet>
+      <!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
+      <scale_factors> 1 1 1</scale_factors>
+      <!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
+      <transform> -0 0 -0 0 0 0</transform>
+      <!--Whether to show a coordinate frame-->
+      <show_axes>false</show_axes>
+      <!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
+      <display_preference>4</display_preference>
+    </VisibleObject>
+  </GeometryPath>
+  <!--The maximum force this actuator can produce.-->
+  <optimal_force>1</optimal_force>
+  <!--Maximum isometric force that the fibers can generate-->
+  <max_isometric_force>400.1</max_isometric_force>
+  <!--Optimal length of the muscle fibers-->
+  <optimal_fiber_length>0.083</optimal_fiber_length>
+  <!--Resting length of the tendon-->
+  <tendon_slack_length>0.025</tendon_slack_length>
+  <!--Angle between tendon and fibers at optimal fiber length expressed in radians-->
+  <pennation_angle_at_optimal>0</pennation_angle_at_optimal>
+  <!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
+  <max_contraction_velocity>10</max_contraction_velocity>
+  <!--tendon strain at maximum isometric muscle force-->
+  <FmaxTendonStrain>0.033</FmaxTendonStrain>
+</Thelen2003Muscle>

@@ -1,0 +1,21 @@
+MuJoCo Pro Team license activation key, number 5293, type 1.
+
+Issued to Prof. David Borton, Brown University.
+
+Expires April 30, 2016.
+
+Do not share this file with anyone other than the users covered
+by your license agreement with Roboti LLC. This file activates
+MuJoCo Pro on any computer running any supported OS.
+
+Do not modify this file. Its entire content, including the
+plain text section, is used by the activation manager.
+
+474b7e1132a33b6a767d5aaa917486060ea917a1a12d276ce7a38756fc58eb37
+6ada77bddda4c8367e0b808626c61b98796792c090990c082337d36748b7b9a0
+b74a1e5364e70a2358071b4a37c2ae0ec77fd273bccd67f820107c78317bae78
+f09f1c3974206b9e589e44bedd6b0482af46c410760530902f2b9a0a4554d3a1
+b1c4666027935046f86c2a79a100dec48c70c1155a6e7954a305b6cdc699fc01
+87c04b02347e80a432a884d3b7a16c60eccd7bc3ddee0d8e08ff88999c80add5
+c9ee7835ab236fd313800acbad72dcca79947f15cb67f7a7b8b625aa3f518867
+028479c8899b4119f5579d816e102ddea85e64a67890b5206c487961ae8366c9

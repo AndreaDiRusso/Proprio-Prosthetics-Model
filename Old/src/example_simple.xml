@@ -1,0 +1,38 @@
+<mujoco model="example">
+	<compiler coordinate="global"/>
+
+	<option gravity='0 0 0'/>
+	<default>
+		<geom rgba=".8 .6 .4 1"/>
+	</default>
+
+	<asset>
+		<texture type="skybox" builtin="gradient" rgb1="1 1 1" rgb2=".6 .8 1" width="256" height="256"/>
+
+        <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2"
+            width="1000" height="1000"/>
+
+        <material name='MatPlane' reflectance='0.5' texture="texplane"/>
+	</asset>
+
+	<worldbody>
+		<light pos="0 1 1" dir="0 -1 -1" diffuse="1 1 1"/>
+
+		<geom name='floor' pos='0 0 -2' size='1 1 1' euler='0 0 0' type='plane' material="MatPlane" condim='3'/>
+
+		<body pos="0 0 0">
+			<geom type="capsule" fromto = "0 0 0 0 0 1" size = "0.01"/>
+			<body name="hanging" pos="0 0 0">
+				<geom type="capsule" pos="0 0 -0.5"  euler='0 0 0' size="0.06 0.5"/>
+
+				<site name="top" pos="0 0.06 0" type="sphere" size="0.01"/>
+				<site name="mid" pos="0 -0.06 -0.6" type="sphere" size="0.01"/>
+				<site name="bot" pos="0.06 0 -1" type="sphere" size="0.01"/>
+
+				<joint type="hinge" pos="0 0 0" axis='1 0 0' />
+			</body>
+		</body>
+
+	</worldbody>
+
+</mujoco>
