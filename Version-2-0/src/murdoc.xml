@@ -15,18 +15,18 @@
 		-->
         <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2"
             width="1000" height="1000"/>
-        <texture name='bone_texture' type="cube" file="Murdoc/Bone.png"/>
+        <texture name='bone_texture' type="cube" file="../Resources/Murdoc/Bone.png"/>
 		<!-- Create materials based on textures above
 		-->
         <material name='MatPlane' reflectance='0.5' texture="texplane"/>
         <material name='geom' texture="texgeom" texuniform="true"/>
         <material name='bone' texture='bone_texture' reflectance='0' texuniform='true' specular='0' shininess='0'/>
 
-        <mesh file="Murdoc/femur.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="Murdoc/sacrum_notail.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="Murdoc/fibula.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="Murdoc/foot.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="Murdoc/tibia.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="../Resources/Murdoc/femur.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="../Resources/Murdoc/sacrum_notail.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="../Resources/Murdoc/fibula.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="../Resources/Murdoc/foot.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="../Resources/Murdoc/tibia.stl" scale='1e-3 1e-3 1e-3' />
 
     </asset>
 

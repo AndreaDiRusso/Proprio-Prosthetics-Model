@@ -3,7 +3,12 @@
 #include "zmq.hpp"
 #include "stdlib.h"
 #include "string.h"
+#include "stdio.h"
+
 #include <iostream>
+#include <limits>
+#include <random>
+
 #include <Eigen\Dense>
 #include "mujoco2py.pb.h"
 #include <unsupported/Eigen/LevenbergMarquardt>

@@ -1,6 +1,6 @@
 #include "mujoco2py_functions.hpp"
-#include <limits>
-#include <random>
+#include "functions_config.hpp"
+
 // make default abstract geom
 void v_defaultGeom(mjvGeom* geom)
 {
@@ -19,6 +19,7 @@ void v_defaultGeom(mjvGeom* geom)
 	geom->reflectance = 0;
 	geom->label[0] = 0;
 }
+
 double angleOfSegments(int idx, int idy, int idz, double* targ) {
 	double segment1[3] = {
 		targ[3 * idx] - targ[3 * idy],
@@ -45,43 +46,7 @@ double getTendonMomentArm(mjData* d, mjModel* m, std::string tendon_name, std::s
 	double ma = d->ten_moment[nv*tendonID + jointID];
 	return ma;
 }
-/*
-double apply_constraints(double xin, int i) {
-	double low_bounds[NUM_JOINTS] = {
-		//-40 * 2 * PI / 360,
-		//-40 * 2 * PI / 360,
-		-40 * 2 * PI / 360,
-		-40 * 2 * PI / 360,
-		-10 * 2 * PI / 360,
-		-120 * 2 * PI / 360,
-		-60 * 2 * PI / 360,
-		-1 * 2 * PI / 360,
-		-1 * 2 * PI / 360,
-		-1 * 2 * PI / 360,
-		-1 * 2 * PI / 360,
-	};
-	double high_bounds[NUM_JOINTS] = {
-		//150 * 2 * PI / 360,
-		//150 * 2 * PI / 360,
-		150 * 2 * PI / 360,
-		150 * 2 * PI / 360,
-		10 * 2 * PI / 360,
-		40 * 2 * PI / 360,
-		120 * 2 * PI / 360,
-		1 * 2 * PI / 360,
-		1 * 2 * PI / 360,
-		1 * 2 * PI / 360,
-		1 * 2 * PI / 360,
-	};
-	
-	if (xin < low_bounds[i])
-		return low_bounds[i];
-	else if (xin > high_bounds[i])
-		return high_bounds[i];
-	else
-		return xin;
-}
-*/
+
 struct site_functor : Eigen::DenseFunctor<double>
 {
 	mjModel* _model = new mjModel();
@@ -90,7 +55,7 @@ struct site_functor : Eigen::DenseFunctor<double>
 	int _n_sites;
 
 	std::vector<std::string> _site_name;
-	
+
 	site_functor(mjModel* m, mjData* d, double* tgt, std::vector<std::string> siteNames) : DenseFunctor<double>(NUM_JOINTS, NUM_SITES) {
 
 		_model = NULL;
@@ -129,45 +94,6 @@ struct site_functor : Eigen::DenseFunctor<double>
 			current_site_xpos[count] = _data->site_xpos[3 * siteID + 2];
 			count++;
 		}
-
-		double weights[NUM_SITES] = {
-			1, // right iliac crest
-			1,
-			1,
-			1, // right hip
-			1,
-			1,
-			1, // right knee
-			1,
-			1,
-			2, // right ankle
-			2,
-			2,
-			1, // right knuckle
-			1,
-			1,
-			1, // right toe
-			1,
-			1,
-			1, // left iliac crest
-			1,
-			1,
-			1, // left hip
-			1,
-			1,
-			0, // left knee
-			0,
-			0,
-			0, // left ankle
-			0,
-			0,
-			0, // left knuckle
-			0,
-			0,
-			0, // left toe
-			0,
-			0
-		};
 
 		for (int i = 0; i < values(); i++)
 		{
@@ -220,7 +146,7 @@ Eigen::VectorXd apply_lm(mjModel* m, mjData* d, double *targ, Eigen::VectorXd x,
 
 	double factor = 10;
 	lm.setFactor(factor);
-	
+
 	lm.setEpsilon(std::numeric_limits<double>::epsilon());
 
 	std::cout << "lm.info says: " << lm.info() << std::endl;
@@ -242,7 +168,7 @@ Eigen::VectorXd apply_lm(mjModel* m, mjData* d, double *targ, Eigen::VectorXd x,
 
 void renderTargetSite(mjvScene* scn, double x, double y, double z, double re, double gr, double bl, double sz) {
 
-	mjvGeom* g; 
+	mjvGeom* g;
 	g = scn->geoms + scn->ngeom;
 	v_defaultGeom(g);
 
@@ -282,25 +208,9 @@ void fitPoseToSites(mjData* d, mjModel*  m, mjvScene* scn, zmq::socket_t *publis
 	int n = NUM_JOINTS; // of joints
 	Eigen::VectorXd qpos;
 
-	std::vector<std::string> sites;
-
-	sites.push_back("right_iliac_crest");
-	sites.push_back("right_hip");
-	sites.push_back("right_knee");
-	sites.push_back("right_ankle");
-	sites.push_back("right_knuckle");
-	sites.push_back("right_toe");
-
-	sites.push_back("left_iliac_crest");
-	sites.push_back("left_hip");
-	sites.push_back("left_knee");
-	sites.push_back("left_ankle");
-	sites.push_back("left_knuckle");
-	sites.push_back("left_toe");
-
 	/* the following starting values provide a rough fit initial guess. */
 	qpos.setConstant(n, 0);
-	
+
 	for (int j = 0; j < n; j++) {
 		qpos[j] = d->qpos[j];
 		std::cout << "x_i[" << j << "] = " << qpos[j] << " ";
@@ -309,31 +219,31 @@ void fitPoseToSites(mjData* d, mjModel*  m, mjvScene* scn, zmq::socket_t *publis
 	double targ[NUM_SITES];
 
 	//left iliac crest
-	
+
 	//targ[18] = 0.03143;
 	//targ[19] = 0;
 	//targ[20] = -0.163;
 	//left hip
-	
+
 	//targ[21] = 0.03143;
 	//targ[22] = 0;
 	//targ[23] = -0.345;
-	
+
 	//left knee
 	targ[24] = 0.03143;
 	targ[25] = 0;
 	targ[26] = -0.345;
-	
+
 	//left ankle
 	targ[27] = 0.03143;
 	targ[28] = -0.074;
 	targ[29] = -0.345;
-	
+
 	//left knuckle
 	targ[30] = 0.03143;
 	targ[31] = -0.074;
 	targ[32] = -0.345;
-	
+
 	//left toe
 	targ[33] = 0.03143;
 	targ[34] = -0.074;
@@ -403,7 +313,7 @@ void fitPoseToSites(mjData* d, mjModel*  m, mjvScene* scn, zmq::socket_t *publis
 	(*publisher).recv(&reply);
 
 	from_msg.ParseFromArray(reply.data(), reply.size());
-	
+
 	for (int i = 0; i < from_msg.site_size(); i++) {
 		targ[3 * i] = from_msg.site(i).x();
 		targ[3 * i + 1] = from_msg.site(i).y();
@@ -412,11 +322,11 @@ void fitPoseToSites(mjData* d, mjModel*  m, mjvScene* scn, zmq::socket_t *publis
 		(*target_pose)(3 * i) = from_msg.site(i).x();
 		(*target_pose)(3 * i + 1) = from_msg.site(i).y();
 		(*target_pose)(3 * i + 2) = from_msg.site(i).z();
-				
+
 		std::cout << "The reply expects site: " << from_msg.site(i).name()
 			<< " to be at position <" << from_msg.site(i).x() << ", "
 			<< from_msg.site(i).y() << ", " << from_msg.site(i).z() << ">" << std::endl;
-		
+
 	}
 
 	bool fix_world_coords = false;
@@ -433,19 +343,19 @@ void fitPoseToSites(mjData* d, mjModel*  m, mjvScene* scn, zmq::socket_t *publis
 
 	bool use_observed_angles = false;
 	if (use_observed_angles) {
-		//set hip flexion	
+		//set hip flexion
 		double crestHipKnee = angleOfSegments(0, 1, 2, targ);
 		qpos[6] = crestHipKnee;
 		std::cout << "Set crestHipKnee to " << qpos[3] << std::endl;
 		//set hip abduction
 		qpos[7] = 0;
 
-		//set knee flexion	
+		//set knee flexion
 		double hipKneeAnkle = angleOfSegments(1, 2, 3, targ);
 		qpos[8] = - hipKneeAnkle;
 		std::cout << "Set hipKneeAnkle to " << qpos[5] << std::endl;
 
-		//set ankle flexion	
+		//set ankle flexion
 		double kneeAnkleKnuckle = angleOfSegments(2, 3, 4, targ);
 		qpos[9] = kneeAnkleKnuckle;
 		std::cout << "Set kneeAnkleKnuckle to " << qpos[6] << std::endl;
@@ -462,7 +372,7 @@ void fitPoseToSites(mjData* d, mjModel*  m, mjvScene* scn, zmq::socket_t *publis
 		// run down the gradient to find the right orientation
 		(*solution_pose) = apply_lm(m, d, targ, qpos, sites, &info_holder, tol);
 		std::cout << "First run of the frame: solution pose: " << (*solution_pose).transpose() << std::endl;
-		
+
 		// sanity check: are there angles in the solution greater than 0?
 		Eigen::VectorXd solution_pose_abs = (*solution_pose).cwiseAbs();
 		// translation doesn't have to fall between -PI and PI
@@ -470,17 +380,17 @@ void fitPoseToSites(mjData* d, mjModel*  m, mjvScene* scn, zmq::socket_t *publis
 		solution_pose_abs[4] = 0;
 		solution_pose_abs[5] = 0;
 		double solution_pose_max = solution_pose_abs.maxCoeff();
-		
+
 		int repeat_counter = 0;
 		int maxRepeats = 10;
 
 		// second sanity check: did we fail to fit? let's keep trying a bit!
-		
+
 		double lower_bound = -0.5;
 		double upper_bound = 0.5;
 		std::uniform_real_distribution<double> unif(lower_bound, upper_bound);
 		std::default_random_engine re;
-		
+
 		while ((solution_pose_max > 10 || info_holder > 4) && repeat_counter < maxRepeats) {
 			std::cout << "Warning!! INfo was: " << info_holder << std::endl;
 
@@ -504,7 +414,7 @@ void fitPoseToSites(mjData* d, mjModel*  m, mjvScene* scn, zmq::socket_t *publis
 			std::cout << "Tried again! solution pose: " << (*solution_pose).transpose() << std::endl;
 			repeat_counter++;
 		}
-		
+
 		// apply the orientation
 		for (int a = 0; a < m->nq; a++) {
 			d->qpos[a] = (*solution_pose)[a];
@@ -515,9 +425,6 @@ void fitPoseToSites(mjData* d, mjModel*  m, mjvScene* scn, zmq::socket_t *publis
 			d->qpos[a] = qpos[a];
 		}
 	}
-	
-	
-
 }
 
 void updateNeuron(mjData* d, mjModel*  m, zmq::socket_t *publisher, std::vector<std::string> tendon_names, std::vector<mjtNum> tendon_length0) {

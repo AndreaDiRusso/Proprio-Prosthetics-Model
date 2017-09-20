@@ -1028,7 +1028,7 @@ int main(int argc, const char** argv)
   	start_poses[10] = -60;
   	end_poses[10] = 30;
 
-	mju_copy(d->qpos, m->key_qpos, m->nq*1);
+		mju_copy(d->qpos, m->key_qpos, m->nq*1);
     // main loop
 
     while( !glfwWindowShouldClose(window) )

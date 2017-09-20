@@ -14,7 +14,7 @@ from matplotlib import cm
 import mujoco2py_pb2 as mj2py
 import scipy.io as sio
 from helper_functions import *
-import cPickle as pickle
+import pickle
 
 enable_plotting = 1
 
@@ -205,13 +205,13 @@ if enable_plotting:
     fig4.text(0.02, 0.5, 'Y Position (m)', va='center', rotation='vertical')
     axarr4[nsites-1].legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-figuresDir = 'E:\\Google Drive\\Github\\tempdata\\Biomechanical Model\\figures\\'
+figuresDir = 'D:\\tempdata\\Biomechanical Model\\figures\\'
 fig1.savefig(figuresDir+"joint_forces.png")
 fig2.savefig(figuresDir+"forces.png")
 fig3.savefig(figuresDir+"fits.png")
 fig4.savefig(figuresDir+"trajectories.png")
 
-tracesFilename = open('E:\\Google Drive\\Github\\tempdata\\Biomechanical Model\\figures\\siteserverdata.pickle','wb')
+tracesFilename = open(figuresDir + 'siteserverdata.pickle','wb')
 
 datadump = {
     'joint_forces': joint_forces,
