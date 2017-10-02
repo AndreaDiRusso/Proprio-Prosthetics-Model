@@ -301,3 +301,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Project specific
+.gitPath
+scratch.py
+*.pyc
