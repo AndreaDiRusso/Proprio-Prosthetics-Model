@@ -4,7 +4,7 @@ include("E:/Google Drive/Code Libraries/Cpp/ucm/cmake/ucm.cmake")
 # TODO: remove absolute paths
 ucm_set_runtime(STATIC)
 set(MUJOCO_DIR "E:/mjpro150")
-set(ZMQ_DIR "E:/Google Drive/Code Libraries/Cpp/libzmq/bin/x64/Release/v140/dynamic")
+set(ZMQ_DIR "E:/Google Drive/Code Libraries/Cpp/zeromq-4.2.2/bin/x64/Release/v140/dynamic")
 set(PROTOBUF_DIR "E:/protobuf/install")
 
 # list of source files
@@ -18,8 +18,8 @@ set(project_files
 	)
 # add this folder to the include
 include_directories("./")
-include_directories("E:/Google Drive/Code Libraries/Cpp/Eigen-328")
-include_directories("E:/Google Drive/Code Libraries/Cpp/libzmq/include")
+include_directories("E:/Google Drive/Code Libraries/Cpp/eigen-eigen-5a0156e40feb")
+include_directories("E:/Google Drive/Code Libraries/Cpp/zeromq-4.2.2/include")
 include_directories(${PROTOBUF_DIR}/include)
 include_directories(${MUJOCO_DIR}/include)
 # define the executable
