@@ -37,13 +37,13 @@
       0.5e-3 0.5e-3 0.5e-3' rgba='1 0 0 0'/>
 
     <default class='Hip:x'>
-      <joint type='hinge' axis='0 1 0' ref='0' range='-40 150' limited='true' armature='0.0001' stiffness='0' springref='0'/>
+      <joint type='hinge' axis='0 1 0' ref='0' range='-60 90' limited='true' armature='0.0001' stiffness='0' springref='0'/>
 		</default>
 		<default class='Hip:y'>
-            <joint type='hinge' axis='0 1 0' range='-10 10' damping='5' limited='true' stiffness='0' armature='0.0080' />
+            <joint type='hinge' axis='0 1 0' range='-15 15' damping='5' limited='true' stiffness='0' armature='0.0080' />
 		</default>
 		<default class='Hip:z'>
-            <joint type='hinge' axis='0 0 1' range='-60 60' damping='5' limited='true' stiffness='0' armature='0.0080' />
+            <joint type='hinge' axis='0 0 1' range='-15 15' damping='5' limited='true' stiffness='0' armature='0.0080' />
 		</default>
 		<default class = 'Knee:x'>
 			<joint type='hinge' axis='1 0 0' range='-90  70' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
@@ -55,7 +55,7 @@
 			<joint type='hinge' axis='1 0 0' pos='0 0 0' range='-60 120' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
 		</default>
 		<default class = 'Ankle:y'>
-			<joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 120' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+			<joint type='hinge' axis='0 1 0' pos='0 0 0' range='-30 30' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
 		</default>
 	</default>
 
@@ -94,9 +94,9 @@
 
     <body name='Leg_Right' pos='0 0 0' euler='0 0 0'>
 
-      <joint name='Hip_Right:x' class='Hip:x' axis='-0.0073147	-0.016036	-0.008204' ref = '0' pos='0.0826091	0.157705	-0.11688899999999999'/>
-      <joint name='Hip_Right:y' class='Hip:y' axis='0.000844	-0.001969	0.005925' ref = '-10' pos='0.0826091	0.157705	-0.11688899999999999'/>
-      <joint name='Hip_Right:z' class='Hip:z' axis='-0.0078502	-8.4e-05	0.000232' ref = '0' pos='0.0826091	0.157705	-0.11688899999999999'/>
+      <joint name='Hip_Right:x' class='Hip:x' axis='0.0006758	-0.013831	0.000223' ref = '0' pos='0.0826091	0.15947	-0.112889'/>
+      <joint name='Hip_Right:y' class='Hip:y' axis='0.000844	-0.000204	0.009925' ref = '-10' pos='0.0826091	0.15947	-0.112889'/>
+      <joint name='Hip_Right:z' class='Hip:z' axis='-0.0068956	0.000621	0.000387' ref = '0' pos='0.0826091	0.15947	-0.112889'/>
 
   	  <geom type='mesh' mesh='Femur_Right' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
 
@@ -134,8 +134,8 @@
             <site name="SOL_Ankle_Right" pos='0.43153500000000006	0.128441	-0.0745976' rgba='0 0 1 0'/>
             <site name="GAS_Ankle_Right" pos='0.429856	0.126789	-0.076244' rgba='0 0 1 0'/>
 
-            <joint name='Ankle_Right:x' class='Ankle:x' axis='-0.000838	-0.008659	0.0'  ref='60' pos='0.446505	0.130104	-0.10443700000000002'/>
-            <joint name='Ankle_Right:y' class='Ankle:y' axis='-0.000226	-0.000533	0.005476'  pos='0.446505	0.130104	-0.10443700000000002'/>
+            <joint name='Ankle_Right:x' class='Ankle:x' axis='-0.005414	-0.015079	-0.0011246'  ref='60' pos='0.451742	0.125831	-0.0995679'/>
+            <joint name='Ankle_Right:y' class='Ankle:y' axis='-0.003975	-0.002958	-0.0163363'  pos='0.451742	0.125831	-0.0995679'/>
 
   				</body>
   				<!-- End foot
@@ -153,9 +153,9 @@
 
       <body name='Leg_Left' pos='0 0 0' euler='0 0 0'>
 
-        <joint name='Hip_Left:x' class='Hip:x' axis='-0.001688	0.013785	-0.011' ref = '-17' pos='0.069949	0.07611799999999999	-0.12374600000000001'/>
-        <joint name='Hip_Left:y' class='Hip:y' axis='-0.0002814	9.99999999891e-08	0.007319' ref = '0' pos='0.069949	0.07611799999999999	-0.12374600000000001'/>
-        <joint name='Hip_Left:z' class='Hip:z' axis='-0.0205103	-0.0001158	9.99999999999e-06' ref = '30' pos='0.069949	0.07611799999999999	-0.12374600000000001'/>
+        <joint name='Hip_Left:x' class='Hip:x' axis='0.0011455	-0.0156977	-0.000391' ref = '10' pos='0.07004089999999999	0.07826670000000001	-0.122147'/>
+        <joint name='Hip_Left:y' class='Hip:y' axis='0.0	-0.0001116	0.008477' ref = '10' pos='0.07004089999999999	0.07826670000000001	-0.122147'/>
+        <joint name='Hip_Left:z' class='Hip:z' axis='-0.0162048	-0.0013199	-0.001129' ref = '30' pos='0.07004089999999999	0.07826670000000001	-0.122147'/>
 
     	  <geom type='mesh' mesh='Femur_Left' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
 
@@ -179,7 +179,7 @@
             <site name="RF_Tibia_Left" pos='0.23261	0.14416299999999999	-0.159571' rgba='0 0 1 0'/>
             <site name="BF_Tibia_Left" pos='0.27140800000000004	0.15383600000000003	-0.126231' rgba='0 0 1 0'/>
 
-            <joint name='Knee_Left:x' class='Knee:x' axis='0.0	0.0135896	-0.0059711'  ref='60' pos='0.255763	0.0947011	-0.08999760000000001'/>
+            <joint name='Knee_Left:x' class='Knee:x' axis='-0.0002	-0.0119739	0.0035798'  ref='-60' pos='0.255763	0.0947011	-0.08999760000000001'/>
 
     				<body name='Foot_Left' pos='0 0 0' >
 
@@ -193,8 +193,8 @@
               <site name="SOL_Ankle_Left" pos='0.43153500000000006	0.128441	-0.0745976' rgba='0 0 1 0'/>
               <site name="GAS_Ankle_Left" pos='0.429856	0.126789	-0.076244' rgba='0 0 1 0'/>
 
-              <joint name='Ankle_Left:x' class='Ankle:x' axis='-0.00226	0.006401	-0.003'  ref='-60' pos='0.40128500000000006	0.12106200000000002	0.018296399999999997'/>
-              <joint name='Ankle_Left:y' class='Ankle:y' axis='0.0	2.5e-05	0.01096965'  pos='0.40128500000000006	0.12106200000000002	0.018296399999999997'/>
+              <joint name='Ankle_Left:x' class='Ankle:x' axis='-0.004736	-0.009071	0.0031693'  ref='60' pos='0.408875	0.124663	0.017906199999999997'/>
+              <joint name='Ankle_Left:y' class='Ankle:y' axis='0.002568	-0.008538	-0.0136004'  ref='0' pos='0.408875	0.124663	0.017906199999999997'/>
     				</body>
     				<!-- End foot
     				-->
