@@ -6,6 +6,7 @@ Example for how to modifying the MuJoCo qpos during execution.
 import os, pdb, argparse
 from mujoco_py import load_model_from_xml, MjSim, MjViewer
 from helper_functions import *
+from inverse_kinematics import *
 
 curfilePath = os.path.abspath(__file__)
 #print(curfilePath)
@@ -20,41 +21,47 @@ parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/gro
 args = parser.parse_args()
 
 kinematicsFile = args.kinematicsFile
+# kinematicsFile = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Training/T_1.txt'
 
-with open(curDir + '/murdoc.xml', 'r') as f:
-    MODEL_XML = f.read()
+resourcesDir = curDir + '/Resources/Murdoc'
 
-MODEL_XML = MODEL_XML.replace('$MURDOC_DIR$', curDir + '/Resources/Murdoc')
+templateFilePath = curDir + '/murdoc_template.xml'
+fcsvFilePath = resourcesDir + '/Fiducials_old.fcsv'
 
-model = load_model_from_xml(MODEL_XML)
+specification = fcsv_to_spec(fcsvFilePath)
+modelXML = populate_model(templateFilePath, specification, resourcesDir, showTendons = False)
+
+model = load_model_from_xml(modelXML)
 sim = MjSim(model)
-#viewer = MjViewer(sim)
+viewer = MjViewer(sim)
 
+sitesToFit = ['MT_Left', 'M_Left', 'C_Left', 'GT_Left', 'K_Left']
+
+jointsToFit = {
+    'World:xt':(0,-3.14, 3.14) ,
+    'World:yt':(0,-3.14, 3.14) ,
+    'World:zt':(0,-3.14, 3.14),
+    'World:x':(0,-3.14, 3.14),
+    'World:y':(0,-3.14, 3.14),
+    'World:z':(0,-3.14, 3.14),
+    'Hip_Left:x':(0,-3.14, 3.14),
+    'Hip_Left:y':(0,-3.14, 3.14),
+    'Hip_Left:z':(0,-3.14, 3.14),
+    'Knee_Left:x':(0,-3.14, 3.14),
+    'Ankle_Left:x':(0,-3.14, 3.14),
+    'Ankle_Left:y':(0,-3.14, 3.14),
+    }
+
+solver = IKFit(sim, sitesToFit, jointsToFit)
 #Get kinematics
 kin = get_kinematics(kinematicsFile,
-    selectHeaders = ['MT_Left', 'M_Left', 'C_Left', 'GT_Left', 'K_Left'],
+    selectHeaders = sitesToFit,
     selectTime = [26, 50])
 
-states = [{'box:x': +0.8, 'box:y': +0.8},
-          {'box:x': -0.8, 'box:y': +0.8},
-          {'box:x': -0.8, 'box:y': -0.8},
-          {'box:x': +0.8, 'box:y': -0.8},
-          {'box:x': +0.0, 'box:y': +0.0}]
+for t, row in kin.iterrows():
+    stats = solver.fit(t, row)
+    report_fit(stats)
 
-# MjModel.joint_name2id returns the index of a joint in
-# MjData.qpos.
-
-x_joint_i = sim.model.get_joint_qpos_addr("left_knee")
-#y_joint_i = sim.model.get_joint_qpos_addr("box:y")
-
-#print_box_xpos(sim)
-
-for idx, row in kin.iterrows():
     sim_state = sim.get_state()
-    #sim_state.qpos[x_joint_i] = state["box:x"]
-    #sim_state.qpos[y_joint_i] = state["box:y"]
-    #sim.set_state(sim_state)
     sim.forward()
-    print("updated state to", state)
-    #print_box_xpos(sim)
-    #viewer.render()
+    viewer.render()

@@ -15,26 +15,25 @@
 		-->
         <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2"
             width="1000" height="1000"/>
-        <texture name='bone_texture' type="cube" file="$Murdoc_Dir$/Bone.png"/>
+        <texture name='bone_texture' type="cube" file="$resourcesDir$/Bone.png"/>
 		<!-- Create materials based on textures above
 		-->
         <material name='MatPlane' reflectance='0.5' texture="texplane"/>
         <material name='geom' texture="texgeom" texuniform="true"/>
         <material name='bone' texture='bone_texture' reflectance='0' texuniform='true' specular='0' shininess='0'/>
 
-        <mesh file="$Murdoc_Dir$/Pelvis.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="$Murdoc_Dir$/Femur_Left.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="$Murdoc_Dir$/Femur_Right.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="$Murdoc_Dir$/Shin_Left.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="$Murdoc_Dir$/Shin_Right.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="$Murdoc_Dir$/Foot_Left.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="$Murdoc_Dir$/Foot_Right.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="$resourcesDir$/Pelvis.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="$resourcesDir$/Femur_Left.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="$resourcesDir$/Femur_Right.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="$resourcesDir$/Shin_Left.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="$resourcesDir$/Shin_Right.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="$resourcesDir$/Foot_Left.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="$resourcesDir$/Foot_Right.stl" scale='1e-3 1e-3 1e-3' />
 
     </asset>
 
 	<default>
-    <site size='
-      0.5e-3 0.5e-3 0.5e-3' rgba='1 0 0 0'/>
+    <site size='0.5e-3 0.5e-3 0.5e-3' rgba='1 0 0 0'/>
 
     <default class='Hip:x'>
       <joint type='hinge' axis='0 1 0' ref='0' range='-60 90' limited='true' armature='0.0001' stiffness='0' springref='0'/>
@@ -215,81 +214,81 @@
 	</worldbody>
 
   <tendon>
-    <spatial name="IL_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name="IL_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='IL_Pelvis_Left'/>
         <site site='IL_Femur_Left'/>
     </spatial>
 
-    <spatial name="GMED_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name="GMED_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
       <site site='GMED_Pelvis_Left'/>
       <site site='GMED_Femur_Left'/>
     </spatial>
 
-    <spatial name='VAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name='VAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
       <site site='VAS_Femur_Left'/>
       <site site='VAS_Tibia_Left'/>
     </spatial>
 
-    <spatial name='TA_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name='TA_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
       <site site='TA_Tibia_Left'/>
       <site site='TA_Ankle_Left'/>
     </spatial>
 
-    <spatial name='SOL_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name='SOL_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
       <site site='SOL_Tibia_Left'/>
       <site site='SOL_Ankle_Left'/>
     </spatial>
 
-    <spatial name='RF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name='RF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
       <site site='RF_Pelvis_Left'/>
       <site site='RF_Tibia_Left'/>
     </spatial>
 
-    <spatial name='BF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name='BF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
       <site site='BF_Pelvis_Left'/>
       <site site='BF_Tibia_Left'/>
     </spatial>
 
-    <spatial name='GAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name='GAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
       <site site='GAS_Femur_Left'/>
       <site site='GAS_Ankle_Left'/>
     </spatial>
-      <spatial name="IL_Right" stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name="IL_Right" stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
           <site site='IL_Pelvis_Right'/>
           <site site='IL_Femur_Right'/>
       </spatial>
 
-      <spatial name="GMED_Right" stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name="GMED_Right" stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='GMED_Pelvis_Right'/>
         <site site='GMED_Femur_Right'/>
       </spatial>
 
-      <spatial name='VAS_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name='VAS_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='VAS_Femur_Right'/>
         <site site='VAS_Tibia_Right'/>
       </spatial>
 
-      <spatial name='TA_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name='TA_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='TA_Tibia_Right'/>
         <site site='TA_Ankle_Right'/>
       </spatial>
 
-      <spatial name='SOL_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name='SOL_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='SOL_Tibia_Right'/>
         <site site='SOL_Ankle_Right'/>
       </spatial>
 
-      <spatial name='RF_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name='RF_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='RF_Pelvis_Right'/>
         <site site='RF_Tibia_Right'/>
       </spatial>
 
-      <spatial name='BF_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name='BF_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='BF_Pelvis_Right'/>
         <site site='BF_Tibia_Right'/>
       </spatial>
 
-      <spatial name='GAS_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name='GAS_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='GAS_Femur_Right'/>
         <site site='GAS_Ankle_Right'/>
       </spatial>

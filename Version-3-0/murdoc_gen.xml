@@ -15,26 +15,25 @@
 		-->
         <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2"
             width="1000" height="1000"/>
-        <texture name='bone_texture' type="cube" file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Bone.png"/>
+        <texture name='bone_texture' type="cube" file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Bone.png"/>
 		<!-- Create materials based on textures above
 		-->
         <material name='MatPlane' reflectance='0.5' texture="texplane"/>
         <material name='geom' texture="texgeom" texuniform="true"/>
         <material name='bone' texture='bone_texture' reflectance='0' texuniform='true' specular='0' shininess='0'/>
 
-        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Pelvis.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Femur_Left.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Femur_Right.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Shin_Left.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Shin_Right.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Foot_Left.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Foot_Right.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Pelvis.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Femur_Left.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Femur_Right.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Shin_Left.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Shin_Right.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Foot_Left.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Foot_Right.stl" scale='1e-3 1e-3 1e-3' />
 
     </asset>
 
 	<default>
-    <site size='
-      0.5e-3 0.5e-3 0.5e-3' rgba='1 0 0 0'/>
+    <site size='0.5e-3 0.5e-3 0.5e-3' rgba='1 0 0 0'/>
 
     <default class='Hip:x'>
       <joint type='hinge' axis='0 1 0' ref='0' range='-60 90' limited='true' armature='0.0001' stiffness='0' springref='0'/>
