@@ -22,13 +22,13 @@
         <material name='geom' texture="texgeom" texuniform="true"/>
         <material name='bone' texture='bone_texture' reflectance='0' texuniform='true' specular='0' shininess='0'/>
 
-        <mesh file="$resourcesDir$/Pelvis.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="$resourcesDir$/Femur_Left.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="$resourcesDir$/Femur_Right.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="$resourcesDir$/Shin_Left.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="$resourcesDir$/Shin_Right.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="$resourcesDir$/Foot_Left.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="$resourcesDir$/Foot_Right.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="$resourcesDir$/Pelvis.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Femur_Left.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Femur_Right.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Shin_Left.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Shin_Right.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Foot_Left.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Foot_Right.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
 
     </asset>
 
