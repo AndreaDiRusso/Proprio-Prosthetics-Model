@@ -22,28 +22,27 @@
         <material name='geom' texture="texgeom" texuniform="true"/>
         <material name='bone' texture='bone_texture' reflectance='0' texuniform='true' specular='0' shininess='0'/>
 
-        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Pelvis.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Femur_Left.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Femur_Right.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Shin_Left.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Shin_Right.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Foot_Left.stl" scale='1e-3 1e-3 1e-3' />
-        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Foot_Right.stl" scale='1e-3 1e-3 1e-3' />
+        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Pelvis.stl" scale='0.0011 0.0011 0.0011' />
+        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Femur_Left.stl" scale='0.0011 0.0011 0.0011' />
+        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Femur_Right.stl" scale='0.0011 0.0011 0.0011' />
+        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Shin_Left.stl" scale='0.0011 0.0011 0.0011' />
+        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Shin_Right.stl" scale='0.0011 0.0011 0.0011' />
+        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Foot_Left.stl" scale='0.0011 0.0011 0.0011' />
+        <mesh file="C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Foot_Right.stl" scale='0.0011 0.0011 0.0011' />
 
     </asset>
 
 	<default>
-    <site size='
-      0.5e-3 0.5e-3 0.5e-3' rgba='1 0 0 0'/>
+    <site size='0.5e-3 0.5e-3 0.5e-3' rgba='1 0 0 0'/>
 
     <default class='Hip:x'>
-      <joint type='hinge' axis='0 1 0' ref='0' range='-40 150' limited='true' armature='0.0001' stiffness='0' springref='0'/>
+      <joint type='hinge' axis='0 1 0' ref='0' range='-60 90' limited='true' armature='0.0001' stiffness='0' springref='0'/>
 		</default>
 		<default class='Hip:y'>
-            <joint type='hinge' axis='0 1 0' range='-10 10' damping='5' limited='true' stiffness='0' armature='0.0080' />
+            <joint type='hinge' axis='0 1 0' range='-15 15' damping='5' limited='true' stiffness='0' armature='0.0080' />
 		</default>
 		<default class='Hip:z'>
-            <joint type='hinge' axis='0 0 1' range='-60 60' damping='5' limited='true' stiffness='0' armature='0.0080' />
+            <joint type='hinge' axis='0 0 1' range='-15 15' damping='5' limited='true' stiffness='0' armature='0.0080' />
 		</default>
 		<default class = 'Knee:x'>
 			<joint type='hinge' axis='1 0 0' range='-90  70' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
@@ -55,7 +54,7 @@
 			<joint type='hinge' axis='1 0 0' pos='0 0 0' range='-60 120' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
 		</default>
 		<default class = 'Ankle:y'>
-			<joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 120' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+			<joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
 		</default>
 	</default>
 
@@ -65,77 +64,79 @@
     <body name='Lower_Body' pos='0 0 0' euler='0 0 0'>
 
     <body name='Pelvis' pos='0 0 0' euler='0 0 0'>
-    <joint name='World:xt' type='slide' axis='1 0 0' pos='0 0 0$' ref='0.0563597' limited='false' />
-    <joint name='World:yt' type='slide' axis='0 1 0' pos='0 0 0$' ref='0.12496600000000001' limited='false' />
-    <joint name='World:zt' type='slide' axis='0 0 1' pos='0 0 0$' ref='-0.18002500000000002' limited='false' />
+    <camera name = 'Sagittal_Left' mode = 'fixed' pos = '3e-1 -5e-1 -2e-1' euler = '90 0 180'/>
 
-    <joint name='World:x' type='hinge' axis='1 0 0' pos='0.0563597	0.12496600000000001	-0.18002500000000002' ref='185' limited='false'  />
-    <joint name='World:y' type='hinge' axis='0 1 0' pos='0.0563597	0.12496600000000001	-0.18002500000000002' ref='10' limited='false'  />
-    <joint name='World:z' type='hinge' axis='0 0 1' pos='0.0563597	0.12496600000000001	-0.18002500000000002' ref='0' limited='false'  />
+    <joint name='World:xt' type='slide' axis='1 0 0' pos='0 0 0' ref='0.06199567' limited='false' />
+    <joint name='World:yt' type='slide' axis='0 1 0' pos='0 0 0' ref='0.13746260000000002' limited='false' />
+    <joint name='World:zt' type='slide' axis='0 0 1' pos='0 0 0' ref='-0.19802750000000002' limited='false' />
 
-     <site name="BF_Pelvis_Left" pos='0.0846852	0.160661	-0.0648937' rgba='1 0 0 0'/>
-     <site name="RF_Pelvis_Left" pos='0.0778304	0.15799600000000003	-0.147005' rgba='1 0 0 0'/>
-     <site name="GMED_Pelvis_Left" pos='0.051607900000000005	0.155553	-0.192365' rgba='1 0 0 0'/>
-     <site name="IL_Pelvis_Left" pos='0.066193	0.161373	-0.18102200000000002' rgba='1 0 0 0'/>
+    <joint name='World:x' type='hinge' axis='1 0 0' pos='0.06199567	0.13746260000000002	-0.19802750000000002' ref='185' limited='false'  />
+    <joint name='World:y' type='hinge' axis='0 1 0' pos='0.06199567	0.13746260000000002	-0.19802750000000002' ref='10' limited='false'  />
+    <joint name='World:z' type='hinge' axis='0 0 1' pos='0.06199567	0.13746260000000002	-0.19802750000000002' ref='0' limited='false'  />
 
-     <site name="GMED_Pelvis_Right" pos='0.051607900000000005	0.155553	-0.192365' rgba='0 0 1 0'/>
-     <site name="IL_Pelvis_Right" pos='0.066193	0.161373	-0.18102200000000002' rgba='0 0 1 0'/>
-     <site name="RF_Pelvis_Right" pos='0.0778304	0.15799600000000003	-0.147005' rgba='0 0 1 0'/>
-     <site name="BF_Pelvis_Right" pos='0.0846852	0.160661	-0.0648937' rgba='0 0 1 0'/>
+     <site name="BF_Pelvis_Left" pos='0.07541567000000002	0.07732472	-0.08395585' rgba='1 0 0 0'/>
+     <site name="RF_Pelvis_Left" pos='0.0764522	0.0946209	-0.16296610000000003' rgba='1 0 0 0'/>
+     <site name="GMED_Pelvis_Left" pos='0.049623860000000006	0.10116183000000001	-0.22827200000000003' rgba='1 0 0 0'/>
+     <site name="IL_Pelvis_Left" pos='0.09443148000000001	0.09588931	-0.1390752' rgba='1 0 0 0'/>
 
-     <site name="C_Right" group='1' pos='0.0310231	0.167978	-0.20496099999999998' rgba='1 1 1 1' size='5e-3'/>
-     <site name="C_Left" group='1' pos='0.0223632	0.09738930000000001	-0.205471' rgba='1 1 1 1' size='5e-3'/>
+     <site name="GMED_Pelvis_Right" pos='0.05741384000000001	0.17560510000000001	-0.22142340000000002' rgba='0 0 1 0'/>
+     <site name="IL_Pelvis_Right" pos='0.10638243	0.15780490000000003	-0.13306700000000002' rgba='0 0 1 0'/>
+     <site name="RF_Pelvis_Right" pos='0.08400359	0.17506610000000003	-0.16586789999999998' rgba='0 0 1 0'/>
+     <site name="BF_Pelvis_Right" pos='0.09202149000000001	0.17616060000000003	-0.07276973' rgba='0 0 1 0'/>
+
+     <site name="C_Right" group='1' pos='0.03412541	0.1847758	-0.2254571' rgba='1 1 1 1' size='5e-3'/>
+     <site name="C_Left" group='1' pos='0.02459952	0.10712823000000002	-0.2260181' rgba='1 1 1 1' size='5e-3'/>
 
      <geom type='mesh' mesh='Pelvis' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
 
       <body name='GT_Holder_Right' pos='0 0 0' euler='0 0 0'>
-        <site name="GT_Right" group='1' pos='0.0814642	0.18958900000000004	-0.11208200000000001' rgba='1 1 0 1' size='5e-3'/>
+        <site name="GT_Right" group='1' pos='0.08961062000000002	0.20854790000000004	-0.12329020000000002' rgba='1 1 0 1' size='5e-3'/>
       </body>
 
     <body name='Leg_Right' pos='0 0 0' euler='0 0 0'>
 
-      <joint name='Hip_Right:x' class='Hip:x' axis='-0.0073147	-0.016036	-0.008204' ref = '0' pos='0.0826091	0.157705	-0.11688899999999999'/>
-      <joint name='Hip_Right:y' class='Hip:y' axis='0.000844	-0.001969	0.005925' ref = '-10' pos='0.0826091	0.157705	-0.11688899999999999'/>
-      <joint name='Hip_Right:z' class='Hip:z' axis='-0.0078502	-8.4e-05	0.000232' ref = '0' pos='0.0826091	0.157705	-0.11688899999999999'/>
+      <joint name='Hip_Right:x' class='Hip:x' axis='0.00074338	-0.0152141	0.0002453' ref = '0' pos='0.09087001	0.17541700000000002	-0.12417790000000001'/>
+      <joint name='Hip_Right:y' class='Hip:y' axis='0.0009284	-0.0002244	0.0109175' ref = '-10' pos='0.09087001	0.17541700000000002	-0.12417790000000001'/>
+      <joint name='Hip_Right:z' class='Hip:z' axis='-0.00758516	0.0006831	0.0004257' ref = '0' pos='0.09087001	0.17541700000000002	-0.12417790000000001'/>
 
   	  <geom type='mesh' mesh='Femur_Right' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
 
-      <site name="GMED_Femur_Right" pos='0.0731469	0.179226	-0.108311' rgba='0 0 1 0'/>
+      <site name="GMED_Femur_Right" pos='0.07976562000000001	0.19600350000000002	-0.12033670000000002' rgba='0 0 1 0'/>
 
-      <site name="IL_Femur_Right" pos='0.10490899999999999	0.160921	-0.103008' rgba='0 0 1 0'/>
-      <site name="IL_Front_Right" pos='0.10490899999999999	0.160921	-0.103008' rgba='0 0 1 0'/>
+      <site name="IL_Femur_Right" pos='0.11386320000000001	0.17627610000000002	-0.1153823' rgba='0 0 1 0'/>
+      <site name="IL_Front_Right" pos='$IL_Front_Right:x$	$IL_Front_Right:y$	$IL_Front_Right:z$' rgba='0 0 1 0'/>
 
-      <site name="VAS_Femur_Right" pos='0.15849000000000002	0.159111	-0.136153' rgba='0 0 1 0'/>
-      <site name="GAS_Femur_Right" pos='0.242951	0.141299	-0.133344' rgba='0 0 1 0'/>
+      <site name="VAS_Femur_Right" pos='0.18480770000000002	0.1731312	-0.1498046' rgba='0 0 1 0'/>
+      <site name="GAS_Femur_Right" pos='0.2800446	0.1584583	-0.14959010000000003' rgba='0 0 1 0'/>
 
-      <site name="K_Right" pos='0.26711700000000005	0.14675100000000002	-0.158053' rgba='1 0 0 1' size='5e-3'/>
+      <site name="K_Right" pos='0.29382870000000005	0.16142610000000002	-0.17385830000000002' rgba='1 0 0 1' size='5e-3'/>
 
   	  <body name='Shin_Right' pos='0 0 0' euler='0 0 0'>
 
           <geom type='mesh' mesh='Shin_Right' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
 
-          <site name="VAS_Tibia_Right" pos='0.227972	0.146542	-0.157237' rgba='0 0 1 0'/>
-          <site name="TA_Tibia_Right" pos='0.343832	0.127757	-0.134737' rgba='0 0 1 0'/>
-          <site name="SOL_Tibia_Right" pos='0.277582	0.152171	-0.12554600000000002' rgba='0 0 1 0'/>
-          <site name="RF_Tibia_Right" pos='0.23261	0.14416299999999999	-0.159571' rgba='0 0 1 0'/>
-          <site name="BF_Tibia_Right" pos='0.27140800000000004	0.15383600000000003	-0.126231' rgba='0 0 1 0'/>
+          <site name="VAS_Tibia_Right" pos='0.26958360000000003	0.1572395	-0.1768569' rgba='0 0 1 0'/>
+          <site name="TA_Tibia_Right" pos='0.3731222	0.1474473	-0.1525128' rgba='0 0 1 0'/>
+          <site name="SOL_Tibia_Right" pos='0.30460210000000004	0.16444450000000002	-0.1423906' rgba='0 0 1 0'/>
+          <site name="RF_Tibia_Right" pos='0.269885	0.16199370000000002	-0.1770065' rgba='0 0 1 0'/>
+          <site name="BF_Tibia_Right" pos='0.3047671	0.1695067	-0.1462747' rgba='0 0 1 0'/>
 
-          <joint name='Knee_Right:x' class='Knee:x' axis='-0.001537	-0.012808	0.0' ref='-60' pos='0.261764	0.141711	-0.14281200000000002'/>
+          <joint name='Knee_Right:x' class='Knee:x' axis='-0.0016907	-0.0140888	0.0' ref='-60' pos='0.28794040000000004	0.15588210000000002	-0.15709320000000002'/>
 
   				<body name='Foot_Right' pos='0 0 0' >
 
             <geom type='mesh' mesh='Foot_Right' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
 
-            <site name="M_Right" pos='0.454192	0.142859	-0.096663' rgba='0.5 0.5 0.5 1' size='5e-3'/>
-            <site name="MT_Right" pos='0.534378	0.12728	-0.116801' rgba='0 0 1 1' size='5e-3'/>
-            <site name="T_Right" pos='0.568988	0.109595	-0.113604' rgba='0 1 1 1' size='5e-3'/>
+            <site name="M_Right" pos='0.4996112	0.15714490000000003	-0.1063293' rgba='0.5 0.5 0.5 1' size='5e-3'/>
+            <site name="MT_Right" pos='0.5878158000000001	0.14000800000000002	-0.12848110000000001' rgba='0 0 1 1' size='5e-3'/>
+            <site name="T_Right" pos='0.6258868000000001	0.12055450000000001	-0.1249644' rgba='0 1 1 1' size='5e-3'/>
 
-            <site name="TA_Ankle_Right" pos='0.464477	0.102348	-0.0964599' rgba='0 0 1 0'/>
-            <site name="SOL_Ankle_Right" pos='0.43153500000000006	0.128441	-0.0745976' rgba='0 0 1 0'/>
-            <site name="GAS_Ankle_Right" pos='0.429856	0.126789	-0.076244' rgba='0 0 1 0'/>
+            <site name="TA_Ankle_Right" pos='0.5308237	0.1136993	-0.11346060000000001' rgba='0 0 1 0'/>
+            <site name="SOL_Ankle_Right" pos='0.48338400000000004	0.1476398	-0.09132299' rgba='0 0 1 0'/>
+            <site name="GAS_Ankle_Right" pos='0.4816471	0.1477146	-0.09284858' rgba='0 0 1 0'/>
 
-            <joint name='Ankle_Right:x' class='Ankle:x' axis='-0.000838	-0.008659	0.0'  ref='60' pos='0.446505	0.130104	-0.10443700000000002'/>
-            <joint name='Ankle_Right:y' class='Ankle:y' axis='-0.000226	-0.000533	0.005476'  pos='0.446505	0.130104	-0.10443700000000002'/>
+            <joint name='Ankle_Right:x' class='Ankle:x' axis='-0.0059554	-0.0165869	-0.00123706'  ref='60' pos='0.4969162	0.1384141	-0.10952469'/>
+            <joint name='Ankle_Right:y' class='Ankle:y' axis='-0.0043725	-0.0032538	-0.01796993'  pos='0.4969162	0.1384141	-0.10952469'/>
 
   				</body>
   				<!-- End foot
@@ -148,53 +149,53 @@
   -->
 
       <body name='GT_Holder_Left' pos='0 0 0' euler='0 0 0'>
-        <site name="GT_Left" group='1' pos='0.0633843	0.047944600000000004	-0.116957' rgba='1 1 0 1' size='5e-3'/>
+        <site name="GT_Left" group='1' pos='0.06972273000000001	0.052739060000000004	-0.1286527' rgba='1 1 0 1' size='5e-3'/>
       </body>
 
       <body name='Leg_Left' pos='0 0 0' euler='0 0 0'>
 
-        <joint name='Hip_Left:x' class='Hip:x' axis='-0.001688	0.013785	-0.011' ref = '-17' pos='0.069949	0.07611799999999999	-0.12374600000000001'/>
-        <joint name='Hip_Left:y' class='Hip:y' axis='-0.0002814	9.99999999891e-08	0.007319' ref = '0' pos='0.069949	0.07611799999999999	-0.12374600000000001'/>
-        <joint name='Hip_Left:z' class='Hip:z' axis='-0.0205103	-0.0001158	9.99999999999e-06' ref = '30' pos='0.069949	0.07611799999999999	-0.12374600000000001'/>
+        <joint name='Hip_Left:x' class='Hip:x' axis='0.00126005	-0.01726747	-0.0004301' ref = '10' pos='0.07704499	0.08609337	-0.1343617'/>
+        <joint name='Hip_Left:y' class='Hip:y' axis='0.0	-0.00012276	0.0093247' ref = '10' pos='0.07704499	0.08609337	-0.1343617'/>
+        <joint name='Hip_Left:z' class='Hip:z' axis='-0.01782528	-0.00145189	-0.0012419' ref = '30' pos='0.07704499	0.08609337	-0.1343617'/>
 
     	  <geom type='mesh' mesh='Femur_Left' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
 
-        <site name="GMED_Femur_Left" pos='0.0731469	0.179226	-0.108311' rgba='0 0 1 0'/>
+        <site name="GMED_Femur_Left" pos='0.06510064	0.06600594	-0.1287946' rgba='0 0 1 0'/>
 
-        <site name="IL_Femur_Left" pos='0.10490899999999999	0.160921	-0.103008' rgba='0 0 1 0'/>
-        <site name="IL_Front_Left" pos='0.10490899999999999	0.160921	-0.103008' rgba='0 0 1 0'/>
+        <site name="IL_Femur_Left" pos='0.09909427000000001	0.08435284	-0.1156133' rgba='0 0 1 0'/>
+        <site name="IL_Front_Left" pos='$IL_Front_Left:x$	$IL_Front_Left:y$	$IL_Front_Left:z$' rgba='0 0 1 0'/>
 
-        <site name="VAS_Femur_Left" pos='0.15849000000000002	0.159111	-0.136153' rgba='0 0 1 0'/>
-        <site name="GAS_Femur_Left" pos='0.242951	0.141299	-0.133344' rgba='0 0 1 0'/>
+        <site name="VAS_Femur_Left" pos='0.1872123	0.08587986	-0.1304578' rgba='0 0 1 0'/>
+        <site name="GAS_Femur_Left" pos='0.2826054	0.10399796	-0.09229473000000002' rgba='0 0 1 0'/>
 
-        <site name="K_Left" pos='0.27113400000000004	0.0897635	-0.10431399999999999' rgba='1 0 0 1' size='5e-3'/>
+        <site name="K_Left" pos='0.29824740000000005	0.09873985	-0.1147454' rgba='1 0 0 1' size='5e-3'/>
 
     	  <body name='Shin_Left' pos='0 0 0' euler='0 0 0'>
 
             <geom type='mesh' mesh='Shin_Left' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
 
-            <site name="VAS_Tibia_Left" pos='0.227972	0.146542	-0.157237' rgba='0 0 1 0'/>
-            <site name="TA_Tibia_Left" pos='0.343832	0.127757	-0.134737' rgba='0 0 1 0'/>
-            <site name="SOL_Tibia_Left" pos='0.277582	0.152171	-0.12554600000000002' rgba='0 0 1 0'/>
-            <site name="RF_Tibia_Left" pos='0.23261	0.14416299999999999	-0.159571' rgba='0 0 1 0'/>
-            <site name="BF_Tibia_Left" pos='0.27140800000000004	0.15383600000000003	-0.126231' rgba='0 0 1 0'/>
+            <site name="VAS_Tibia_Left" pos='0.27771809999999997	0.10049798000000001	-0.1228139' rgba='0 0 1 0'/>
+            <site name="TA_Tibia_Left" pos='0.3682492	0.1155319	-0.05739701' rgba='0 0 1 0'/>
+            <site name="SOL_Tibia_Left" pos='0.3000371	0.09832317	-0.07756111' rgba='0 0 1 0'/>
+            <site name="RF_Tibia_Left" pos='0.2768799	0.09597104	-0.1234343' rgba='0 0 1 0'/>
+            <site name="BF_Tibia_Left" pos='0.2973894000000001	0.09430707	-0.08177565' rgba='0 0 1 0'/>
 
-            <joint name='Knee_Left:x' class='Knee:x' axis='0.0	0.0135896	-0.0059711'  ref='60' pos='0.255763	0.0947011	-0.08999760000000001'/>
+            <joint name='Knee_Left:x' class='Knee:x' axis='-0.00022	-0.01317129	0.00393778'  ref='-60' pos='0.2813393	0.10417121	-0.09899736'/>
 
     				<body name='Foot_Left' pos='0 0 0' >
 
               <geom type='mesh' mesh='Foot_Left' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
 
-              <site name="M_Left" pos='0.39995800000000004	0.11373200000000001	0.0284587' rgba='0.5 0.5 0.5 1' size='5e-3'/>
-              <site name="MT_Left" pos='0.477032	0.10137299999999999	0.0469846' rgba='0 0 1 1' size='5e-3'/>
-              <site name="T_Left" pos='0.513024	0.10679799999999999	0.0571901' rgba='0 1 1 1' size='5e-3'/>
+              <site name="M_Left" pos='0.43995380000000006	0.12510520000000003	0.031304570000000004' rgba='0.5 0.5 0.5 1' size='5e-3'/>
+              <site name="MT_Left" pos='0.5247352	0.11151029999999999	0.05168306' rgba='0 0 1 1' size='5e-3'/>
+              <site name="T_Left" pos='0.5643264	0.1174778	0.06290911' rgba='0 1 1 1' size='5e-3'/>
 
-              <site name="TA_Ankle_Left" pos='0.464477	0.102348	-0.0964599' rgba='0 0 1 0'/>
-              <site name="SOL_Ankle_Left" pos='0.43153500000000006	0.128441	-0.0745976' rgba='0 0 1 0'/>
-              <site name="GAS_Ankle_Left" pos='0.429856	0.126789	-0.076244' rgba='0 0 1 0'/>
+              <site name="TA_Ankle_Left" pos='0.4713621	0.15333670000000002	0.02389673' rgba='0 0 1 0'/>
+              <site name="SOL_Ankle_Left" pos='0.42997680000000005	0.14066579999999998	0.031173120000000002' rgba='0 0 1 0'/>
+              <site name="GAS_Ankle_Left" pos='0.4287932	0.1393337	0.027288580000000003' rgba='0 0 1 0'/>
 
-              <joint name='Ankle_Left:x' class='Ankle:x' axis='-0.00226	0.006401	-0.003'  ref='-60' pos='0.40128500000000006	0.12106200000000002	0.018296399999999997'/>
-              <joint name='Ankle_Left:y' class='Ankle:y' axis='0.0	2.5e-05	0.01096965'  pos='0.40128500000000006	0.12106200000000002	0.018296399999999997'/>
+              <joint name='Ankle_Left:x' class='Ankle:x' axis='-0.0052096	-0.0099781	0.00348623'  ref='60' pos='0.4497625	0.1371293	0.01969682'/>
+              <joint name='Ankle_Left:y' class='Ankle:y' axis='0.0028248	-0.0093918	-0.01496044'  ref='0' pos='0.4497625	0.1371293	0.01969682'/>
     				</body>
     				<!-- End foot
     				-->
@@ -215,81 +216,81 @@
 	</worldbody>
 
   <tendon>
-    <spatial name="IL_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name="IL_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
         <site site='IL_Pelvis_Left'/>
         <site site='IL_Femur_Left'/>
     </spatial>
 
-    <spatial name="GMED_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name="GMED_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
       <site site='GMED_Pelvis_Left'/>
       <site site='GMED_Femur_Left'/>
     </spatial>
 
-    <spatial name='VAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name='VAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
       <site site='VAS_Femur_Left'/>
       <site site='VAS_Tibia_Left'/>
     </spatial>
 
-    <spatial name='TA_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name='TA_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
       <site site='TA_Tibia_Left'/>
       <site site='TA_Ankle_Left'/>
     </spatial>
 
-    <spatial name='SOL_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name='SOL_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
       <site site='SOL_Tibia_Left'/>
       <site site='SOL_Ankle_Left'/>
     </spatial>
 
-    <spatial name='RF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name='RF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
       <site site='RF_Pelvis_Left'/>
       <site site='RF_Tibia_Left'/>
     </spatial>
 
-    <spatial name='BF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name='BF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
       <site site='BF_Pelvis_Left'/>
       <site site='BF_Tibia_Left'/>
     </spatial>
 
-    <spatial name='GAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+    <spatial name='GAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
       <site site='GAS_Femur_Left'/>
       <site site='GAS_Ankle_Left'/>
     </spatial>
-      <spatial name="IL_Right" stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name="IL_Right" stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
           <site site='IL_Pelvis_Right'/>
           <site site='IL_Femur_Right'/>
       </spatial>
 
-      <spatial name="GMED_Right" stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name="GMED_Right" stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
         <site site='GMED_Pelvis_Right'/>
         <site site='GMED_Femur_Right'/>
       </spatial>
 
-      <spatial name='VAS_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name='VAS_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
         <site site='VAS_Femur_Right'/>
         <site site='VAS_Tibia_Right'/>
       </spatial>
 
-      <spatial name='TA_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name='TA_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
         <site site='TA_Tibia_Right'/>
         <site site='TA_Ankle_Right'/>
       </spatial>
 
-      <spatial name='SOL_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name='SOL_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
         <site site='SOL_Tibia_Right'/>
         <site site='SOL_Ankle_Right'/>
       </spatial>
 
-      <spatial name='RF_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name='RF_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
         <site site='RF_Pelvis_Right'/>
         <site site='RF_Tibia_Right'/>
       </spatial>
 
-      <spatial name='BF_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name='BF_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
         <site site='BF_Pelvis_Right'/>
         <site site='BF_Tibia_Right'/>
       </spatial>
 
-      <spatial name='GAS_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
+      <spatial name='GAS_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 1" limited="false" range="0 0.33">
         <site site='GAS_Femur_Right'/>
         <site site='GAS_Ankle_Right'/>
       </spatial>
@@ -323,6 +324,7 @@
 
 <keyframe>
     <key time="0" qpos="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" />
+    <key time="0" qpos="0 0 0 0 0 0 -1 0 0 1 0 0 0 0 0 0 0 0" />
 </keyframe>
 
 </mujoco>
