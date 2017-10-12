@@ -82,3 +82,7 @@ for idx, ax in enumerate(g.axes.flat):
 
 plt.legend(loc='center right', bbox_to_anchor = (1.4,3))
 plt.savefig(outputFile)
+
+pickleName = outputFile.split('.')[0] + '.pickle'
+with open(pickleName, 'wb') as f:
+    pickle.dump(g,f)

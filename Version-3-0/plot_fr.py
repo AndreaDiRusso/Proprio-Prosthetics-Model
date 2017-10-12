@@ -45,3 +45,7 @@ g = sns.FacetGrid(iARate, row = 'Tendon', size = 3, aspect = 3,
 g.map(plt.plot, 'Time (sec)', 'Firing Rate (Hz)', lw = 3)
 
 plt.savefig(outputFile)
+
+pickleName = outputFile.split('.')[0] + '.pickle'
+with open(pickleName, 'wb') as f:
+    pickle.dump(g,f)
