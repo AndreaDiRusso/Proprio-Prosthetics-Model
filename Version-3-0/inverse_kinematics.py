@@ -6,6 +6,7 @@ def iter_cb(params, iter, resid, t, kinSeries, solver):
     print("Iteration number: %d" % iter, end = '\r')
     if solver.mjViewer is not None:
         render_targets(solver.mjViewer, alignToModel(solver.simulation, kinSeries, solver.alignTo))
+        solver.mjViewer.render()
     #print("Residual array:")
     #print(resid)
     #print("params: ")

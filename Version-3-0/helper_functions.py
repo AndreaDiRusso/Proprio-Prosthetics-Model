@@ -9,7 +9,7 @@ import pdb, copy
 def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None, reIndex = None):
     raw = pd.read_table(kinematicsFile, index_col = 0, skiprows = [1])
     raw.index = np.around(raw.index, 3)
-    
+
     if selectTime:
         raw = raw.loc[slice(selectTime[0], selectTime[1]), :]
     headings = sorted(raw.columns) # get column names
@@ -96,25 +96,27 @@ def populate_model(templateFilePath, specification, resourcesDir, showTendons = 
 
     return modelXML
 
-def dict_to_params(jointDict):
+def dict_to_params(jointDict, skip = []):
     params = Parameters()
     for key, value in jointDict.items():
+        vary = True if key not in skip else False
         # silly workaround because Parameter() does not allow ':' in name
         # TODO: Fix
         key = key.replace(':', '_')
-        params.add(key, value=value[0], min=value[1], max=value[2])
+        params.add(key, value=value[0], min=value[1], max=value[2], vary = vary)
     return params
 
-def params_to_series(params):
+def params_to_dict(params):
     jointSeries = {}
     for key, value in params.valuesdict().items():
         # silly workaround because Parameter() does not allow ':' in name
         # TODO: fix
         key = key[::-1].replace('_', ':', 1)[::-1]
         jointSeries.update({key : value})
-
-    jointSeries = pd.Series(jointSeries)
     return jointSeries
+
+def params_to_series(params):
+    return pd.Series(params_to_dict(params))
 
 def pose_model(simulation, jointSeries):
     simState = simulation.get_state()
@@ -130,6 +132,11 @@ def pose_model(simulation, jointSeries):
     simulation.forward()
 
     return simulation
+
+def get_tendon_length(tendonSeries, simulation):
+    for tendonName in tendonSeries.index:
+        tendonSeries.loc[tendonName] = simulation.data.actuator_length[simulation.model.actuator_name2id(tendonName)]
+    return tendonSeries
 
 def get_site_pos(kinSeries, simulation):
     sitePos = pd.Series(index = kinSeries.index)
@@ -185,3 +192,17 @@ def series_to_markers(kinSeries):
             'type': const.GEOM_SPHERE
             }]
     return markers
+
+def Ia_model(k, tendonL, tendonV, tendonL0):
+    iAFiring = pd.DataFrame(index = tendonL.index, columns = tendonL.columns)
+    for t, tendonSeries in tendonL.iterrows():
+        positiveV = tendonV.loc[t,:].clip(lower = 0)
+        iAFiring.loc[t, :] = k*(positiveV*21*(positiveV/tendonL0)**0.5+200*(tendonL.loc[t,:]-tendonL0)/tendonL0+60)
+    return iAFiring
+
+def long_form_df(kinDF, overrideColumns = None):
+    longDF = pd.DataFrame(kinDF.unstack())
+    longDF.reset_index(inplace=True)
+    if overrideColumns is not None:
+        longDF.columns = overrideColumns
+    return longDF

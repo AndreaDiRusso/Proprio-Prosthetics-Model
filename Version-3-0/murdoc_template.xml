@@ -324,6 +324,7 @@
 
 <keyframe>
     <key time="0" qpos="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" />
+    <key time="0" qpos="0 0 0 0 0 0 -1 0 0 1 0 0 0 0 0 0 0 0" />
 </keyframe>
 
 </mujoco>

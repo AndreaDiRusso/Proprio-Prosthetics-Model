@@ -46,18 +46,18 @@ viewer = MjViewerBasic(simulation) if showViewer else None
 sitesToFit = ['MT_Left', 'M_Left', 'C_Left', 'GT_Left', 'K_Left']
 
 jointsToFit = {
-    'World:xt':(.1,-1, 1) ,
-    'World:yt':(0,-1, 1) ,
-    'World:zt':(0,-1, 1),
-    'World:x':(math.radians(0),math.radians(-180),math.radians(180)),
-    'World:y':(math.radians(0),math.radians(-180),math.radians(180)),
-    'World:z':(math.radians(90),math.radians(-180),math.radians(180)),
-    'Hip_Left:x':(math.radians(0),math.radians(-60),math.radians(90)),
-    'Hip_Left:y':(math.radians(0),math.radians(-15),math.radians(15)),
-    'Hip_Left:z':(math.radians(0),math.radians(-15),math.radians(15)),
-    'Knee_Left:x':(math.radians(0),math.radians(-90),math.radians(70)),
-    'Ankle_Left:x':(math.radians(0),math.radians(-60),math.radians(120)),
-    'Ankle_Left:y':(math.radians(0),math.radians(-60),math.radians(60)),
+    'World:xt':[.1,-1, 1],
+    'World:yt':[0.08,-1, 1],
+    'World:zt':[0.07,-1, 1],
+    'World:x':[0.15,math.radians(-180),math.radians(180)],
+    'World:y':[0.3,math.radians(-180),math.radians(180)],
+    'World:z':[-1,math.radians(-180),math.radians(180)],
+    'Hip_Left:x':[-0.5,math.radians(-60),math.radians(90)],
+    'Hip_Left:y':[0.05,math.radians(-15),math.radians(15)],
+    'Hip_Left:z':[0,math.radians(-15),math.radians(15)],
+    'Knee_Left:x':[0.4,math.radians(-90),math.radians(70)],
+    'Ankle_Left:x':[-0.5,math.radians(-60),math.radians(120)],
+    'Ankle_Left:y':[0.1,math.radians(-60),math.radians(60)],
     }
 
 referenceJoint = 'C_Left'
@@ -72,13 +72,29 @@ kinematics = get_kinematics(kinematicsFile,
 kinIterator = kinematics.iterrows()
 t, kinSeries = next(kinIterator)
 stats = solver.fit(t, kinSeries)
-solver.jointsParam = stats.params
+
+# skip world coords after initial fit
+initialResults = params_to_dict(stats.params)
+for key, value in jointsToFit.items():
+    jointsToFit[key][0] = initialResults[key]
+
+skip = [
+    'World:xt',
+    'World:yt',
+    'World:zt',
+    'World:x',
+    'World:y',
+    'World:z',
+    ]
+
+solver.jointsParam = dict_to_params(jointsToFit, skip)
 
 modelKin = pd.DataFrame(index = kinematics.index, columns = kinematics.columns)
 modelQpos = pd.DataFrame(index = kinematics.index, columns = params_to_series(stats.params).index)
+alignedKin = pd.DataFrame(index = kinematics.index, columns = kinematics.columns)
 
 for t, kinSeries in kinematics.iterrows():
-    solver.nelderTol = 5e-3
+    solver.nelderTol = 2e-3
     stats = solver.fit(t, kinSeries)
 
     print("SSQ: ")
@@ -89,10 +105,12 @@ for t, kinSeries in kinematics.iterrows():
     solver.jointsParam = stats.params
     modelKin.loc[t, :] = get_site_pos(kinSeries, simulation)
     modelQpos.loc[t, :] = params_to_series(stats.params)
+    alignedKin.loc[t, :] = alignToModel(simulation, kinSeries, referenceJoint)
+
 
 results = {
     'site_pos' : modelKin,
-    'orig_site_pos': kinematics,
+    'orig_site_pos': alignedKin,
     'qpos' : modelQpos
 }
 

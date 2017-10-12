@@ -1,10 +1,18 @@
 import numpy as np
-import cv2
+import cv2, argparse
 
-outputFile = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Training/T_1_stack.avi'
+parser = argparse.ArgumentParser()
+parser.add_argument('--modelVideoFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1.avi')
+parser.add_argument('--origVideoFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_orig.avi')
+parser.add_argument('--outputFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_stacked.avi')
 
-model = cv2.VideoCapture('W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Training/T_1.avi')
-orig = cv2.VideoCapture('W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Training/T_1_orig.avi')
+args = parser.parse_args()
+outputFile = args.outputFile
+origVideoFile = args.origVideoFile
+modelVideoFile = args.modelVideoFile
+
+model = cv2.VideoCapture(modelVideoFile)
+orig = cv2.VideoCapture(origVideoFile)
 
 # Define the codec and create VideoWriter object
 fourcc = cv2.VideoWriter_fourcc(*'MPEG')

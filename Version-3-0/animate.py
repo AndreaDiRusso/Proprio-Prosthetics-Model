@@ -22,7 +22,6 @@ parser.add_argument('--modelKinematicsFile', default = 'W:/ENG_Neuromotion_Share
 parser.add_argument('--outputFile')
 parser.add_argument('--outputRawFile')
 parser.add_argument('--modelFile', default = 'murdoc_gen.xml')
-parser.set_defaults(saveVideo = False)
 
 args = parser.parse_args()
 
@@ -42,6 +41,12 @@ with open(modelKinematicsFile, 'rb') as f:
 simulation = MjSim(model)
 
 viewer = MjViewer(simulation)
+#get resting lengths
+nJoints = simulation.model.key_qpos.shape[1]
+allJoints = [simulation.model.joint_id2name(i) for i in range(nJoints)]
+keyPos = pd.Series({jointName: simulation.model.key_qpos[1][i] for i, jointName in enumerate(allJoints)})
+
+pose_model(simulation, keyPos)
 
 for t, kinSeries in kinematics['site_pos'].iterrows():
 
