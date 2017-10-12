@@ -307,3 +307,4 @@ $RECYCLE.BIN/
 scratch.py
 *.pyc
 murdoc_gen.xml
+*.nii
