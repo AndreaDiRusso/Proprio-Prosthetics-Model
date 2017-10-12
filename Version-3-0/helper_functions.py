@@ -8,6 +8,8 @@ import pdb, copy
 
 def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None, reIndex = None):
     raw = pd.read_table(kinematicsFile, index_col = 0, skiprows = [1])
+    raw.index = np.around(raw.index, 3)
+    
     if selectTime:
         raw = raw.loc[slice(selectTime[0], selectTime[1]), :]
     headings = sorted(raw.columns) # get column names
@@ -15,6 +17,24 @@ def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None, reIn
 
     # reorder alphabetically by columns
     raw = raw.reindex_axis(headings, axis = 1)
+
+    if reIndex is not None:
+        uniqueHeadings = set([name[:-2] for name in headings])
+        oldIndex = raw.columns
+        newIndex = np.array(oldIndex)
+        for name in uniqueHeadings:
+            for reindexPair in reIndex:
+                mask = [
+                    oldIndex.str.contains(name + ' ' + reindexPair[0]),
+                    oldIndex.str.contains(name + ' ' + reindexPair[1])
+                ]
+                temp = newIndex[mask[0]]
+                newIndex[mask[0]] = newIndex[mask[1]]
+                newIndex[mask[1]] = temp
+        raw.columns = newIndex
+        headings = sorted(newIndex)
+        raw = raw.reindex_axis(headings, axis = 1)
+
     # create multiIndex column names
     if selectHeaders is not None:
         expandedHeadings = [
@@ -24,7 +44,7 @@ def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None, reIn
         ] + [
             name + ' Z' for name in selectHeaders
         ]
-        raw = raw[expandedHeadings]
+        raw = raw[sorted(expandedHeadings)]
         indexPD = pd.MultiIndex.from_product([sorted(selectHeaders), coordinates], names=['joint', 'coordinate'])
     else:
         uniqueHeadings = set([name[:-2] for name in headings])
@@ -44,7 +64,7 @@ def populate_model(templateFilePath, specification, resourcesDir, showTendons = 
     with open(templateFilePath, 'r') as f:
         modelXML = f.read()
 
-    meshScale = 1e-3
+    meshScale = 1.1e-3
 
     tendonAlpha = 1 if showTendons else 0
     modelXML = modelXML.replace('$resourcesDir$', resourcesDir)
@@ -96,10 +116,11 @@ def params_to_series(params):
     jointSeries = pd.Series(jointSeries)
     return jointSeries
 
-def pose_model(simulation, jointsToFit, jointSeries):
+def pose_model(simulation, jointSeries):
     simState = simulation.get_state()
 
-    for jointName in jointsToFit.keys():
+    jointsDict = jointSeries.to_dict()
+    for jointName in jointsDict.keys():
         jointId = simulation.model.get_joint_qpos_addr(jointName)
         simState.qpos[jointId] = jointSeries.loc[jointName]
 
@@ -117,9 +138,9 @@ def get_site_pos(kinSeries, simulation):
 
         siteXYZ = simulation.data.get_site_xpos(siteName)
 
-        sitePos.loc[(siteName, 'x')] = siteXYZ[0]
-        sitePos.loc[(siteName, 'y')] = siteXYZ[1]
-        sitePos.loc[(siteName, 'z')] = siteXYZ[2]
+        sitePos[(siteName, 'x')] = siteXYZ[0]
+        sitePos[(siteName, 'y')] = siteXYZ[1]
+        sitePos[(siteName, 'z')] = siteXYZ[2]
 
     return sitePos
 
@@ -127,21 +148,40 @@ def alignToModel(simulation, kinSeries, reference):
     modelSitePos = get_site_pos(kinSeries, simulation)
 
     alignedSitePos = copy.deepcopy(kinSeries)
+    #e.g. kin[GT_left, x] = kin[GT_Left, x] - kin[Reference, x]
     for siteName in np.unique(alignedSitePos.index.get_level_values('joint')):
-        #e.g. kin[GT_left, x] = kin[GT_Left, x] - kin[Reference, x]
-        alignedSitePos.loc[(siteName, 'x')] = alignedSitePos.loc[(siteName, 'x')] - alignedSitePos.loc[(reference, 'x')] + modelSitePos.loc[(reference, 'x')]
-        alignedSitePos.loc[(siteName, 'y')] = alignedSitePos.loc[(siteName, 'y')] - alignedSitePos.loc[(reference, 'y')] + modelSitePos.loc[(reference, 'y')]
-        alignedSitePos.loc[(siteName, 'z')] = alignedSitePos.loc[(siteName, 'z')] - alignedSitePos.loc[(reference, 'z')] + modelSitePos.loc[(reference, 'z')]
+        alignedSitePos[(siteName, 'x')] = alignedSitePos[(siteName, 'x')] - alignedSitePos[(reference, 'x')] + modelSitePos[(reference, 'x')]
+        alignedSitePos[(siteName, 'y')] = alignedSitePos[(siteName, 'y')] - alignedSitePos[(reference, 'y')] + modelSitePos[(reference, 'y')]
+        alignedSitePos[(siteName, 'z')] = alignedSitePos[(siteName, 'z')] - alignedSitePos[(reference, 'z')] + modelSitePos[(reference, 'z')]
 
     return alignedSitePos
 
 def render_targets(viewer, kinSeries):
+    # Markers and overlay are regenerated in every pass.
+    viewer._markers[:] = []
+    viewer._overlay.clear()
+
     for siteName in np.unique(kinSeries.index.get_level_values('joint')):
         viewer.add_marker(
-            pos=np.array([kinSeries.loc[(siteName, 'x')],
-                kinSeries.loc[(siteName, 'y')],
-                kinSeries.loc[(siteName, 'z')]]),
+            pos=np.array(
+                [kinSeries[(siteName, 'x')],
+                kinSeries[(siteName, 'y')],
+                kinSeries[(siteName, 'z')]
+                ]),
             size = np.ones(3) * 1e-2,
+            type = const.GEOM_SPHERE,
             label = siteName)
 
-    viewer.render()
+def series_to_markers(kinSeries):
+    markers = []
+    for siteName in np.unique(kinSeries.index.get_level_values('joint')):
+        markers = markers + [{
+            'label': siteName,
+            'pos': np.array([kinSeries[(siteName, 'x')],
+                kinSeries[(siteName, 'y')],
+                kinSeries[(siteName, 'z')]
+                ]),
+            'size': np.ones(3) * 1e-2,
+            'type': const.GEOM_SPHERE
+            }]
+    return markers

@@ -54,7 +54,7 @@
 			<joint type='hinge' axis='1 0 0' pos='0 0 0' range='-60 120' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
 		</default>
 		<default class = 'Ankle:y'>
-			<joint type='hinge' axis='0 1 0' pos='0 0 0' range='-30 30' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+			<joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
 		</default>
 	</default>
 
@@ -64,9 +64,11 @@
     <body name='Lower_Body' pos='0 0 0' euler='0 0 0'>
 
     <body name='Pelvis' pos='0 0 0' euler='0 0 0'>
-    <joint name='World:xt' type='slide' axis='1 0 0' pos='0 0 0$' ref='$Pelvis_Origin:x$' limited='false' />
-    <joint name='World:yt' type='slide' axis='0 1 0' pos='0 0 0$' ref='$Pelvis_Origin:y$' limited='false' />
-    <joint name='World:zt' type='slide' axis='0 0 1' pos='0 0 0$' ref='$Pelvis_Origin:z$' limited='false' />
+    <camera name = 'Sagittal_Left' mode = 'fixed' pos = '3e-1 -5e-1 -2e-1' euler = '90 0 180'/>
+
+    <joint name='World:xt' type='slide' axis='1 0 0' pos='0 0 0' ref='$Pelvis_Origin:x$' limited='false' />
+    <joint name='World:yt' type='slide' axis='0 1 0' pos='0 0 0' ref='$Pelvis_Origin:y$' limited='false' />
+    <joint name='World:zt' type='slide' axis='0 0 1' pos='0 0 0' ref='$Pelvis_Origin:z$' limited='false' />
 
     <joint name='World:x' type='hinge' axis='1 0 0' pos='$Pelvis_Origin:x$	$Pelvis_Origin:y$	$Pelvis_Origin:z$' ref='185' limited='false'  />
     <joint name='World:y' type='hinge' axis='0 1 0' pos='$Pelvis_Origin:x$	$Pelvis_Origin:y$	$Pelvis_Origin:z$' ref='10' limited='false'  />
