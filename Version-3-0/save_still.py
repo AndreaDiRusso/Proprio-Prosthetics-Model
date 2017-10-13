@@ -18,7 +18,7 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--modelKinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Training/T_1_model.pickle')
+parser.add_argument('--modelKinematicsFile', default = '')
 parser.add_argument('--outputFile')
 parser.add_argument('--t', default = 'first')
 parser.add_argument('--modelFile', default = 'murdoc_gen.xml')

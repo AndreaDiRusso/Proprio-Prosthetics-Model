@@ -13,7 +13,7 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--modelKinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Training/T_1_model.pickle')
+parser.add_argument('--modelKinematicsFile', default = 'Z:\\ENG_Neuromotion_Shared\\group\\Proprioprosthetics\\Data\\201709261100-Proprio\\T_1_model.pickle')
 parser.add_argument('--modelFile', default = 'murdoc_gen.xml')
 parser.add_argument('--showViewer', dest='showViewer', action='store_true')
 parser.set_defaults(showViewer = False)
@@ -47,7 +47,7 @@ simulation = MjSim(model)
 viewer = MjViewer(simulation)
 
 #get resting lengths
-nJoints = simulation.model.key_qpos.size
+nJoints = simulation.model.key_qpos.shape[0]
 allJoints = [simulation.model.joint_id2name(i) for i in range(nJoints)]
 keyPos = pd.Series({jointName: simulation.model.key_qpos[0][i] for i, jointName in enumerate(allJoints)})
 
