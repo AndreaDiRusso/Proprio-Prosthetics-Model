@@ -15,7 +15,7 @@
 		-->
         <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2"
             width="1000" height="1000"/>
-      
+
         <texture name='bone_texture' type="cube" file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Bone.png"/>
 		<!-- Create materials based on textures above
 		-->
@@ -60,7 +60,7 @@
 	</default>
 
 	<worldbody>
-    <light directional='true' diffuse='1 1 1' specular='0 0 0' pos='0 0 40.5' dir='0 1 0'/>
+    <light directional='true' diffuse='1 11 1' specular='0 0 0' pos='0 0 40.5' dir='0 1 0'/>
 
     <body name='Lower_Body' pos='0 0 0' euler='0 0 0'>
 

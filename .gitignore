@@ -306,5 +306,5 @@ $RECYCLE.BIN/
 .gitPath
 scratch.py
 *.pyc
-*murdoc_gen.xml
+Version-3-0\murdoc_gen.xml
 *.nii
