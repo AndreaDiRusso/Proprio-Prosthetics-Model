@@ -18,9 +18,9 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Training/T_1.txt')
-parser.add_argument('--startTime', default = '26')
-parser.add_argument('--stopTime', default = '63')
+parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1.txt')
+parser.add_argument('--startTime', default = '27.760')
+parser.add_argument('--stopTime', default = '49.960')
 parser.add_argument('--showViewer', dest='showViewer', action='store_true')
 parser.set_defaults(showViewer = False)
 args = parser.parse_args()
