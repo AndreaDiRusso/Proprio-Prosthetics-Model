@@ -2,9 +2,9 @@ import numpy as np
 import cv2, argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--modelVideoFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1.avi')
-parser.add_argument('--origVideoFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_orig.avi')
-parser.add_argument('--outputFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_stacked.avi')
+parser.add_argument('--modelVideoFile', default = 'Z:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio//T_1.avi')
+parser.add_argument('--origVideoFile', default = 'Z:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio//T_1_orig.avi')
+parser.add_argument('--outputFile', default = 'Z:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio//T_1_stacked.avi')
 
 args = parser.parse_args()
 outputFile = args.outputFile

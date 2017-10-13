@@ -14,7 +14,7 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--modelKinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Training/T_1_model.pickle')
+parser.add_argument('--modelKinematicsFile', default = 'Z:\\ENG_Neuromotion_Shared\\group\\Proprioprosthetics\\Data\\201709261100-Proprio\\T_1_model.pickle')
 parser.add_argument('--outputFile')
 parser.add_argument('--meanSubtract', dest='meanSubtract', action='store_true')
 parser.set_defaults(meanSubtract = False)

@@ -14,7 +14,7 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--modelFrFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Training/T_1_model.pickle')
+parser.add_argument('--modelFrFile', default = 'Z:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_model_fr.pickle')
 parser.add_argument('--outputFile')
 
 args = parser.parse_args()
