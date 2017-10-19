@@ -15,13 +15,19 @@
 		-->
         <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2"
             width="1000" height="1000"/>
+<<<<<<< HEAD
         <texture name='bone_texture' type="cube" file="C:/Users/adirusso/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources\Murdoc/Bone.png"/>
+=======
+      
+        <texture name='bone_texture' type="cube" file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Bone.png"/>
+>>>>>>> 6989b480bdef01883fc69690f86a6428e757d63f
 		<!-- Create materials based on textures above
 		-->
         <material name='MatPlane' reflectance='0.5' texture="texplane"/>
         <material name='geom' texture="texgeom" texuniform="true"/>
         <material name='bone' texture='bone_texture' reflectance='0' texuniform='true' specular='0' shininess='0'/>
 
+<<<<<<< HEAD
         <mesh file="C:/Users/adirusso/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources\Murdoc/Pelvis.stl" scale='0.0011 0.0011 0.0011' />
         <mesh file="C:/Users/adirusso/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources\Murdoc/Femur_Left.stl" scale='0.0011 0.0011 0.0011' />
         <mesh file="C:/Users/adirusso/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources\Murdoc/Femur_Right.stl" scale='0.0011 0.0011 0.0011' />
@@ -29,6 +35,15 @@
         <mesh file="C:/Users/adirusso/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources\Murdoc/Shin_Right.stl" scale='0.0011 0.0011 0.0011' />
         <mesh file="C:/Users/adirusso/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources\Murdoc/Foot_Left.stl" scale='0.0011 0.0011 0.0011' />
         <mesh file="C:/Users/adirusso/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources\Murdoc/Foot_Right.stl" scale='0.0011 0.0011 0.0011' />
+=======
+        <mesh file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Pelvis.stl" scale='0.0011 0.0011 0.0011' />
+        <mesh file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Femur_Left.stl" scale='0.0011 0.0011 0.0011' />
+        <mesh file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Femur_Right.stl" scale='0.0011 0.0011 0.0011' />
+        <mesh file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Shin_Left.stl" scale='0.0011 0.0011 0.0011' />
+        <mesh file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Shin_Right.stl" scale='0.0011 0.0011 0.0011' />
+        <mesh file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Foot_Left.stl" scale='0.0011 0.0011 0.0011' />
+        <mesh file="C:\Users\Radu\Documents\GitHub\Proprio-Prosthetics-Model\Version-3-0/Resources/Murdoc/Foot_Right.stl" scale='0.0011 0.0011 0.0011' />
+>>>>>>> 6989b480bdef01883fc69690f86a6428e757d63f
 
     </asset>
 

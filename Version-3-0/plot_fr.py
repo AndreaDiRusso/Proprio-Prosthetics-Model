@@ -30,15 +30,18 @@ iARate = long_form_df(kinematics['iARate'], overrideColumns = ['Tendon', 'Time (
 
 sns.set_style('darkgrid')
 plt.style.use('seaborn-darkgrid')
-matplotlib.rcParams.update({'font.size': 20})
-matplotlib.rcParams.update({'text.color': 'black'})
-matplotlib.rcParams.update({'axes.facecolor': 'white'})
-matplotlib.rcParams.update({'axes.edgecolor': 'black'})
-matplotlib.rcParams.update({'savefig.facecolor': 'white'})
-matplotlib.rcParams.update({'savefig.edgecolor': 'black'})
-matplotlib.rcParams.update({'figure.facecolor': 'white'})
-matplotlib.rcParams.update({'figure.edgecolor': 'black'})
-matplotlib.rcParams.update({'axes.labelcolor': 'black'})
+invertColors = False
+matplotlib.rcParams.update({'font.size': 30})
+matplotlib.rcParams.update({'text.color': 'black' if invertColors else 'white'})
+matplotlib.rcParams.update({'axes.facecolor': 'white' if invertColors else 'black'})
+matplotlib.rcParams.update({'axes.edgecolor': 'black' if invertColors else 'white'})
+matplotlib.rcParams.update({'savefig.facecolor': 'white' if invertColors else 'black'})
+matplotlib.rcParams.update({'savefig.edgecolor': 'black' if invertColors else 'white'})
+matplotlib.rcParams.update({'figure.facecolor': 'white' if invertColors else 'black'})
+matplotlib.rcParams.update({'figure.edgecolor': 'black' if invertColors else 'white'})
+matplotlib.rcParams.update({'axes.labelcolor': 'black' if invertColors else 'white'})
+matplotlib.rcParams.update({'xtick.color': 'black' if invertColors else 'white'})
+matplotlib.rcParams.update({'ytick.color': 'black' if invertColors else 'white'})
 
 g = sns.FacetGrid(iARate, row = 'Tendon', size = 3, aspect = 3,
     despine = False, sharey = False)
