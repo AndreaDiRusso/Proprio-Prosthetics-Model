@@ -176,11 +176,11 @@ class SubplotAnimation(animation.TimedAnimation):
                 if not legendSet:
                     ax[rowIdx][colIdx].legend(loc='center right', bbox_to_anchor = (1.4,-2.5))
                     legendSet = True
-        animation.TimedAnimation.__init__(self, self.fig, interval=1, blit=True)
+        animation.TimedAnimation.__init__(self, self.fig, interval=10, blit=True)
 
     def _draw_frame(self, framedata):
-        i = framedata + 1
-        head = framedata
+        i = framedata
+        head = i - 1
 
         self._drawn_artists = []
 

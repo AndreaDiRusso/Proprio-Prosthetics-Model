@@ -1,7 +1,7 @@
 <mujoco model="Murdoc">
 
     <compiler inertiafromgeom='true' angle='degree'/>
-    <option gravity='0 0 0'/>
+    <option gravity='0 0 -9.80665'/>
     <asset>
 		<!-- Sets sky rendering
 		-->
