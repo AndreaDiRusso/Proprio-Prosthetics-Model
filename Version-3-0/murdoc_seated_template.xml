@@ -67,8 +67,8 @@
       <site name="T12_Attachment" pos='$T12_Attachment:x$	$T12_Attachment:y$	$T12_Attachment:z$' rgba='1 1 0 1' size='15e-3'/>
       <geom type='box' size="75e-3 75e-3 75e-3" density='1' pos='$Seat_Center:x$ $Seat_Center:y$ $Seat_Center:z$' euler='0 0 0' rgba='1 0 0 1'/>
     </body>
-    #TODO: Finish work on post-alignment model
-    <body name='Pelvis' pos='$World:xt$ $World:yt$ $World:zt$' euler='$World:x$ $World:y$ $World:z$'>
+
+    <body name='Pelvis' pos='$World_t:x$ $World_t:y$ $World_t:z$' euler='$World:x$ $World:y$ $World:z$'>
 
     <site name="T12" pos='$T12:x$	$T12:y$	$T12:z$' rgba='1 0 0 1' size='15e-3'/>
     <camera name = 'Sagittal_Left' mode = 'fixed' pos = '3e-1 -5e-1 -2e-1' euler = '90 0 180'/>
