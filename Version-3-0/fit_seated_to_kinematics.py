@@ -34,7 +34,7 @@ showContactForces = True
 resourcesDir = curDir + '/Resources/Murdoc'
 
 templateFilePath = curDir + '/murdoc_template.xml'
-fcsvFilePath = resourcesDir + '/Fiducials.fcsv'
+fcsvFilePath = resourcesDir + '/Fiducials-PO.fcsv'
 
 specification = fcsv_to_spec(fcsvFilePath)
 modelXML = populate_model(templateFilePath, specification, resourcesDir, showTendons = True)
@@ -51,12 +51,12 @@ if showContactForces and showViewer:
 sitesToFit = ['MT_Left', 'M_Left', 'C_Left', 'GT_Left', 'K_Left']
 
 jointsToFit = {
-    'World:xt':[-0.15,-1, 1],
-    'World:yt':[0.14,-1, 1],
+    'World:xt':[0,-1, 1],
+    'World:yt':[0,-1, 1],
     'World:zt':[0,-1, 1],
-    'World:x':[-2.6,math.radians(-180),math.radians(180)],
-    'World:y':[-0.63,math.radians(-180),math.radians(180)],
-    'World:z':[-1.6,math.radians(-180),math.radians(180)],
+    'World:x':[0,math.radians(-180),math.radians(180)],
+    'World:y':[0,math.radians(-180),math.radians(180)],
+    'World:z':[0,math.radians(-180),math.radians(180)],
     'Hip_Left:x':[-0.5,math.radians(-60),math.radians(90)],
     'Hip_Left:y':[0.05,math.radians(-15),math.radians(15)],
     'Hip_Left:z':[0,math.radians(-15),math.radians(15)],
