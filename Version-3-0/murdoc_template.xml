@@ -75,13 +75,13 @@
 
     <camera name = 'Sagittal_Left' mode = 'fixed' pos = '3e-1 -5e-1 -2e-1' euler = '90 0 180'/>
 
-    <joint name='World:xt' type='slide' axis='1 0 0' pos='0 0 0' ref='$Pelvis_Origin:x$' limited='false' />
-    <joint name='World:yt' type='slide' axis='0 1 0' pos='0 0 0' ref='$Pelvis_Origin:y$' limited='false' />
-    <joint name='World:zt' type='slide' axis='0 0 1' pos='0 0 0' ref='$Pelvis_Origin:z$' limited='false' />
+    <joint name='World:xt' type='slide' axis='1 0 0' pos='0 0 0' ref='0' limited='false' />
+    <joint name='World:yt' type='slide' axis='0 1 0' pos='0 0 0' ref='0' limited='false' />
+    <joint name='World:zt' type='slide' axis='0 0 1' pos='0 0 0' ref='0' limited='false' />
 
-    <joint name='World:x' type='hinge' axis='1 0 0' pos='$Pelvis_Origin:x$	$Pelvis_Origin:y$	$Pelvis_Origin:z$' ref='185' limited='false'  />
-    <joint name='World:y' type='hinge' axis='0 1 0' pos='$Pelvis_Origin:x$	$Pelvis_Origin:y$	$Pelvis_Origin:z$' ref='10' limited='false'  />
-    <joint name='World:z' type='hinge' axis='0 0 1' pos='$Pelvis_Origin:x$	$Pelvis_Origin:y$	$Pelvis_Origin:z$' ref='0' limited='false'  />
+    <joint name='World:x' type='hinge' axis='1 0 0' pos='0 0 0' ref='0' limited='false'  />
+    <joint name='World:y' type='hinge' axis='0 1 0' pos='0 0 0' ref='0' limited='false'  />
+    <joint name='World:z' type='hinge' axis='0 0 1' pos='0 0 0' ref='0' limited='false'  />
 
      <site name="BF_Pelvis_Left" pos='$BF_Pelvis_Left:x$	$BF_Pelvis_Left:y$	$BF_Pelvis_Left:z$' rgba='1 0 0 0'/>
      <site name="RF_Pelvis_Left" pos='$RF_Pelvis_Left:x$	$RF_Pelvis_Left:y$	$RF_Pelvis_Left:z$' rgba='1 0 0 0'/>

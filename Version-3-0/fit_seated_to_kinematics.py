@@ -51,12 +51,12 @@ if showContactForces and showViewer:
 sitesToFit = ['MT_Left', 'M_Left', 'C_Left', 'GT_Left', 'K_Left']
 
 jointsToFit = {
-    'World:xt':[.1,-1, 1],
-    'World:yt':[0.08,-1, 1],
-    'World:zt':[0.07,-1, 1],
-    'World:x':[0.15,math.radians(-180),math.radians(180)],
-    'World:y':[0.3,math.radians(-180),math.radians(180)],
-    'World:z':[-1,math.radians(-180),math.radians(180)],
+    'World:xt':[-0.15,-1, 1],
+    'World:yt':[0.14,-1, 1],
+    'World:zt':[0,-1, 1],
+    'World:x':[-2.6,math.radians(-180),math.radians(180)],
+    'World:y':[-0.63,math.radians(-180),math.radians(180)],
+    'World:z':[-1.6,math.radians(-180),math.radians(180)],
     'Hip_Left:x':[-0.5,math.radians(-60),math.radians(90)],
     'Hip_Left:y':[0.05,math.radians(-15),math.radians(15)],
     'Hip_Left:z':[0,math.radians(-15),math.radians(15)],
@@ -86,6 +86,7 @@ for key, value in jointsToFit.items():
 # second model does not contain world joints:
 #TODO: make this less kludgy
 meshScale = 1.1e-3
+
 T12AnchorSeries = pd.Series([0,0,0], index =
     pd.MultiIndex.from_product([['T12_Attachment'], ['x', 'y', 'z']],
         names = ['joint', 'coordinate']))
@@ -105,24 +106,34 @@ seatCenterSeries = pd.Series([0,0,0], index =
         names = ['joint', 'coordinate']))
 seatCenter = get_site_pos(seatCenterSeries, simulation)
 
-specification.loc[seatCenterIdx, 'x'] = seatCenter[('Seat_Center', 'x')]/meshScale
-specification.loc[seatCenterIdx, 'y'] = seatCenter[('Seat_Center', 'y')]/meshScale
-specification.loc[seatCenterIdx, 'z'] = seatCenter[('Seat_Center', 'z')]/meshScale
+specification.loc[seatCenterIdx, 'x'] =\
+    seatCenter[('Seat_Center', 'x')]/meshScale
+specification.loc[seatCenterIdx, 'y'] =\
+    seatCenter[('Seat_Center', 'y')]/meshScale
+specification.loc[seatCenterIdx, 'z'] =\
+    seatCenter[('Seat_Center', 'z')]/meshScale
 
+worldCoords = pd.DataFrame({
+    '1' : {
+        'label' : 'World',
+        'x': math.degrees(jointsToFit['World:x'][0]),
+        'y': math.degrees(jointsToFit['World:y'][0]),
+        'z': math.degrees(jointsToFit['World:z'][0])
+        },
+    '2': {
+        'label' : 'World_t',
+        'x': jointsToFit['World:xt'][0]/meshScale,
+        'y': jointsToFit['World:yt'][0]/meshScale,
+        'z': jointsToFit['World:zt'][0]/meshScale
+        }
+    }).transpose()
 #TODO: populate specification with world transformation
-
-secondTemplateFilePath = '/'.join(templateFilePath.split('/')[:-1]) + 'murdoc_seated_template.xml'
+specification = specification.append(worldCoords, ignore_index = True)
+secondTemplateFilePath = '/'.join(templateFilePath.split('/')[:-1]) +\
+    '/murdoc_seated_template.xml'
 modelXML2 = populate_model(secondTemplateFilePath, specification, resourcesDir, showTendons = True)
 
 # skip world coords after initial fit
-skip = [
-    'World:xt',
-    'World:yt',
-    'World:zt',
-    'World:x',
-    'World:y',
-    'World:z',
-    ]
 
 solver.jointsParam = dict_to_params(jointsToFit, skip)
 
@@ -143,7 +154,6 @@ for t, kinSeries in kinematics.iterrows():
     modelKin.loc[t, :] = get_site_pos(kinSeries, simulation)
     modelQpos.loc[t, :] = params_to_series(stats.params)
     alignedKin.loc[t, :] = alignToModel(simulation, kinSeries, referenceJoint)
-
 
 results = {
     'site_pos' : modelKin,
