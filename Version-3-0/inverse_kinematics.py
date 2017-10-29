@@ -56,7 +56,7 @@ class IKFit:
 
     def joint_pos2site_pos(self, jointSeries, kinSeries):
 
-        self.simulation = pose_model(self.simulation, jointSeries)
+        self.simulation = pose_model(self.simulation, jointSeries, method = 'inverse')
 
         # get resulting changes
         sitePos = get_site_pos(kinSeries, self.simulation)

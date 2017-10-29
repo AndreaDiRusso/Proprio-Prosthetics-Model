@@ -9,6 +9,8 @@ from lmfit import minimize, Minimizer, Parameters, Parameter, report_fit
 from helper_functions import *
 from inverse_kinematics import *
 import math
+import quaternion as quat
+import numpy as np
 
 curfilePath = os.path.abspath(__file__)
 #print(curfilePath)
@@ -34,7 +36,7 @@ showContactForces = True
 resourcesDir = curDir + '/Resources/Murdoc'
 
 templateFilePath = curDir + '/murdoc_template.xml'
-fcsvFilePath = resourcesDir + '/Fiducials-PO.fcsv'
+fcsvFilePath = resourcesDir + '/Aligned-To-Pelvis/Fiducials.fcsv'
 
 specification = fcsv_to_spec(fcsvFilePath)
 modelXML = populate_model(templateFilePath, specification, resourcesDir, showTendons = True)
@@ -51,12 +53,12 @@ if showContactForces and showViewer:
 sitesToFit = ['MT_Left', 'M_Left', 'C_Left', 'GT_Left', 'K_Left']
 
 jointsToFit = {
-    'World:xt':[0,-1, 1],
-    'World:yt':[0,-1, 1],
-    'World:zt':[0,-1, 1],
-    'World:x':[0,math.radians(-180),math.radians(180)],
-    'World:y':[0,math.radians(-180),math.radians(180)],
-    'World:z':[0,math.radians(-180),math.radians(180)],
+    'World:xt':[0.06,-1, 1],
+    'World:yt':[0.02,-1, 1],
+    'World:zt':[-0.001,-1, 1],
+    'World:x':[1.73,math.radians(-180),math.radians(180)],
+    'World:y':[-0.56,math.radians(-180),math.radians(180)],
+    'World:z':[1.72,math.radians(-180),math.radians(180)],
     'Hip_Left:x':[-0.5,math.radians(-60),math.radians(90)],
     'Hip_Left:y':[0.05,math.radians(-15),math.radians(15)],
     'Hip_Left:z':[0,math.radians(-15),math.radians(15)],
@@ -87,73 +89,97 @@ for key, value in jointsToFit.items():
 #TODO: make this less kludgy
 meshScale = 1.1e-3
 
-T12AnchorSeries = pd.Series([0,0,0], index =
-    pd.MultiIndex.from_product([['T12_Attachment'], ['x', 'y', 'z']],
-        names = ['joint', 'coordinate']))
-T12Anchor = get_site_pos(T12AnchorSeries, simulation)
+origGravity = np.array([0,0,0,-9.78])
 
-specification = specification.append(pd.Series({
-    'label': 'T12_Attachment',
-    'x' : T12Anchor[('T12_Attachment', 'x')]/meshScale,
-    'y' : T12Anchor[('T12_Attachment', 'y')]/meshScale,
-    'z' : T12Anchor[('T12_Attachment', 'z')]/meshScale
-    }), ignore_index = True)
+xAxis = np.array([0,1,0,0])
+xAxisAngle = (jointsToFit['World:x'][0]*0.5) * xAxis/np.linalg.norm(xAxis)
+xQLog = quat.quaternion(*xAxisAngle)
+xQ = np.exp(xQLog)
 
-seatCenterIdx = np.flatnonzero(specification.index.where(
-    specification['label'] == 'Seat_Center', other = 0))[0]
-seatCenterSeries = pd.Series([0,0,0], index =
-    pd.MultiIndex.from_product([['Seat_Center'], ['x', 'y', 'z']],
-        names = ['joint', 'coordinate']))
-seatCenter = get_site_pos(seatCenterSeries, simulation)
+yAxis = np.array([0,0,1,0])
+yAxisAngle = (jointsToFit['World:y'][0]*0.5) * yAxis/np.linalg.norm(yAxis)
+yQLog = quat.quaternion(*yAxisAngle)
+yQ = np.exp(yQLog)
 
-specification.loc[seatCenterIdx, 'x'] =\
-    seatCenter[('Seat_Center', 'x')]/meshScale
-specification.loc[seatCenterIdx, 'y'] =\
-    seatCenter[('Seat_Center', 'y')]/meshScale
-specification.loc[seatCenterIdx, 'z'] =\
-    seatCenter[('Seat_Center', 'z')]/meshScale
+zAxis = np.array([0,0,0,1])
+zAxisAngle = (jointsToFit['World:z'][0]*0.5) * zAxis/np.linalg.norm(zAxis)
+zQLog = quat.quaternion(*zAxisAngle)
+zQ = np.exp(zQLog)
+
+vec = quat.quaternion(*origGravity)
+q = xQ * yQ * zQ
+rotatedGravity = q * vec * np.conjugate(q)
 
 worldCoords = pd.DataFrame({
     '1' : {
         'label' : 'World',
-        'x': math.degrees(jointsToFit['World:x'][0]),
-        'y': math.degrees(jointsToFit['World:y'][0]),
-        'z': math.degrees(jointsToFit['World:z'][0])
+        'x': math.degrees(jointsToFit['World:x'][0])/meshScale,
+        'y': math.degrees(jointsToFit['World:y'][0])/meshScale,
+        'z': math.degrees(jointsToFit['World:z'][0])/meshScale
         },
     '2': {
         'label' : 'World_t',
         'x': jointsToFit['World:xt'][0]/meshScale,
         'y': jointsToFit['World:yt'][0]/meshScale,
         'z': jointsToFit['World:zt'][0]/meshScale
+        },
+    '3': {
+        'label' : 'gravity',
+        'x': (rotatedGravity.x)/meshScale,
+        'y': (rotatedGravity.y)/meshScale,
+        'z': (rotatedGravity.z)/meshScale
         }
     }).transpose()
 #TODO: populate specification with world transformation
 specification = specification.append(worldCoords, ignore_index = True)
 secondTemplateFilePath = '/'.join(templateFilePath.split('/')[:-1]) +\
     '/murdoc_seated_template.xml'
-modelXML2 = populate_model(secondTemplateFilePath, specification, resourcesDir, showTendons = True)
+modelXML2 = populate_model(secondTemplateFilePath, specification, resourcesDir,
+    showTendons = True)
 
-# skip world coords after initial fit
+model2 = load_model_from_xml(modelXML2)
+simulation2 = MjSim(model2)
 
-solver.jointsParam = dict_to_params(jointsToFit, skip)
+#viewer = MjViewerBasic(simulation) if showViewer else None
+#TODO: make flag for enabling and disabling contact force rendering
+if showContactForces and showViewer:
+    viewer2 = MjViewer(simulation2) if showViewer else None
+    viewer2.vopt.flags[10] = viewer2.vopt.flags[11] = not viewer2.vopt.flags[10]
+
+skip = [
+    'World:xt',
+    'World:yt',
+    'World:zt',
+    'World:x',
+    'World:y',
+    'World:z',
+    ]
+
+for joint in skip:
+    jointsToFit.pop(joint)
+
+solver2 = IKFit(simulation2, sitesToFit, jointsToFit,
+    alignTo = referenceJoint, mjViewer = viewer2, method = 'nelder')
+solver2.jointsParam = dict_to_params(jointsToFit)
 
 modelKin = pd.DataFrame(index = kinematics.index, columns = kinematics.columns)
 modelQpos = pd.DataFrame(index = kinematics.index, columns = params_to_series(stats.params).index)
 alignedKin = pd.DataFrame(index = kinematics.index, columns = kinematics.columns)
 
+solver2.nelderTol = 2e-3
+
 for t, kinSeries in kinematics.iterrows():
-    solver.nelderTol = 2e-3
-    stats = solver.fit(t, kinSeries)
+    stats = solver2.fit(t, kinSeries)
 
     print("SSQ: ")
     print(np.sum(stats.residual**2))
     print(stats.message)
     report_fit(stats)
 
-    solver.jointsParam = stats.params
-    modelKin.loc[t, :] = get_site_pos(kinSeries, simulation)
+    solver2.jointsParam = stats.params
+    modelKin.loc[t, :] = get_site_pos(kinSeries, simulation2)
     modelQpos.loc[t, :] = params_to_series(stats.params)
-    alignedKin.loc[t, :] = alignToModel(simulation, kinSeries, referenceJoint)
+    alignedKin.loc[t, :] = alignToModel(simulation2, kinSeries, referenceJoint)
 
 results = {
     'site_pos' : modelKin,

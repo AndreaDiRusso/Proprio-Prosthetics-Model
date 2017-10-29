@@ -4,6 +4,7 @@ import seaborn as sns
 import itertools
 from lmfit import Parameters, Parameter
 from mujoco_py.generated import const
+from mujoco_py import functions
 import pdb, copy
 
 def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None, reIndex = None):
@@ -118,7 +119,7 @@ def params_to_dict(params):
 def params_to_series(params):
     return pd.Series(params_to_dict(params))
 
-def pose_model(simulation, jointSeries):
+def pose_model(simulation, jointSeries, method = 'forward'):
     simState = simulation.get_state()
 
     jointsDict = jointSeries.to_dict()
@@ -129,7 +130,10 @@ def pose_model(simulation, jointSeries):
     # make the changes to joint state
     simulation.set_state(simState)
     # advance the simulation one step
-    simulation.forward()
+    if method == 'forward':
+        simulation.forward()
+    if method == 'inverse':
+        functions.mj_inverse(simulation.model, simulation.data)
 
     return simulation
 
