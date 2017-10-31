@@ -66,6 +66,7 @@ vtkMRMLMarkupsFiducialNode_59,172,60,-126,0,0,0,1,1,1,1,GAS_Femur_Left,,vtkMRMLM
 vtkMRMLMarkupsFiducialNode_60,325,103,-232,0,0,0,1,1,1,1,GAS_Ankle_Left,,vtkMRMLModelNode10
 vtkMRMLMarkupsFiducialNode_65,-6,9,-159,0,0,0,1,1,1,1,Pad_Left,,
 vtkMRMLMarkupsFiducialNode_28,4.24255e-015,-6.35139e-014,6.59476e-014,0,0,0,1,1,1,1,Pelvis_Origin,,vtkMRMLScalarVolumeNode2
-vtkMRMLMarkupsFiducialNode_63,60.5743,3.70832,134.83,0,0,0,1,1,1,1,T12,,vtkMRMLScalarVolumeNode3
+vtkMRMLMarkupsFiducialNode_63,0,-80,135,0,0,0,1,1,1,0,T12_Right,,vtkMRMLScalarVolumeNode3
+vtkMRMLMarkupsFiducialNode_68,0,80.7168,133.942,0,0,0,1,1,1,0,T12_Left,,vtkMRMLScalarVolumeNode2
 vtkMRMLMarkupsFiducialNode_66,25.002,-27.6709,-177.177,0,0,0,1,1,1,1,Groin,,
 vtkMRMLMarkupsFiducialNode_67,-60,-15,-172,0,0,0,1,1,1,1,Seat_Center,,

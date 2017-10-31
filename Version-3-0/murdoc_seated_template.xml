@@ -2,6 +2,10 @@
 
     <compiler inertiafromgeom='true' angle='degree'/>
     <option gravity='$gravity:x$ $gravity:y$ $gravity:z$'/>
+    <option timestep='0.01' impratio = '2'/>
+    <option>
+    <flag fwdinv = 'enable'/>
+    </option>
     <asset>
 		<!-- Sets sky rendering
 		-->
@@ -34,6 +38,7 @@
 
 	<default>
     <site size='0.5e-3 0.5e-3 0.5e-3' rgba='1 0 0 0'/>
+    <geom solimp="0.99 0.99 0" solref="0.01 1" friction = "5 0.01e6 0.001e6" condim='6'/>
 
     <default class='Hip:x'>
       <joint type='hinge' axis='0 1 0' ref='0' range='-90 60' limited='true' armature='0.0001' stiffness='0' springref='0'/>
@@ -62,7 +67,8 @@
     <light directional='true' diffuse='1 1 1' specular='0 0 0' pos='0 0 40.5' dir='0 1 0'/>
 
     <body name='Seat' pos='$World_t:x$ $World_t:y$ $World_t:z$' euler='$World:x$ $World:y$ $World:z$'>
-      <site name="T12_Attachment" pos='$T12:x$	$T12:y$	$T12:z$' rgba='0 0 1 0.33' size='15e-3'/>
+      <site name="T12_Attachment_Left" pos='$T12_Left:x$	$T12_Left:y$	$T12_Left:z$' rgba='0 0 1 0.33' size='15e-3'/>
+        <site name="T12_Attachment_Right" pos='$T12_Right:x$	$T12_Right:y$	$T12_Right:z$' rgba='0 0 1 0.33' size='15e-3'/>
       <geom type='box' size="75e-3 75e-3 25e-3" density='1' pos='$Seat_Center:x$ $Seat_Center:y$ $Seat_Center:z$' euler='0 0 0' rgba='1 0 0 0.5'/>
       <site name="Seat_Center" pos='$Seat_Center:x$ $Seat_Center:y$ $Seat_Center:z$' rgba='1 1 0 1' size='15e-3'/>
     </body>
@@ -71,7 +77,8 @@
     <body name='Pelvis' pos='$World_t:x$ $World_t:y$ $World_t:z$' euler='$World:x$ $World:y$ $World:z$'>
     <joint name='world' type = 'free'/>
 
-    <site name="T12" pos='$T12:x$	$T12:y$	$T12:z$' rgba='1 0 0 0.33' size='15e-3'/>
+        <site name="T12_Left" pos='$T12_Left:x$	$T12_Left:y$	$T12_Left:z$' rgba='1 0 0 0.33' size='15e-3'/>
+            <site name="T12_Right" pos='$T12_Right:x$	$T12_Right:y$	$T12_Right:z$' rgba='1 0 0 0.33' size='15e-3'/>
     <camera name = 'Sagittal_Left' mode = 'fixed' pos = '3e-1 -5e-1 -2e-1' euler = '90 0 180'/>
 
      <site name="BF_Pelvis_Left" pos='$BF_Pelvis_Left:x$	$BF_Pelvis_Left:y$	$BF_Pelvis_Left:z$' rgba='1 0 0 0'/>
@@ -87,7 +94,7 @@
      <site name="C_Right" group='1' pos='$C_Right:x$	$C_Right:y$	$C_Right:z$' rgba='1 1 1 1' size='5e-3'/>
      <site name="C_Left" group='1' pos='$C_Left:x$	$C_Left:y$	$C_Left:z$' rgba='1 1 1 1' size='5e-3'/>
 
-     <geom type='mesh' mesh='Pelvis-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
+     <geom type='mesh' mesh='Pelvis-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
 
       <body name='GT_Holder_Right' pos='0 0 0' euler='0 0 0'>
         <site name="GT_Right" group='1' pos='$GT_Right:x$	$GT_Right:y$	$GT_Right:z$' rgba='1 1 0 1' size='5e-3'/>
@@ -99,7 +106,7 @@
       <joint name='Hip_Right:y' class='Hip:y' axis='$Hip_Right:y:x$	$Hip_Right:y:y$	$Hip_Right:y:z$' ref = '0' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
       <joint name='Hip_Right:z' class='Hip:z' axis='$Hip_Right:z:x$	$Hip_Right:z:y$	$Hip_Right:z:z$' ref = '0' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
 
-  	  <geom type='mesh' mesh='Femur_Right-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
+  	  <geom type='mesh' mesh='Femur_Right-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
 
       <site name="GMED_Femur_Right" pos='$GMED_Femur_Right:x$	$GMED_Femur_Right:y$	$GMED_Femur_Right:z$' rgba='0 0 1 0'/>
 
@@ -113,7 +120,7 @@
 
   	  <body name='Shin_Right' pos='0 0 0' euler='0 0 0'>
 
-          <geom type='mesh' mesh='Shin_Right-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
+          <geom type='mesh' mesh='Shin_Right-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
 
           <site name="VAS_Tibia_Right" pos='$VAS_Tibia_Right:x$	$VAS_Tibia_Right:y$	$VAS_Tibia_Right:z$' rgba='0 0 1 0'/>
           <site name="TA_Tibia_Right" pos='$TA_Tibia_Right:x$	$TA_Tibia_Right:y$	$TA_Tibia_Right:z$' rgba='0 0 1 0'/>
@@ -125,7 +132,7 @@
 
   				<body name='Foot_Right' pos='0 0 0' >
 
-            <geom type='mesh' mesh='Foot_Right-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
+            <geom type='mesh' mesh='Foot_Right-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
 
             <site name="M_Right" pos='$M_Right:x$	$M_Right:y$	$M_Right:z$' rgba='0.5 0.5 0.5 1' size='5e-3'/>
             <site name="MT_Right" pos='$MT_Right:x$	$MT_Right:y$	$MT_Right:z$' rgba='0 0 1 1' size='5e-3'/>
@@ -158,7 +165,7 @@
         <joint name='Hip_Left:y' class='Hip:y' axis='$Hip_Left:y:x$	$Hip_Left:y:y$	$Hip_Left:y:z$' ref = '0' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
         <joint name='Hip_Left:z' class='Hip:z' axis='$Hip_Left:z:x$	$Hip_Left:z:y$	$Hip_Left:z:z$' ref = '0' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
 
-    	  <geom type='mesh' mesh='Femur_Left-Flipped' density='2e3' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
+    	  <geom type='mesh' mesh='Femur_Left-Flipped' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
 
         <site name="GMED_Femur_Left" pos='$GMED_Femur_Left:x$	$GMED_Femur_Left:y$	$GMED_Femur_Left:z$' rgba='0 0 1 0'/>
 
@@ -172,7 +179,7 @@
 
     	  <body name='Shin_Left' pos='0 0 0' euler='0 0 0'>
 
-            <geom type='mesh' mesh='Shin_Left-Flipped' density='2e3' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
+            <geom type='mesh' mesh='Shin_Left-Flipped' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
 
             <site name="VAS_Tibia_Left" pos='$VAS_Tibia_Left:x$	$VAS_Tibia_Left:y$	$VAS_Tibia_Left:z$' rgba='0 0 1 0'/>
             <site name="TA_Tibia_Left" pos='$TA_Tibia_Left:x$	$TA_Tibia_Left:y$	$TA_Tibia_Left:z$' rgba='0 0 1 0'/>
@@ -184,7 +191,7 @@
 
     				<body name='Foot_Left' pos='0 0 0' >
 
-              <geom type='mesh' mesh='Foot_Left-Flipped' density='2e3' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
+              <geom type='mesh' mesh='Foot_Left-Flipped' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
 
               <site name="M_Left" pos='$M_Left:x$	$M_Left:y$	$M_Left:z$' rgba='0.5 0.5 0.5 1' size='5e-3'/>
               <site name="MT_Left" pos='$MT_Left:x$	$MT_Left:y$	$MT_Left:z$' rgba='0 0 1 1' size='5e-3'/>
@@ -214,6 +221,8 @@
   <contact>
     <exclude body1='Pelvis' body2='Leg_Right'/>
     <exclude body1='Pelvis' body2='Leg_Left'/>
+    <exclude body1='Seat' body2='Leg_Right'/>
+    <exclude body1='Seat' body2='Leg_Left'/>
     <exclude body1='Shin_Right' body2='Leg_Right'/>
     <exclude body1='Shin_Left' body2='Leg_Left'/>
     <exclude body1='Shin_Right' body2='Foot_Right'/>
@@ -300,9 +309,14 @@
         <site site='GAS_Ankle_Right'/>
       </spatial>
 
-      <spatial name='Neck_Restraint' stiffness="1e3" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 1">
-        <site site='T12'/>
-        <site site='T12_Attachment'/>
+      <spatial name='Neck_Restraint_Left' stiffness="1e3" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="true" range="0 1e-6">
+        <site site='T12_Left'/>
+        <site site='T12_Attachment_Left'/>
+      </spatial>
+
+      <spatial name='Neck_Restraint_Right' stiffness="1e3" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="true" range="0 1e-6">
+        <site site='T12_Right'/>
+        <site site='T12_Attachment_Right'/>
       </spatial>
 </tendon>
 
@@ -322,8 +336,8 @@
   <general name='SOL_Right'  gear='1' tendon='SOL_Right'  ctrllimited='true' ctrlrange='-1 1' gainprm='822' biastype="affine" biasprm='0 0 -66'/>
   <general name='SOL_Left'  gear='1' tendon='SOL_Left'  ctrllimited='true' ctrlrange='-1 1' gainprm='822' biastype="affine" biasprm='0 0 -66'/>
 
-  <general name='RF_Right'   gear='1' tendon='RF_Right'   ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -100'/>
-  <general name='RF_Left'   gear='1' tendon='RF_Left'   ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -100'/>
+  <general name='RF_Right'   gear='1' tendon='RF_Right'  ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -100'/>
+  <general name='RF_Left'   gear='1' tendon='RF_Left'  ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -100'/>
 
   <general name='BF_Right'   gear='1' tendon='BF_Right'   ctrllimited='true' ctrlrange='-1 1' gainprm='804' biastype="affine" biasprm='0 0 -91'/>
   <general name='BF_Left'   gear='1' tendon='BF_Left'   ctrllimited='true' ctrlrange='-1 1' gainprm='804' biastype="affine" biasprm='0 0 -91'/>

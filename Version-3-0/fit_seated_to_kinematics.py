@@ -49,6 +49,8 @@ simulation = MjSim(alignModel)
 if showContactForces and showViewer:
     viewer = MjViewer(simulation) if showViewer else None
     viewer.vopt.flags[10] = viewer.vopt.flags[11] = not viewer.vopt.flags[10]
+else:
+    viewer = None
 
 sitesToFit = ['MT_Left', 'M_Left', 'C_Left', 'GT_Left', 'K_Left']
 
@@ -69,7 +71,9 @@ jointsToFit = {
 
 referenceJoint = 'C_Left'
 solver = IKFit(simulation, sitesToFit, jointsToFit,
-    alignTo = referenceJoint, mjViewer = viewer, method = 'nelder', simulationType = 'forward')
+    alignTo = referenceJoint, mjViewer = viewer, method = 'nelder',
+    simulationType = 'forward')
+
 #Get kinematics
 kinematics = get_kinematics(kinematicsFile,
     selectHeaders = sitesToFit,
@@ -149,6 +153,8 @@ poseSim = MjSim(poseModel)
 if showContactForces and showViewer:
     viewer2 = MjViewer(optSim) if showViewer else None
     viewer2.vopt.flags[10] = viewer2.vopt.flags[11] = not viewer2.vopt.flags[10]
+else:
+    viewer2 = None
 
 skip = [
     'World:xt',
@@ -163,26 +169,34 @@ for joint in skip:
     jointsToFit.pop(joint)
 
 solver2 = IKFit(optSim, sitesToFit, jointsToFit,
-    alignTo = referenceJoint, mjViewer = viewer2, method = 'nelder', simulationType = 'forward')
+    alignTo = referenceJoint, mjViewer = viewer2,
+    method = 'nelder', simulationType = 'forward')
 solver2.jointsParam = dict_to_params(jointsToFit)
 
 modelKin = pd.DataFrame(index = kinematics.index, columns = kinematics.columns)
-modelQpos = pd.DataFrame(index = kinematics.index, columns = params_to_series(stats.params).index)
+modelQpos = pd.DataFrame(index = kinematics.index, columns = params_to_series(solver2.jointsParam).index)
 alignedKin = pd.DataFrame(index = kinematics.index, columns = kinematics.columns)
 
 solver2.nelderTol = 2e-3
-
+statistics = {
+    'nfev': [],
+    'redchi': []
+    }
 for t, kinSeries in kinematics.iterrows():
     stats = solver2.fit(t, kinSeries)
 
-    print("SSQ: ")
-    print(np.sum(stats.residual**2))
-    print(stats.message)
-    report_fit(stats)
+    try:
+        print("SSQ: ")
+        print(np.sum(stats.residual**2))
+        print(stats.message)
+        report_fit(stats)
+
+        statistics['nfev'].append(stats.nfev)
+        statistics['redchi'].append(stats.redchi)
+    except:
+        pass
 
     solver2.jointsParam = stats.params
-
-
 
     modelKin.loc[t, :] = get_site_pos(kinSeries, optSim)
     modelQpos.loc[t, :] = params_to_series(stats.params)
@@ -197,3 +211,6 @@ results = {
 saveName = kinematicsFile.split('.')[0] + "_model.pickle"
 with open(saveName, 'wb') as f:
     pickle.dump(results, f)
+
+print('Finished with %4.2f average function calls' % np.mean(statistics['nfev']))
+print('Finished with %4.6f average reduced chisquare' % np.mean(statistics['redchi']))

@@ -42,7 +42,7 @@ simulation = MjSim(model)
 
 viewer = MjViewer(simulation)
 #get resting lengths
-nJoints = simulation.model.key_qpos.shape[1]
+nJoints = simulation.model.njnt
 allJoints = [simulation.model.joint_id2name(i) for i in range(nJoints)]
 keyPos = pd.Series({jointName: simulation.model.key_qpos[1][i] for i, jointName in enumerate(allJoints)})
 
