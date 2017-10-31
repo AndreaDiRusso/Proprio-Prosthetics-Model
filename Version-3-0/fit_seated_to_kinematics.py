@@ -41,8 +41,8 @@ fcsvFilePath = resourcesDir + '/Aligned-To-Pelvis/Fiducials.fcsv'
 specification = fcsv_to_spec(fcsvFilePath)
 modelXML = populate_model(templateFilePath, specification, resourcesDir, showTendons = True)
 
-model = load_model_from_xml(modelXML)
-simulation = MjSim(model)
+alignModel= load_model_from_xml(modelXML)
+simulation = MjSim(alignModel)
 
 #viewer = MjViewerBasic(simulation) if showViewer else None
 #TODO: make flag for enabling and disabling contact force rendering
@@ -59,17 +59,17 @@ jointsToFit = {
     'World:x':[1.73,math.radians(-180),math.radians(180)],
     'World:y':[-0.56,math.radians(-180),math.radians(180)],
     'World:z':[1.72,math.radians(-180),math.radians(180)],
-    'Hip_Left:x':[-0.5,math.radians(-60),math.radians(90)],
-    'Hip_Left:y':[0.05,math.radians(-15),math.radians(15)],
-    'Hip_Left:z':[0,math.radians(-15),math.radians(15)],
-    'Knee_Left:x':[0.4,math.radians(-90),math.radians(70)],
-    'Ankle_Left:x':[-0.5,math.radians(-60),math.radians(120)],
+    'Hip_Left:x':[-1,math.radians(-60),math.radians(90)],
+    'Hip_Left:y':[0,math.radians(-15),math.radians(15)],
+    'Hip_Left:z':[0.05,math.radians(-15),math.radians(15)],
+    'Knee_Left:x':[-1.57,math.radians(-90),math.radians(70)],
+    'Ankle_Left:x':[1.58,math.radians(-60),math.radians(120)],
     'Ankle_Left:y':[0.1,math.radians(-60),math.radians(60)],
     }
 
 referenceJoint = 'C_Left'
 solver = IKFit(simulation, sitesToFit, jointsToFit,
-    alignTo = referenceJoint, mjViewer = viewer, method = 'nelder')
+    alignTo = referenceJoint, mjViewer = viewer, method = 'nelder', simulationType = 'forward')
 #Get kinematics
 kinematics = get_kinematics(kinematicsFile,
     selectHeaders = sitesToFit,
@@ -137,13 +137,17 @@ secondTemplateFilePath = '/'.join(templateFilePath.split('/')[:-1]) +\
 modelXML2 = populate_model(secondTemplateFilePath, specification, resourcesDir,
     showTendons = True)
 
-model2 = load_model_from_xml(modelXML2)
-simulation2 = MjSim(model2)
+#model that will be varied for optimization fitting
+optModel = load_model_from_xml(modelXML2)
+optSim = MjSim(optModel)
+# model that will be posed for inverse dynamics
+poseModel = load_model_from_xml(modelXML2)
+poseSim = MjSim(poseModel)
 
 #viewer = MjViewerBasic(simulation) if showViewer else None
 #TODO: make flag for enabling and disabling contact force rendering
 if showContactForces and showViewer:
-    viewer2 = MjViewer(simulation2) if showViewer else None
+    viewer2 = MjViewer(optSim) if showViewer else None
     viewer2.vopt.flags[10] = viewer2.vopt.flags[11] = not viewer2.vopt.flags[10]
 
 skip = [
@@ -158,8 +162,8 @@ skip = [
 for joint in skip:
     jointsToFit.pop(joint)
 
-solver2 = IKFit(simulation2, sitesToFit, jointsToFit,
-    alignTo = referenceJoint, mjViewer = viewer2, method = 'nelder')
+solver2 = IKFit(optSim, sitesToFit, jointsToFit,
+    alignTo = referenceJoint, mjViewer = viewer2, method = 'nelder', simulationType = 'forward')
 solver2.jointsParam = dict_to_params(jointsToFit)
 
 modelKin = pd.DataFrame(index = kinematics.index, columns = kinematics.columns)
@@ -177,9 +181,12 @@ for t, kinSeries in kinematics.iterrows():
     report_fit(stats)
 
     solver2.jointsParam = stats.params
-    modelKin.loc[t, :] = get_site_pos(kinSeries, simulation2)
+
+
+
+    modelKin.loc[t, :] = get_site_pos(kinSeries, optSim)
     modelQpos.loc[t, :] = params_to_series(stats.params)
-    alignedKin.loc[t, :] = alignToModel(simulation2, kinSeries, referenceJoint)
+    alignedKin.loc[t, :] = alignToModel(optSim, kinSeries, referenceJoint)
 
 results = {
     'site_pos' : modelKin,

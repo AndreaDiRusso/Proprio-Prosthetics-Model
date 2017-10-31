@@ -119,7 +119,7 @@ def params_to_dict(params):
 def params_to_series(params):
     return pd.Series(params_to_dict(params))
 
-def pose_model(simulation, jointSeries, method = 'forward'):
+def pose_model(simulation, jointSeries, qAcc = None, method = 'forward'):
     simState = simulation.get_state()
 
     jointsDict = jointSeries.to_dict()
@@ -132,7 +132,11 @@ def pose_model(simulation, jointSeries, method = 'forward'):
     # advance the simulation one step
     if method == 'forward':
         simulation.forward()
+    if method == 'step':
+        simulation.step()
     if method == 'inverse':
+        for idx, newValue in enumerate(qAcc):
+            simulation.data.qacc[idx] = newValue
         functions.mj_inverse(simulation.model, simulation.data)
 
     return simulation

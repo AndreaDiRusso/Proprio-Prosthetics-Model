@@ -62,18 +62,16 @@
     <light directional='true' diffuse='1 1 1' specular='0 0 0' pos='0 0 40.5' dir='0 1 0'/>
 
     <body name='Seat' pos='$World_t:x$ $World_t:y$ $World_t:z$' euler='$World:x$ $World:y$ $World:z$'>
-      <site name="T12_Attachment" pos='$T12:x$	$T12:y$	$T12:z$' rgba='1 1 0 1' size='15e-3'/>
+      <site name="T12_Attachment" pos='$T12:x$	$T12:y$	$T12:z$' rgba='0 0 1 0.33' size='15e-3'/>
       <geom type='box' size="75e-3 75e-3 25e-3" density='1' pos='$Seat_Center:x$ $Seat_Center:y$ $Seat_Center:z$' euler='0 0 0' rgba='1 0 0 0.5'/>
       <site name="Seat_Center" pos='$Seat_Center:x$ $Seat_Center:y$ $Seat_Center:z$' rgba='1 1 0 1' size='15e-3'/>
     </body>
 
-    <body name='Lower_Body' pos='0 0 0' euler='0 0 0'>
-    <joint name='world' type = 'free'/>
 
     <body name='Pelvis' pos='$World_t:x$ $World_t:y$ $World_t:z$' euler='$World:x$ $World:y$ $World:z$'>
+    <joint name='world' type = 'free'/>
 
-
-    <site name="T12" pos='$T12:x$	$T12:y$	$T12:z$' rgba='1 0 0 1' size='15e-3'/>
+    <site name="T12" pos='$T12:x$	$T12:y$	$T12:z$' rgba='1 0 0 0.33' size='15e-3'/>
     <camera name = 'Sagittal_Left' mode = 'fixed' pos = '3e-1 -5e-1 -2e-1' euler = '90 0 180'/>
 
      <site name="BF_Pelvis_Left" pos='$BF_Pelvis_Left:x$	$BF_Pelvis_Left:y$	$BF_Pelvis_Left:z$' rgba='1 0 0 0'/>
@@ -211,16 +209,16 @@
      <!--
      End Pelvis
    -->
-
-    </body>
-    <!-- End Lower bod
-    -->
 	</worldbody>
 
   <contact>
-  <exclude body1='Pelvis' body2='Leg_Right'/>
-  <exclude body1='Pelvis' body2='Leg_Left'/>
-</contact>
+    <exclude body1='Pelvis' body2='Leg_Right'/>
+    <exclude body1='Pelvis' body2='Leg_Left'/>
+    <exclude body1='Shin_Right' body2='Leg_Right'/>
+    <exclude body1='Shin_Left' body2='Leg_Left'/>
+    <exclude body1='Shin_Right' body2='Foot_Right'/>
+    <exclude body1='Shin_Left' body2='Foot_Left'/>
+  </contact>
 
   <tendon>
     <spatial name="IL_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
@@ -301,6 +299,11 @@
         <site site='GAS_Femur_Right'/>
         <site site='GAS_Ankle_Right'/>
       </spatial>
+
+      <spatial name='Neck_Restraint' stiffness="1e3" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 1">
+        <site site='T12'/>
+        <site site='T12_Attachment'/>
+      </spatial>
 </tendon>
 
 <actuator>
@@ -328,10 +331,5 @@
   <general name='GAS_Right'  gear='1' tendon='GAS_Right'  ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -91'/>
   <general name='GAS_Left'  gear='1' tendon='GAS_Left'  ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -91'/>
 </actuator>
-
-<keyframe>
-    <key time="0" qpos=" 0 0 0 0 0 0 0 0 0 0 0 0" />
-    <key time="0" qpos=" -0.5 0.05 0 0.4 -0.5 0.1 -0.5 0.05 0 0.4 -0.5 0.1" />
-</keyframe>
 
 </mujoco>
