@@ -1,0 +1,35 @@
+# Markups fiducial file version = 4.5
+# CoordinateSystem = 0
+# columns = id,x,y,z,ow,ox,oy,oz,vis,sel,lock,label,desc,associatedNodeID
+vtkMRMLMarkupsFiducialNode_3,-22,-35,15,0,0,0,1,1,1,1,C_Right,,
+vtkMRMLMarkupsFiducialNode_7,-12,-77,-83,0,0,0,1,1,1,1,GT_Right,,
+vtkMRMLMarkupsFiducialNode_12,182,-80,-105,0,0,0,1,1,1,1,K_Right,,
+vtkMRMLMarkupsFiducialNode_13,333,-130,-220,0,0,0,1,1,1,1,M_Right,,
+vtkMRMLMarkupsFiducialNode_14,417,-134,-229,0,0,0,1,1,1,1,MT_Right,,
+vtkMRMLMarkupsFiducialNode_15,451,-126,-246,0,0,0,1,1,1,1,T_Right,,
+vtkMRMLMarkupsFiducialNode_15,-4,-49,-88,0,0,0,1,1,1,1,Hip_Right:o,,vtkMRMLScalarVolumeNode2
+vtkMRMLMarkupsFiducialNode_16,-8,-75,-95,0,0,0,1,1,1,1,Hip_Right:x,,vtkMRMLScalarVolumeNode2
+vtkMRMLMarkupsFiducialNode_17,-4,-49,-78,0,0,0,1,1,1,1,Hip_Right:y,,vtkMRMLScalarVolumeNode2
+vtkMRMLMarkupsFiducialNode_30,5,-49,-90,0,0,0,1,1,1,1,Hip_Right:z,,vtkMRMLScalarVolumeNode2
+vtkMRMLMarkupsFiducialNode_23,335,-117,-220,0,0,0,1,1,1,1,Ankle_Right:o,,vtkMRMLScalarVolumeNode1
+vtkMRMLMarkupsFiducialNode_24,335,-129,-222,0,0,0,1,1,1,1,Ankle_Right:x,,vtkMRMLScalarVolumeNode1
+vtkMRMLMarkupsFiducialNode_25,335,-113,-236,0,0,0,1,1,1,1,Ankle_Right:y,,vtkMRMLScalarVolumeNode1
+vtkMRMLMarkupsFiducialNode_26,173,-75,-118,0,0,0,1,1,1,1,Knee_Right:o,,vtkMRMLScalarVolumeNode1
+vtkMRMLMarkupsFiducialNode_27,173,-88,-118,0,0,0,1,1,1,1,Knee_Right:x,,vtkMRMLScalarVolumeNode1
+vtkMRMLMarkupsFiducialNode_31,-19,-54,-132,0,0,0,1,1,1,1,BF_Pelvis_Right,,vtkMRMLModelNode4
+vtkMRMLMarkupsFiducialNode_32,181,-92,-130,0,0,0,1,1,1,1,BF_Tibia_Right,,vtkMRMLModelNode6
+vtkMRMLMarkupsFiducialNode_35,2,-43,-51,0,0,0,1,1,1,1,RF_Pelvis_Right,,vtkMRMLModelNode4
+vtkMRMLMarkupsFiducialNode_36,163,-74,-95,0,0,0,1,1,1,1,RF_Tibia_Right,,vtkMRMLModelNode8
+vtkMRMLMarkupsFiducialNode_41,-2,-32,3,0,0,0,1,1,1,1,GMED_Pelvis_Right,,vtkMRMLModelNode4
+vtkMRMLMarkupsFiducialNode_42,-19,-64,-85,0,0,0,1,1,1,1,GMED_Femur_Right,,vtkMRMLModelNode8
+vtkMRMLMarkupsFiducialNode_43,14,-36,-88,0,0,0,1,1,1,1,IL_Pelvis_Right,,vtkMRMLModelNode4
+vtkMRMLMarkupsFiducialNode_44,11,-56,-102,0,0,0,1,1,1,1,IL_Femur_Right,,vtkMRMLModelNode8
+vtkMRMLMarkupsFiducialNode_47,81,-66,-93,0,0,0,1,1,1,1,VAS_Femur_Right,,vtkMRMLModelNode8
+vtkMRMLMarkupsFiducialNode_48,163,-70,-96,0,0,0,1,1,1,1,VAS_Tibia_Right,,vtkMRMLModelNode8
+vtkMRMLMarkupsFiducialNode_51,244,-88,-147,0,0,0,1,1,1,1,TA_Tibia_Right,,vtkMRMLModelNode6
+vtkMRMLMarkupsFiducialNode_52,369,-99,-230,0,0,0,1,1,1,1,TA_Ankle_Right,,vtkMRMLModelNode10
+vtkMRMLMarkupsFiducialNode_55,180,-88,-134,0,0,0,1,1,1,1,SOL_Tibia_Right,,vtkMRMLModelNode6
+vtkMRMLMarkupsFiducialNode_56,317,-120,-230,0,0,0,1,1,1,1,SOL_Ankle_Right,,vtkMRMLModelNode10
+vtkMRMLMarkupsFiducialNode_59,163,-76,-122,0,0,0,1,1,1,1,GAS_Femur_Right,,vtkMRMLModelNode8
+vtkMRMLMarkupsFiducialNode_60,316,-119,-228,0,0,0,1,1,1,1,GAS_Ankle_Right,,vtkMRMLModelNode10
+vtkMRMLMarkupsFiducialNode_65,-15,-25,-155,0,0,0,1,1,1,1,Pad_Right,,

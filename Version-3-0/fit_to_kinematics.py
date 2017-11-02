@@ -4,7 +4,7 @@ Example for how to modifying the MuJoCo qpos during execution.
 """
 
 import os, pdb, argparse, pickle
-from mujoco_py import load_model_from_xml, MjSim, MjViewerBasic
+from mujoco_py import load_model_from_xml, MjSim, MjViewerBasic, MjViewer
 from lmfit import minimize, Minimizer, Parameters, Parameter, report_fit
 from helper_functions import *
 from inverse_kinematics import *
@@ -29,6 +29,7 @@ kinematicsFile = args.kinematicsFile
 startTime = float(args.startTime)
 stopTime = float(args.stopTime)
 showViewer = args.showViewer
+showContactForces = True
 
 resourcesDir = curDir + '/Resources/Murdoc'
 
@@ -41,7 +42,11 @@ modelXML = populate_model(templateFilePath, specification, resourcesDir, showTen
 model = load_model_from_xml(modelXML)
 simulation = MjSim(model)
 
-viewer = MjViewerBasic(simulation) if showViewer else None
+#viewer = MjViewerBasic(simulation) if showViewer else None
+#TODO: make flag for enabling and disabling contact force rendering
+if showContactForces and showViewer:
+    viewer = MjViewer(simulation) if showViewer else None
+    viewer.vopt.flags[10] = viewer.vopt.flags[11] = not viewer.vopt.flags[10]
 
 sitesToFit = ['MT_Left', 'M_Left', 'C_Left', 'GT_Left', 'K_Left']
 

@@ -1,9 +1,16 @@
 from lmfit import minimize, Minimizer, Parameters, Parameter, report_fit
 from helper_functions import *
 import pdb
+from mujoco_py import functions
 
-def iter_cb(params, iter, resid, t, kinSeries, solver):
-    print("Iteration number: %d" % iter, end = '\r')
+def iter_cb(params, iterNo, resid, t, kinSeries, solver):
+    printing = False
+    if printing:
+        try:
+            print("Iteration number: %d" % iterNo, end = '\r')
+        except:
+            pass
+
     if solver.mjViewer is not None:
         render_targets(solver.mjViewer, alignToModel(solver.simulation, kinSeries, solver.alignTo))
         solver.mjViewer.render()
@@ -31,7 +38,8 @@ def fcn2min(params, t, kinSeries, solver):
 
 class IKFit:
 
-    def __init__(self, simulation, sitesToFit, jointsToFit, alignTo = None, mjViewer = None, method = 'leastsq'):
+    def __init__(self, simulation, sitesToFit, jointsToFit, alignTo = None,
+        mjViewer = None, method = 'leastsq', simulationType = 'forward'):
 
         # which site to align model and data to
         if alignTo is None:
@@ -50,14 +58,17 @@ class IKFit:
         self.sitesToFit = sitesToFit
         # optimization method
         self.method = method
+        self.simulationType = simulationType
 
         if method == 'nelder':
             self.nelderTol = 1e-7
+        if method == 'leastsq':
+            self.fTol = 1e-8
 
     def joint_pos2site_pos(self, jointSeries, kinSeries):
 
-        self.simulation = pose_model(self.simulation, jointSeries)
-
+        self.simulation = pose_model(self.simulation, jointSeries,
+            method = self.simulationType)
         # get resulting changes
         sitePos = get_site_pos(kinSeries, self.simulation)
 
@@ -68,7 +79,7 @@ class IKFit:
         methodParams = {}
         if self.method == 'leastsq':
             methodParams.update({
-                'ftol': 1e-8,
+                'ftol': self.fTol,
                 'xtol': 1e-8
             })
 
@@ -79,4 +90,5 @@ class IKFit:
 
         minner = Minimizer(fcn2min, self.jointsParam,
             fcn_args=(t, kinSeries, self), iter_cb=iter_cb, **methodParams)
-        return minner.minimize(method = self.method)
+        stats = minner.minimize(method = self.method)
+        return stats

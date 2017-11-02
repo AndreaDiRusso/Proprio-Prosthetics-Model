@@ -14,22 +14,26 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--frFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_fr.pickle')
+parser.add_argument('--kineticsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_kinetics.pickle')
+parser.add_argument('--meanSubtract', dest='meanSubtract', action='store_true')
+parser.set_defaults(meanSubtract = False)
 
 args = parser.parse_args()
-frFile = args.frFile
+kineticsFile = args.kineticsFile
+meanSubtract = args.meanSubtract
 
 resourcesDir = curDir + '/Resources/Murdoc'
 
-with open(frFile, 'rb') as f:
-    kinematics = pickle.load(f)
+with open(kineticsFile, 'rb') as f:
+    kinetics = pickle.load(f)
 
-iARate = long_form_df(kinematics['iARate'], overrideColumns = ['Tendon', 'Time (sec)', 'Firing Rate (Hz)'])
+qFrc = long_form_df(kinetics['qfrc_inverse'],
+    overrideColumns = ['Tendon', 'Time (sec)', 'Joint Torque (N*m)'])
 
 sns.set_style('darkgrid')
 plt.style.use('seaborn-darkgrid')
 invertColors = False
-matplotlib.rcParams.update({'font.size': 30})
+matplotlib.rcParams.update({'font.size': 10})
 matplotlib.rcParams.update({'text.color': 'black' if invertColors else 'white'})
 matplotlib.rcParams.update({'axes.facecolor': 'white' if invertColors else 'black'})
 matplotlib.rcParams.update({'axes.edgecolor': 'black' if invertColors else 'white'})
@@ -41,12 +45,13 @@ matplotlib.rcParams.update({'axes.labelcolor': 'black' if invertColors else 'whi
 matplotlib.rcParams.update({'xtick.color': 'black' if invertColors else 'white'})
 matplotlib.rcParams.update({'ytick.color': 'black' if invertColors else 'white'})
 
-g = sns.FacetGrid(iARate, row = 'Tendon', size = 3, aspect = 3,
-    despine = False, sharey = False)
-g.map(plt.plot, 'Time (sec)', 'Firing Rate (Hz)', lw = 3)
+g = sns.FacetGrid(qFrc, row = 'Tendon', size = 3, aspect = 3,
+    despine = False, sharey = False, sharex = True)
+g.map(plt.plot, 'Time (sec)', 'Joint Torque (N*m)', lw = 3)
+g.set(ylim=(-.25, .25))
 
-plt.savefig(frFile.split('_fr')[0] + '_fr_plot.png')
+plt.savefig(kineticsFile.split('_kinetics')[0] + '_qfrc_plot.png')
 
-pickleName = frFile.split('_fr')[0] + '_fr_plot.pickle'
+pickleName = kineticsFile.split('_kinetics')[0] + '_qfrc_plot.pickle'
 with open(pickleName, 'wb') as f:
     pickle.dump(g,f)

@@ -18,33 +18,37 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--modelKinematicsFile', default = 'Z:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_model.pickle')
-parser.add_argument('--outputFile')
-parser.add_argument('--outputRawFile')
+parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_kinematics.pickle')
+parser.add_argument('--outputFile', dest='outputFile', action='store_true')
+parser.add_argument('--outputRawFile', dest='outputRawFile', action='store_true')
+parser.set_defaults(outputFile = False)
+parser.set_defaults(outputRawFile = False)
 parser.add_argument('--modelFile', default = 'murdoc_gen.xml')
 
 args = parser.parse_args()
 
-modelKinematicsFile = args.modelKinematicsFile
+kinematicsFile = args.kinematicsFile
 modelFile = args.modelFile
-outputFile = args.outputFile if args.outputFile else None
-outputRawFile = args.outputRawFile if args.outputRawFile else None
+outputFile = args.outputFile
+outputRawFile = args.outputRawFile
 
 resourcesDir = curDir + '/Resources/Murdoc'
 
 with open(curDir + '/' + modelFile, 'r') as f:
     model = load_model_from_xml(f.read())
 
-with open(modelKinematicsFile, 'rb') as f:
+with open(kinematicsFile, 'rb') as f:
     kinematics = pickle.load(f)
 
 simulation = MjSim(model)
 
 viewer = MjViewer(simulation)
+viewer.vopt.flags[10] = viewer.vopt.flags[11] = not viewer.vopt.flags[10]
 #get resting lengths
-nJoints = simulation.model.key_qpos.shape[1]
+nJoints = simulation.model.njnt
 allJoints = [simulation.model.joint_id2name(i) for i in range(nJoints)]
-keyPos = pd.Series({jointName: simulation.model.key_qpos[1][i] for i, jointName in enumerate(allJoints)})
+allJoints.remove('world')
+keyPos = pd.Series({jointName: simulation.model.key_qpos[0][i] for i, jointName in enumerate(allJoints)})
 
 pose_model(simulation, keyPos)
 
@@ -52,7 +56,7 @@ for t, kinSeries in kinematics['site_pos'].iterrows():
 
     pose_model(simulation, kinematics['qpos'].loc[t, :])
 
-    if outputFile is not None or outputRawFile is not None:
+    if outputFile or outputRawFile:
         import numpy as np
         import cv2
 
@@ -68,26 +72,35 @@ for t, kinSeries in kinematics['site_pos'].iterrows():
         img = simulation.render(*resolution, camera_name = 'Sagittal_Left')
         img = cv2.flip(cv2.cvtColor(img, cv2.COLOR_RGB2BGR), 0)
 
-        if outputFile is not None and 'output' not in locals():
+        if outputFile and 'output' not in locals():
             # Define the codec and create VideoWriter object
+            outputFileName = kinematicsFile.split('_kinematics')[0] + '_video.mpeg4'
             fourcc = cv2.VideoWriter_fourcc(*'MPEG')
-            output = cv2.VideoWriter(outputFile, fourcc, int(1 / viewer._time_per_render), (img.shape[1], img.shape[0]))
+            output = cv2.VideoWriter(outputFileName, fourcc, int(1 / viewer._time_per_render), (img.shape[1], img.shape[0]))
 
         if outputRawFile is not None and 'output' not in locals():
             # Define the codec and create VideoWriter object
+            outputRawFileName = kinematicsFile.split('_kinematics')[0] + '_raw_video.avi'
             fourcc = cv2.VideoWriter_fourcc(*'DIB ')
-            output = cv2.VideoWriter(outputRawFile, fourcc, int(1 / viewer._time_per_render), (img.shape[1], img.shape[0]))
+            outputRaw = cv2.VideoWriter(outputRawFileName, fourcc, int(1 / viewer._time_per_render), (img.shape[1], img.shape[0]))
 
         # write the frame
         cv2.imshow('frame',img)
         cv2.waitKey(10)
-        output.write(img)
+
+        if outputFile:
+            output.write(img)
+        if outputRawFile:
+            outputRaw.write(img)
     else:
         viewer._hide_overlay = True
         viewer._render_every_frame = True
         render_targets(viewer, alignToModel(simulation, kinematics['site_pos'].loc[t, :], 'C_Left'))
         viewer.render()
 
-if outputFile is not None:
+if outputFile:
     output.release()
+    cv2.destroyAllWindows()
+if outputRawFile:
+    outputRaw.release()
     cv2.destroyAllWindows()
