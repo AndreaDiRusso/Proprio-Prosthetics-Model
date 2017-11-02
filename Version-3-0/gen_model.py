@@ -10,12 +10,21 @@ import seaborn as sns
 import itertools
 from lmfit import Parameters, Parameter
 from mujoco_py.generated import const
-import pdb, copy
+import pdb, copy, os
+from helper_functions import *
 
-resourcesDir = 'C:/Users/adirusso/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc'
+curfilePath = os.path.abspath(__file__)
+#print(curfilePath)
+curDir = os.path.abspath(os.path.join(curfilePath,os.pardir)) # this will return current directory in which python file resides.
+#print(curDir)
+parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return parent directory.
+#print(parentDir)
 
-templateFilePath = 'C:/Users/adirusso/Documents/GitHub\Proprio-Prosthetics-Model/Version-3-0/murdoc_seated_template-Copy.xml'
-fcsvFilePath = 'C:/Users/adirusso/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0/Resources/Murdoc/Aligned-To-Pelvis/Fiducials.fcsv'
+resourcesDir = curDir + '/Resources/Murdoc'
+
+templateFilePath = curDir + '/murdoc_template.xml'
+fcsvFilePath = resourcesDir + '/Aligned-To-Pelvis/Fiducials.fcsv'
+
 
 specification = fcsv_to_spec(fcsvFilePath)
 modelXML = populate_model(templateFilePath, specification, resourcesDir, showTendons = True)
