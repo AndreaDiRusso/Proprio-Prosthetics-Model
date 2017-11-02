@@ -74,7 +74,7 @@ def populate_model(templateFilePath, specification, resourcesDir, showTendons = 
 
     for idx, row in specification.iterrows():
 
-        if ":x" in row['label'] or ":y" in row['label'] or ':z' in row['label']:
+        if ':x' in row['label'] or ':y' in row['label'] or ':z' in row['label']:
             jointAxis = row['label'].split(':')[-1][0]
             jointName = row['label'].split(':')[0]
             originName = jointName + ':o'
