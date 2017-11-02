@@ -189,7 +189,7 @@ for i in range(int(2e3)):
     if viewer2:
         viewer2.render()
 
-printing = False
+printing = True
 for t, kinSeries in kinematics.iterrows():
     stats = solver2.fit(t, kinSeries)
 
