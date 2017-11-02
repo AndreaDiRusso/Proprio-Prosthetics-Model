@@ -14,16 +14,14 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--modelFrFile', default = 'Z:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_model_fr.pickle')
-parser.add_argument('--outputFile')
+parser.add_argument('--frFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_fr.pickle')
 
 args = parser.parse_args()
-modelFrFile = args.modelFrFile
-outputFile = args.outputFile if args.outputFile else None
+frFile = args.frFile
 
 resourcesDir = curDir + '/Resources/Murdoc'
 
-with open(modelFrFile, 'rb') as f:
+with open(frFile, 'rb') as f:
     kinematics = pickle.load(f)
 
 iARate = long_form_df(kinematics['iARate'], overrideColumns = ['Tendon', 'Time (sec)', 'Firing Rate (Hz)'])
@@ -47,8 +45,8 @@ g = sns.FacetGrid(iARate, row = 'Tendon', size = 3, aspect = 3,
     despine = False, sharey = False)
 g.map(plt.plot, 'Time (sec)', 'Firing Rate (Hz)', lw = 3)
 
-plt.savefig(outputFile)
+plt.savefig(frFile.split('_fr')[0] + '_fr_plot.png')
 
-pickleName = outputFile.split('.')[0] + '.pickle'
+pickleName = frFile.split('_fr')[0] + '_fr_plot.pickle'
 with open(pickleName, 'wb') as f:
     pickle.dump(g,f)

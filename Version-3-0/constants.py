@@ -1,5 +1,6 @@
 from enum import Enum
-constDict = Enum(
+
+class generalConsts(Enum):
   MINVAL = 1e-15                       # minimum value in any denominator
   PI = 3.141592653589793               #
   MAXVAL = 10000000000.0               # maximum value in qpos  qvel  qacc
@@ -21,7 +22,7 @@ constDict = Enum(
   MAXLINE = 100.0                     # maximum number of lines per plot
   MAXLINEPNT = 500.0                  # maximum number points per line
   MAXPLANEGRID = 100.0                # maximum number of grid points for plane rendering
-  )
+
 ###### const from enums ######
 # _mjtDisableBit
 DSBL_CONSTRAINT = 0

@@ -61,11 +61,11 @@ jointsToFit = {
     'World:x':[1.73,math.radians(-180),math.radians(180)],
     'World:y':[-0.56,math.radians(-180),math.radians(180)],
     'World:z':[1.72,math.radians(-180),math.radians(180)],
-    'Hip_Left:x':[-1,math.radians(-60),math.radians(90)],
-    'Hip_Left:y':[0,math.radians(-15),math.radians(15)],
+    'Hip_Left:x':[-1,math.radians(-120),math.radians(60)],
+    'Hip_Left:y':[0,math.radians(-30),math.radians(30)],
     'Hip_Left:z':[0.05,math.radians(-15),math.radians(15)],
-    'Knee_Left:x':[-1.57,math.radians(-90),math.radians(70)],
-    'Ankle_Left:x':[1.58,math.radians(-60),math.radians(120)],
+    'Knee_Left:x':[-1.57,math.radians(-120),math.radians(0)],
+    'Ankle_Left:x':[1.58,math.radians(-30),math.radians(90)],
     'Ankle_Left:y':[0.1,math.radians(-60),math.radians(60)],
     }
 
@@ -177,24 +177,33 @@ modelKin = pd.DataFrame(index = kinematics.index, columns = kinematics.columns)
 modelQpos = pd.DataFrame(index = kinematics.index, columns = params_to_series(solver2.jointsParam).index)
 alignedKin = pd.DataFrame(index = kinematics.index, columns = kinematics.columns)
 
-solver2.nelderTol = 2e-3
+solver2.nelderTol = 1e-4
 statistics = {
     'nfev': [],
     'redchi': []
     }
+
+for i in range(int(2e3)):
+    #settle model
+    optSim.step()
+    if viewer2:
+        viewer2.render()
+
+printing = False
 for t, kinSeries in kinematics.iterrows():
     stats = solver2.fit(t, kinSeries)
 
-    try:
-        print("SSQ: ")
-        print(np.sum(stats.residual**2))
-        print(stats.message)
-        report_fit(stats)
+    if printing:
+        try:
+            print("SSQ: ")
+            print(np.sum(stats.residual**2))
+            print(stats.message)
+            report_fit(stats)
 
-        statistics['nfev'].append(stats.nfev)
-        statistics['redchi'].append(stats.redchi)
-    except:
-        pass
+            statistics['nfev'].append(stats.nfev)
+            statistics['redchi'].append(stats.redchi)
+        except:
+            pass
 
     solver2.jointsParam = stats.params
 
@@ -208,7 +217,7 @@ results = {
     'qpos' : modelQpos
 }
 
-saveName = kinematicsFile.split('.')[0] + "_model.pickle"
+saveName = kinematicsFile.split('.')[0] + "_kinematics.pickle"
 with open(saveName, 'wb') as f:
     pickle.dump(results, f)
 

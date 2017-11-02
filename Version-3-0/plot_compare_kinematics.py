@@ -14,19 +14,17 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--modelKinematicsFile', default = 'W:\\ENG_Neuromotion_Shared\\group\\Proprioprosthetics\\Data\\201709261100-Proprio\\T_1_model.pickle')
-parser.add_argument('--outputFile')
+parser.add_argument('--kinematicsFile', default = 'W:\\ENG_Neuromotion_Shared\\group\\Proprioprosthetics\\Data\\201709261100-Proprio\\T_1_kinematics.pickle')
 parser.add_argument('--meanSubtract', dest='meanSubtract', action='store_true')
 parser.set_defaults(meanSubtract = False)
 
 args = parser.parse_args()
-modelKinematicsFile = args.modelKinematicsFile
-outputFile = args.outputFile if args.outputFile else None
+kinematicsFile = args.kinematicsFile
 meanSubtract = args.meanSubtract
 
 resourcesDir = curDir + '/Resources/Murdoc'
 
-with open(modelKinematicsFile, 'rb') as f:
+with open(kinematicsFile, 'rb') as f:
     kinematics = pickle.load(f)
 
 overrideColumns = ['Site', 'Coordinate', 'Time (sec)', 'Position (m)']
@@ -86,8 +84,8 @@ for idx, ax in enumerate(g.axes.flat):
     ax.set_position([box.x0,box.y0,box.width*0.75,box.height])
 
 plt.legend(loc='center right', bbox_to_anchor = (1.4,3))
-plt.savefig(outputFile)
+plt.savefig(kinematicsFile.split('_kinematics')[0] + '_kinematics_plot.png')
 
-pickleName = outputFile.split('.')[0] + '.pickle'
+pickleName = kinematicsFile.split('_kinematics')[0] + '_kinematics_plot.pickle'
 with open(pickleName, 'wb') as f:
     pickle.dump(g,f)

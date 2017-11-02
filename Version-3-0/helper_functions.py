@@ -234,3 +234,23 @@ def long_form_df(kinDF, overrideColumns = None):
     if overrideColumns is not None:
         longDF.columns = overrideColumns
     return longDF
+
+def contact_summary(simulation, debugging = False):
+    activeContacts = []
+    for idx, contact in enumerate(simulation.data.contact):
+        contactForce = np.zeros((6))
+        functions.mj_contactForce(simulation.model, simulation.data, idx, contactForce)
+        if np.sum(contactForce**2) > 0:
+            activeContacts.append( {
+                'contactIdx' : idx,
+                'contactForce' : contactForce
+                } )
+            if debugging:
+                print('Contact geom 1:')
+                print(simulation.model.geom_id2name(contact.geom1))
+                print('Contact geom 2:')
+                print(simulation.model.geom_id2name(contact.geom2))
+                print('Contact Force:')
+                print(contactForce)
+                print('------------------------------------------')
+    return activeContacts

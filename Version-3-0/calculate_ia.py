@@ -13,14 +13,14 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--modelKinematicsFile', default = 'Z:\\ENG_Neuromotion_Shared\\group\\Proprioprosthetics\\Data\\201709261100-Proprio\\T_1_model.pickle')
+parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_kinematics.pickle')
 parser.add_argument('--modelFile', default = 'murdoc_gen.xml')
 parser.add_argument('--showViewer', dest='showViewer', action='store_true')
 parser.set_defaults(showViewer = False)
 
 args = parser.parse_args()
 
-modelKinematicsFile = args.modelKinematicsFile
+kinematicsFile = args.kinematicsFile
 modelFile = args.modelFile
 showViewer = args.showViewer
 
@@ -39,7 +39,7 @@ tendonNames = [
 with open(curDir + '/' + modelFile, 'r') as f:
     model = load_model_from_xml(f.read())
 
-with open(modelKinematicsFile, 'rb') as f:
+with open(kinematicsFile, 'rb') as f:
     kinematics = pickle.load(f)
 
 simulation = MjSim(model)
@@ -47,8 +47,11 @@ simulation = MjSim(model)
 viewer = MjViewer(simulation)
 
 #get resting lengths
-nJoints = simulation.model.key_qpos.shape[0]
+nJoints = simulation.model.njnt
+
 allJoints = [simulation.model.joint_id2name(i) for i in range(nJoints)]
+allJoints.remove('world')
+
 keyPos = pd.Series({jointName: simulation.model.key_qpos[0][i] for i, jointName in enumerate(allJoints)})
 
 pose_model(simulation, keyPos)
@@ -77,6 +80,6 @@ kinematics.update(
         }
     )
 
-newName = modelKinematicsFile.split('.')[0] + '_fr.pickle'
+newName = kinematicsFile.split('_kinematics')[0] + '_fr.pickle'
 with open(newName, 'wb') as f:
     pickle.dump(kinematics, f)

@@ -4,7 +4,13 @@ import pdb
 from mujoco_py import functions
 
 def iter_cb(params, iterNo, resid, t, kinSeries, solver):
-    print("Iteration number: %d" % iterNo, end = '\r')
+    printing = False
+    if printing:
+        try:
+            print("Iteration number: %d" % iterNo, end = '\r')
+        except:
+            pass
+
     if solver.mjViewer is not None:
         render_targets(solver.mjViewer, alignToModel(solver.simulation, kinSeries, solver.alignTo))
         solver.mjViewer.render()
