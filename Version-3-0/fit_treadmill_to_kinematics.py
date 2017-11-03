@@ -63,31 +63,31 @@ whichSide = 'Right'
 sitesToFit = ['MT_' + whichSide, 'M_' + whichSide, 'C_' + whichSide, 'GT_' + whichSide, 'K_' + whichSide]
 
 jointsToFit = {
-    'World:xt':[0.0,-3, 3],
-    'World:yt':[0.0,-3, 3],
-    'World:zt':[0.0,-3, 3],
-    'World:x':[0,math.radians(-180),math.radians(180)],
-    'World:y':[0,math.radians(-180),math.radians(180)],
-    'World:z':[-1.76,math.radians(-180),math.radians(180)],
-    'Hip_' + whichSide + ':x':[-1.04,math.radians(-60),math.radians(120)],
-    'Hip_' + whichSide + ':y':[0.48,math.radians(-5),math.radians(5)],
-    'Hip_' + whichSide + ':z':[0.19,math.radians(-5),math.radians(5)],
-    'Knee_' + whichSide + ':x':[1.75,math.radians(0),math.radians(120)],
-    'Ankle_' + whichSide + ':x':[-1.57,math.radians(-90),math.radians(30)],
-    'Ankle_' + whichSide + ':y':[0.11,math.radians(-60),math.radians(60)],
+    'World:xt':{'value':0.002,'min':-3,'max':3},
+    'World:yt':{'value':-0.004,'min':-3,'max':3},
+    'World:zt':{'value':0.015,'min':-3,'max':3},
+    'World:x':{'value':0.89,'min':math.radians(-180),'max':math.radians(180)},
+    'World:y':{'value':-0.51,'min':math.radians(-180),'max':math.radians(180)},
+    'World:z':{'value':-1.57,'min':math.radians(-180),'max':math.radians(180)},
+    'Hip_' + whichSide + ':x':{'value':-0.34,'min':math.radians(-60),'max':math.radians(120)},
+    'Hip_' + whichSide + ':y':{'value':0.08,'min':math.radians(-5),'max':math.radians(5)},
+    'Hip_' + whichSide + ':z':{'value':0.085,'min':math.radians(-5),'max':math.radians(5)},
+    'Knee_' + whichSide + ':x':{'value':1.64,'min':math.radians(0),'max':math.radians(120)},
+    'Ankle_' + whichSide + ':x':{'value':-1.56,'min':math.radians(-90),'max':math.radians(30)},
+    'Ankle_' + whichSide + ':y':{'value':0.14,'min':math.radians(-60),'max':math.radians(60)},
     } if whichSide == 'Right' else {
-        'World:xt':[0.06,-10, 10],
-        'World:yt':[0.02,-10, 10],
-        'World:zt':[-0.001,-10, 10],
-        'World:x':[1.73,math.radians(-180),math.radians(180)],
-        'World:y':[-0.56,math.radians(-180),math.radians(180)],
-        'World:z':[1.72,math.radians(-180),math.radians(180)],
-        'Hip_' + whichSide + ':x':[-1,math.radians(-120),math.radians(60)],
-        'Hip_' + whichSide + ':y':[0,math.radians(-5),math.radians(5)],
-        'Hip_' + whichSide + ':z':[0.05,math.radians(-5),math.radians(5)],
-        'Knee_' + whichSide + ':x':[-1.57,math.radians(-120),math.radians(0)],
-        'Ankle_' + whichSide + ':x':[1.58,math.radians(-30),math.radians(90)],
-        'Ankle_' + whichSide + ':y':[0.1,math.radians(-60),math.radians(60)],
+        'World:xt':{'value':0.06,'min':-10, 'max':10},
+        'World:yt':{'value':0.02,'min':-10, 'max':10},
+        'World:zt':{'value':-0.001,'min':-10, 'max':10},
+        'World:x':{'value':1.73,'min':math.radians(-180),'max':math.radians(180)},
+        'World:y':{'value':-0.56,'min':math.radians(-180),'max':math.radians(180)},
+        'World:z':{'value':1.72,'min':math.radians(-180),'max':math.radians(180)},
+        'Hip_' + whichSide + ':x':{'value':-1,'min':math.radians(-120),'max':math.radians(60)},
+        'Hip_' + whichSide + ':y':{'value':0,'min':math.radians(-5),'max':math.radians(5)},
+        'Hip_' + whichSide + ':z':{'value':0.05,'min':math.radians(-5),'max':math.radians(5)},
+        'Knee_' + whichSide + ':x':{'value':-1.57,'min':math.radians(-120),'max':math.radians(0)},
+        'Ankle_' + whichSide + ':x':{'value':1.58,'min':math.radians(-30),'max':math.radians(90)},
+        'Ankle_' + whichSide + ':y':{'value':0.1,'min':math.radians(-60),'max':math.radians(60)},
         }
 
 #Get kinematics
@@ -111,48 +111,45 @@ solver = IKFit(simulation, sitesToFit, jointsToFit,
     simulationType = 'forward')
 
 stats = solver.fit(t, kinSeries)
+printing = True
+if printing:
+    try:
+        print("SSQ: ")
+        print(np.sum(stats.residual**2))
+        print(stats.message)
+        report_fit(stats)
+
+        statistics['nfev'].append(stats.nfev)
+        statistics['redchi'].append(stats.redchi)
+    except:
+        pass
 
 #set initial guess to result of initial fit
 initialResults = params_to_dict(stats.params)
 for key, value in jointsToFit.items():
-    jointsToFit[key][0] = initialResults[key]
+    jointsToFit[key]['value'] = initialResults[key]['value']
 
 # second model does not contain world joints:
 #TODO: make this less kludgy
 
 origGravity = np.array([0,0,0,-9.78])
-
-xAxis = np.array([0,1,0,0])
-xAxisAngle = (jointsToFit['World:x'][0]*0.5) * xAxis/np.linalg.norm(xAxis)
-xQLog = quat.quaternion(*xAxisAngle)
-xQ = np.exp(xQLog)
-
-yAxis = np.array([0,0,1,0])
-yAxisAngle = (jointsToFit['World:y'][0]*0.5) * yAxis/np.linalg.norm(yAxis)
-yQLog = quat.quaternion(*yAxisAngle)
-yQ = np.exp(yQLog)
-
-zAxis = np.array([0,0,0,1])
-zAxisAngle = (jointsToFit['World:z'][0]*0.5) * zAxis/np.linalg.norm(zAxis)
-zQLog = quat.quaternion(*zAxisAngle)
-zQ = np.exp(zQLog)
-
+q = get_euler_rotation_quaternion(jointsToFit, jointName = 'World')
 vec = quat.quaternion(*origGravity)
-q = xQ * yQ * zQ
-rotatedGravity = q * vec * np.conjugate(q)
+#rotatedGravity = q * vec * np.conjugate(q)
+rotatedGravity = vec
 
 worldCoords = pd.DataFrame({
     '1' : {
         'label' : 'World',
-        'x': math.degrees(jointsToFit['World:x'][0])/meshScale,
-        'y': math.degrees(jointsToFit['World:y'][0])/meshScale,
-        'z': math.degrees(jointsToFit['World:z'][0])/meshScale
+        'x': math.degrees(jointsToFit['World:x']['value'])/meshScale,
+        'y': math.degrees(jointsToFit['World:y']['value'])/meshScale,
+        'z': math.degrees(jointsToFit['World:z']['value'])/meshScale
         },
     '2': {
         'label' : 'World_t',
-        'x': jointsToFit['World:xt'][0]/meshScale,
-        'y': jointsToFit['World:yt'][0]/meshScale,
-        'z': jointsToFit['World:zt'][0]/meshScale
+        'x': jointsToFit['World:xt']['value']/meshScale,
+        'y': jointsToFit['World:yt']['value']/meshScale,
+        'z': jointsToFit['World:zt']['value']/meshScale
         },
     '3': {
         'label' : 'gravity',
@@ -165,7 +162,7 @@ worldCoords = pd.DataFrame({
 #TODO: populate specification with world transformation
 specification = specification.append(worldCoords, ignore_index = True)
 secondTemplateFilePath = '/'.join(templateFilePath.split('/')[:-1]) +\
-    '/murdoc_template_mobile_treadmill.xml'
+    '/murdoc_template_mobile_treadmill_zero.xml'
 modelXML2 = populate_model(secondTemplateFilePath, specification, resourcesDir,
     meshScale = meshScale, showTendons = True)
 
@@ -181,10 +178,25 @@ if showContactForces and showViewer:
 else:
     viewer2 = None
 
+"""
+worldQ = quat.one
+jointsToFit.update({
+    'World:xq':{'value': quat.as_euler_angles(worldQ)[0], 'min':math.radians(-180), 'max':math.radians(180)},
+    'World:yq':{'value': quat.as_euler_angles(worldQ)[1], 'min':math.radians(-180), 'max':math.radians(180)},
+    'World:zq':{'value': quat.as_euler_angles(worldQ)[2], 'min':math.radians(-180), 'max':math.radians(180)},
+    'World:xt':{'value': 0, 'min':-2, 'max': 2},
+    'World:yt':{'value': 0, 'min':-2, 'max': 2},
+    'World:zt':{'value': 0, 'min':-2, 'max': 2}
+    })
+"""
+worldQ = get_euler_rotation_quaternion(jointsToFit, 'World')
+jointsToFit.update({
+    'World:xq':{'value': quat.as_euler_angles(worldQ)[0], 'min':math.radians(-180), 'max':math.radians(180)},
+    'World:yq':{'value': quat.as_euler_angles(worldQ)[1], 'min':math.radians(-180), 'max':math.radians(180)},
+    'World:zq':{'value': quat.as_euler_angles(worldQ)[2], 'min':math.radians(-180), 'max':math.radians(180)},
+    })
+
 skip = [
-    'World:xt',
-    'World:yt',
-    'World:zt',
     'World:x',
     'World:y',
     'World:z',
@@ -194,7 +206,7 @@ for joint in skip:
     jointsToFit.pop(joint)
 
 solver2 = IKFit(optSim, sitesToFit, jointsToFit,
-    skipThese = ['Hip_' + whichSide + ':y'],
+    #skipThese = ['World:aq', 'World:xq', 'World:yq', 'World:zq'],
     alignTo = referenceSeries, mjViewer = viewer2,
     method = 'nelder', simulationType = 'forward')
 solver2.jointsParam = dict_to_params(jointsToFit)
@@ -203,7 +215,7 @@ modelKin = pd.DataFrame(index = kinematics.index, columns = kinematics.columns)
 modelQpos = pd.DataFrame(index = kinematics.index, columns = params_to_series(solver2.jointsParam).index)
 alignedKin = pd.DataFrame(index = kinematics.index, columns = kinematics.columns)
 
-solver2.nelderTol = 1e-4
+solver2.nelderTol = 1e-3
 statistics = {
     'nfev': [],
     'redchi': []
@@ -218,13 +230,13 @@ for i in range(int(2e3)):
 """
 printing = True
 for t, kinSeries in kinematics.iterrows():
-
+    """
     referenceSeries =\
         copy.deepcopy(get_site_pos(kinSeries, optSim).loc[referenceJoint, :])\
         -copy.deepcopy(kinSeries.loc[referenceJoint, :])
 
     solver2.alignTo = referenceSeries
-
+    """
     stats = solver2.fit(t, kinSeries)
 
     if printing:
@@ -244,6 +256,7 @@ for t, kinSeries in kinematics.iterrows():
     modelKin.loc[t, :] = get_site_pos(kinSeries, optSim)
     modelQpos.loc[t, :] = params_to_series(stats.params)
     alignedKin.loc[t, :] = alignToModel(optSim, kinSeries, referenceSeries)
+    #pdb.set_trace()
 
 results = {
     'site_pos' : modelKin,

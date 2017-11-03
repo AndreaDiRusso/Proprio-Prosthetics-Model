@@ -9,7 +9,6 @@ from lmfit import minimize, Minimizer, Parameters, Parameter, report_fit
 from helper_functions import *
 from inverse_kinematics import *
 import math
-import quaternion as quat
 import numpy as np
 
 curfilePath = os.path.abspath(__file__)
@@ -25,7 +24,7 @@ parser.add_argument('--startTime', default = '27.760')
 parser.add_argument('--stopTime', default = '49.960')
 parser.add_argument('--showViewer', dest='showViewer', action='store_true')
 parser.add_argument('--reIndex', dest='reIndex', type = tuple, nargs = 1)
-parser.set_defaults(showViewer = False)
+parser.set_defaults(showViewer = True)
 parser.set_defaults(reIndex = None)
 args = parser.parse_args()
 
@@ -63,31 +62,31 @@ whichSide = 'Left'
 sitesToFit = ['MT_' + whichSide, 'M_' + whichSide, 'C_' + whichSide, 'GT_' + whichSide, 'K_' + whichSide]
 
 jointsToFit = {
-    'World:xt':[0.0,-3, 3],
-    'World:yt':[0.0,-3, 3],
-    'World:zt':[0.0,-3, 3],
-    'World:x':[0,math.radians(-180),math.radians(180)],
-    'World:y':[0,math.radians(-180),math.radians(180)],
-    'World:z':[-1.76,math.radians(-180),math.radians(180)],
-    'Hip_' + whichSide + ':x':[-1.04,math.radians(-60),math.radians(120)],
-    'Hip_' + whichSide + ':y':[0.48,math.radians(-30),math.radians(30)],
-    'Hip_' + whichSide + ':z':[0.19,math.radians(-15),math.radians(15)],
-    'Knee_' + whichSide + ':x':[1.75,math.radians(0),math.radians(120)],
-    'Ankle_' + whichSide + ':x':[-1.57,math.radians(-90),math.radians(30)],
-    'Ankle_' + whichSide + ':y':[0.11,math.radians(-60),math.radians(60)],
+    'World:xt':{'value':0.0,'min':-3,'max':3},
+    'World:yt':{'value':0.0,'min':-3,'max':3},
+    'World:zt':{'value':0.0,'min':-3,'max':3},
+    'World:x':{'value':0,'min':math.radians(-180),'max':math.radians(180)},
+    'World:y':{'value':0,'min':math.radians(-180),'max':math.radians(180)},
+    'World:z':{'value':-1.76,'min':math.radians(-180),'max':math.radians(180)},
+    'Hip_' + whichSide + ':x':{'value':-1.04,'min':math.radians(-60),'max':math.radians(120)},
+    'Hip_' + whichSide + ':y':{'value':0.48,'min':math.radians(-5),'max':math.radians(5)},
+    'Hip_' + whichSide + ':z':{'value':0.19,'min':math.radians(-5),'max':math.radians(5)},
+    'Knee_' + whichSide + ':x':{'value':1.75,'min':math.radians(0),'max':math.radians(120)},
+    'Ankle_' + whichSide + ':x':{'value':-1.57,'min':math.radians(-90),'max':math.radians(30)},
+    'Ankle_' + whichSide + ':y':{'value':0.11,'min':math.radians(-60),'max':math.radians(60)},
     } if whichSide == 'Right' else {
-        'World:xt':[0.06,-10, 10],
-        'World:yt':[0.02,-10, 10],
-        'World:zt':[-0.001,-10, 10],
-        'World:x':[1.73,math.radians(-180),math.radians(180)],
-        'World:y':[-0.56,math.radians(-180),math.radians(180)],
-        'World:z':[1.72,math.radians(-180),math.radians(180)],
-        'Hip_' + whichSide + ':x':[-1,math.radians(-120),math.radians(60)],
-        'Hip_' + whichSide + ':y':[0,math.radians(-30),math.radians(30)],
-        'Hip_' + whichSide + ':z':[0.05,math.radians(-15),math.radians(15)],
-        'Knee_' + whichSide + ':x':[-1.57,math.radians(-120),math.radians(0)],
-        'Ankle_' + whichSide + ':x':[1.58,math.radians(-30),math.radians(90)],
-        'Ankle_' + whichSide + ':y':[0.1,math.radians(-60),math.radians(60)],
+        'World:xt':{'value':0.06,'min':-10, 'max':10},
+        'World:yt':{'value':0.02,'min':-10, 'max':10},
+        'World:zt':{'value':-0.001,'min':-10, 'max':10},
+        'World:x':{'value':1.73,'min':math.radians(-180),'max':math.radians(180)},
+        'World:y':{'value':-0.56,'min':math.radians(-180),'max':math.radians(180)},
+        'World:z':{'value':1.72,'min':math.radians(-180),'max':math.radians(180)},
+        'Hip_' + whichSide + ':x':{'value':-1,'min':math.radians(-120),'max':math.radians(60)},
+        'Hip_' + whichSide + ':y':{'value':0,'min':math.radians(-5),'max':math.radians(5)},
+        'Hip_' + whichSide + ':z':{'value':0.05,'min':math.radians(-5),'max':math.radians(5)},
+        'Knee_' + whichSide + ':x':{'value':-1.57,'min':math.radians(-120),'max':math.radians(0)},
+        'Ankle_' + whichSide + ':x':{'value':1.58,'min':math.radians(-30),'max':math.radians(90)},
+        'Ankle_' + whichSide + ':y':{'value':0.1,'min':math.radians(-60),'max':math.radians(60)},
         }
 
 #Get kinematics
@@ -115,44 +114,29 @@ stats = solver.fit(t, kinSeries)
 #set initial guess to result of initial fit
 initialResults = params_to_dict(stats.params)
 for key, value in jointsToFit.items():
-    jointsToFit[key][0] = initialResults[key]
+    jointsToFit[key]['value'] = initialResults[key]['value']
 
 # second model does not contain world joints:
 #TODO: make this less kludgy
 
 origGravity = np.array([0,0,0,-9.78])
-
-xAxis = np.array([0,1,0,0])
-xAxisAngle = (jointsToFit['World:x'][0]*0.5) * xAxis/np.linalg.norm(xAxis)
-xQLog = quat.quaternion(*xAxisAngle)
-xQ = np.exp(xQLog)
-
-yAxis = np.array([0,0,1,0])
-yAxisAngle = (jointsToFit['World:y'][0]*0.5) * yAxis/np.linalg.norm(yAxis)
-yQLog = quat.quaternion(*yAxisAngle)
-yQ = np.exp(yQLog)
-
-zAxis = np.array([0,0,0,1])
-zAxisAngle = (jointsToFit['World:z'][0]*0.5) * zAxis/np.linalg.norm(zAxis)
-zQLog = quat.quaternion(*zAxisAngle)
-zQ = np.exp(zQLog)
-
+#q = get_euler_rotation_quaternion(jointsToFit, jointName = 'World')
 vec = quat.quaternion(*origGravity)
-q = xQ * yQ * zQ
-rotatedGravity = q * vec * np.conjugate(q)
+#rotatedGravity = q * vec * np.conjugate(q)
+rotatedGravity = vec
 
 worldCoords = pd.DataFrame({
     '1' : {
         'label' : 'World',
-        'x': math.degrees(jointsToFit['World:x'][0])/meshScale,
-        'y': math.degrees(jointsToFit['World:y'][0])/meshScale,
-        'z': math.degrees(jointsToFit['World:z'][0])/meshScale
+        'x': math.degrees(jointsToFit['World:x']['value'])/meshScale,
+        'y': math.degrees(jointsToFit['World:y']['value'])/meshScale,
+        'z': math.degrees(jointsToFit['World:z']['value'])/meshScale
         },
     '2': {
         'label' : 'World_t',
-        'x': jointsToFit['World:xt'][0]/meshScale,
-        'y': jointsToFit['World:yt'][0]/meshScale,
-        'z': jointsToFit['World:zt'][0]/meshScale
+        'x': jointsToFit['World:xt']['value']/meshScale,
+        'y': jointsToFit['World:yt']['value']/meshScale,
+        'z': jointsToFit['World:zt']['value']/meshScale
         },
     '3': {
         'label' : 'gravity',
@@ -172,9 +156,6 @@ modelXML2 = populate_model(secondTemplateFilePath, specification, resourcesDir,
 #model that will be varied for optimization fitting
 optModel = load_model_from_xml(modelXML2)
 optSim = MjSim(optModel)
-# model that will be posed for inverse dynamics
-poseModel = load_model_from_xml(modelXML2)
-poseSim = MjSim(poseModel)
 
 #viewer = MjViewerBasic(simulation) if showViewer else None
 #TODO: make flag for enabling and disabling contact force rendering

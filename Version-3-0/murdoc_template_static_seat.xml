@@ -86,16 +86,6 @@
 	<worldbody>
     <light directional='true' diffuse='1 1 1' specular='0 0 0' pos='0 0 40.5' dir='0 1 0'/>
 
-    <body name = 'Init' pos = '0 0 0' euler = '0 0 0' >
-
-      <site name="C_Init" pos='-0.022000 -0.035000 0.015000' rgba='1 0 0 1' size='15e-3'/>
-      <site name="GT_Init" pos='-0.038383 0.038689 -0.027012' rgba='0 1 0 1' size='15e-3'/>
-      <site name="K_Init" pos='-0.048703 -0.061385 -0.141855' rgba='0 0 1 1' size='15e-3'/>
-      <site name="MT_Init" pos='-0.052363 0.055734 -0.263889' rgba='0 1 1 1' size='15e-3'/>
-      <site name="M_Init" pos='-0.036526 0.099504 -0.205868' rgba='1 1 0 1' size='15e-3'/>
-
-    </body>
-
     <body name='Lower_Body' pos='0 0 0' euler='0 0 0'>
 
     <body name='Pelvis' pos='0 0 0' euler='0 0 0'>

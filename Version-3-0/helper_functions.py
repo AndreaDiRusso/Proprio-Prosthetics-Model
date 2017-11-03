@@ -8,6 +8,8 @@ from mujoco_py.generated import const
 from mujoco_py import functions
 import pdb, copy
 from mpl_toolkits.mplot3d import Axes3D
+import math
+import quaternion as quat
 
 def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None,
     flip = None, reIndex = None):
@@ -201,30 +203,67 @@ def dict_to_params(jointDict, skip = []):
         # silly workaround because Parameter() does not allow ':' in name
         # TODO: Fix
         key = key.replace(':', '_')
-        params.add(key, value=value[0], min=value[1], max=value[2], vary = vary)
+        params.add(key, value=value['value'], min=value['min'], max=value['max'], vary = vary)
     return params
 
 def params_to_dict(params):
-    jointSeries = {}
+    jointDict = {}
     for key, value in params.valuesdict().items():
         # silly workaround because Parameter() does not allow ':' in name
         # TODO: fix
         key = key[::-1].replace('_', ':', 1)[::-1]
-        jointSeries.update({key : value})
-    return jointSeries
+        jointDict.update({key: {'value': None, 'min' : None, 'max' : None}})
+        jointDict[key].update({'value' : value})
+    return jointDict
 
 def params_to_series(params):
-    return pd.Series(params_to_dict(params))
+    jointDictAll = params_to_dict(params)
+    jointDict = {key : value['value'] for key, value in jointDictAll.items()}
+    return pd.Series(jointDict)
 
-def pose_model(simulation, jointsDict, qAcc = None,
+def series_to_dict(jointSeries):
+    jointDict = { key : {'value': value} for key, value in jointSeries.to_dict().items()}
+    return jointDict
+
+def pose_model(simulation, jointDict, qAcc = None,
     qVel = None, method = 'forward'):
 
     simState = simulation.get_state()
     # TODO implement quaternion as degree of freedom
-    jointsDict = jointSeries.to_dict()
-    for jointName in jointsDict.keys():
-        jointId = simulation.model.get_joint_qpos_addr(jointName)
-        simState.qpos[jointId] = jointSeries.loc[jointName]
+    quatJointNames = set([])
+    for jointName in jointDict.keys():
+        try:
+            #print(jointName)
+            jointId = simulation.model.get_joint_qpos_addr(jointName)
+            #print(jointId)
+            simState.qpos[jointId] = jointDict[jointName]['value']
+        except:
+            # probably one of the quaternion joints
+            quatJointName = jointName[:-3]
+            quatJointNames.add(quatJointName)
+            #TODO: RuntimeError: dictionary changed size during iteration
+    #
+    for quatJointName in quatJointNames:
+
+        jointId = simulation.model.get_joint_qpos_addr(quatJointName)
+
+        rotation = quat.from_euler_angles(
+            jointDict[quatJointName + ':xq']['value'],
+            jointDict[quatJointName + ':yq']['value'],
+            jointDict[quatJointName + ':zq']['value']
+            )
+
+        simState.qpos[jointId[0]    ] = jointDict[quatJointName + ':xt']['value']
+        simState.qpos[jointId[0] + 1] = jointDict[quatJointName + ':yt']['value']
+        simState.qpos[jointId[0] + 2] = jointDict[quatJointName + ':zt']['value']
+
+        simState.qpos[jointId[0] + 3] = rotation.normalized().w
+
+        simState.qpos[jointId[0] + 4] = rotation.normalized().x
+
+        simState.qpos[jointId[0] + 5] = rotation.normalized().y
+
+        simState.qpos[jointId[0] + 6] = rotation.normalized().z
 
     # make the changes to joint state
     simulation.set_state(simState)
@@ -349,24 +388,11 @@ def long_form_df(kinDF, overrideColumns = None):
         longDF.columns = overrideColumns
     return longDF
 
-def get_world_rotation_quaternion(jointsToFit):
-    xAxis = np.array([0,1,0,0])
-    xAxisAngle = (jointsToFit['World:x'][0]*0.5) * xAxis/np.linalg.norm(xAxis)
-    xQLog = quat.quaternion(*xAxisAngle)
-    xQ = np.exp(xQLog)
-
-    yAxis = np.array([0,0,1,0])
-    yAxisAngle = (jointsToFit['World:y'][0]*0.5) * yAxis/np.linalg.norm(yAxis)
-    yQLog = quat.quaternion(*yAxisAngle)
-    yQ = np.exp(yQLog)
-
-    zAxis = np.array([0,0,0,1])
-    zAxisAngle = (jointsToFit['World:z'][0]*0.5) * zAxis/np.linalg.norm(zAxis)
-    zQLog = quat.quaternion(*zAxisAngle)
-    zQ = np.exp(zQLog)
-
-    vec = quat.quaternion(*origGravity)
-    q = xQ * yQ * zQ
+def get_euler_rotation_quaternion(jointsToFit, jointName):
+    q = quat.from_euler_angles(jointsToFit[jointName + ':x']['value'],
+        jointsToFit[jointName + ':y']['value'],
+        jointsToFit[jointName + ':z']['value']
+        )
     return q
 
 def contact_summary(simulation, debugging = False):
