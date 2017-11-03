@@ -216,9 +216,11 @@ def params_to_dict(params):
 def params_to_series(params):
     return pd.Series(params_to_dict(params))
 
-def pose_model(simulation, jointSeries, qAcc = None, qVel = None, method = 'forward'):
-    simState = simulation.get_state()
+def pose_model(simulation, jointsDict, qAcc = None,
+    qVel = None, method = 'forward'):
 
+    simState = simulation.get_state()
+    # TODO implement quaternion as degree of freedom
     jointsDict = jointSeries.to_dict()
     for jointName in jointsDict.keys():
         jointId = simulation.model.get_joint_qpos_addr(jointName)
@@ -346,6 +348,26 @@ def long_form_df(kinDF, overrideColumns = None):
     if overrideColumns is not None:
         longDF.columns = overrideColumns
     return longDF
+
+def get_world_rotation_quaternion(jointsToFit):
+    xAxis = np.array([0,1,0,0])
+    xAxisAngle = (jointsToFit['World:x'][0]*0.5) * xAxis/np.linalg.norm(xAxis)
+    xQLog = quat.quaternion(*xAxisAngle)
+    xQ = np.exp(xQLog)
+
+    yAxis = np.array([0,0,1,0])
+    yAxisAngle = (jointsToFit['World:y'][0]*0.5) * yAxis/np.linalg.norm(yAxis)
+    yQLog = quat.quaternion(*yAxisAngle)
+    yQ = np.exp(yQLog)
+
+    zAxis = np.array([0,0,0,1])
+    zAxisAngle = (jointsToFit['World:z'][0]*0.5) * zAxis/np.linalg.norm(zAxis)
+    zQLog = quat.quaternion(*zAxisAngle)
+    zQ = np.exp(zQLog)
+
+    vec = quat.quaternion(*origGravity)
+    q = xQ * yQ * zQ
+    return q
 
 def contact_summary(simulation, debugging = False):
     activeContacts = []

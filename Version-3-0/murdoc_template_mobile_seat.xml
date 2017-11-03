@@ -40,27 +40,52 @@
     <site size='0.5e-3 0.5e-3 0.5e-3' rgba='1 0 0 0'/>
     <geom solimp="0.99 0.99 0" solref="0.01 1" friction = "5 0.01e6 0.001e6" condim='6'/>
 
+
     <default class='Hip:x'>
       <joint type='hinge' axis='0 1 0' ref='0' range='-120 60' limited='true' armature='0.0001' stiffness='0' springref='0'/>
-		</default>
-		<default class='Hip:y'>
+    </default>
+    <default class='Hip:y'>
             <joint type='hinge' axis='0 1 0' range='-30 30' damping='5' limited='true' stiffness='0' armature='0.0080' />
-		</default>
-		<default class='Hip:z'>
+    </default>
+    <default class='Hip:z'>
             <joint type='hinge' axis='0 0 1' range='-15 15' damping='5' limited='true' stiffness='0' armature='0.0080' />
-		</default>
-		<default class = 'Knee:x'>
-			<joint type='hinge' axis='1 0 0' range='-120  0' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
-		</default>
-		<default class = 'Knee:y'>
-			<joint type='hinge' axis='1 0 0' range='-40 120' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
-		</default>
-		<default class = 'Ankle:x'>
-			<joint type='hinge' axis='1 0 0' pos='0 0 0' range='-30 90' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
-		</default>
-		<default class = 'Ankle:y'>
-			<joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
-		</default>
+    </default>
+    <default class = 'Knee:x'>
+      <joint type='hinge' axis='1 0 0' range='-120  0' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
+    </default>
+    <default class = 'Knee:y'>
+      <joint type='hinge' axis='1 0 0' range='-40 120' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
+    </default>
+    <default class = 'Ankle:x'>
+      <joint type='hinge' axis='1 0 0' pos='0 0 0' range='-60 90' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+    </default>
+    <default class = 'Ankle:y'>
+      <joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+    </default>
+
+                            <!--
+    <default class='Hip:x'>
+    <joint type='hinge' axis='0 1 0' ref='0' range='-60 120' limited='true' armature='0.0001' stiffness='0' springref='0'/>
+    </default>
+    <default class='Hip:y'>
+          <joint type='hinge' axis='0 1 0' range='-30 30' damping='5' limited='true' stiffness='0' armature='0.0080' />
+    </default>
+    <default class='Hip:z'>
+          <joint type='hinge' axis='0 0 1' range='-15 15' damping='5' limited='true' stiffness='0' armature='0.0080' />
+    </default>
+    <default class = 'Knee:x'>
+    <joint type='hinge' axis='1 0 0' range='0  120' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
+    </default>
+    <default class = 'Knee:y'>
+    <joint type='hinge' axis='1 0 0' range='-120 40' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
+    </default>
+    <default class = 'Ankle:x'>
+    <joint type='hinge' axis='1 0 0' pos='0 0 0' range='-90 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+    </default>
+    <default class = 'Ankle:y'>
+    <joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+    </default>
+    -->
 	</default>
 
 	<worldbody>

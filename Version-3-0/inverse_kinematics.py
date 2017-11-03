@@ -68,6 +68,7 @@ class IKFit:
 
     def joint_pos2site_pos(self, jointSeries, kinSeries):
 
+        # TODO implement quaternion as degree of freedom
         self.simulation = pose_model(self.simulation, jointSeries,
             method = self.simulationType)
         # get resulting changes

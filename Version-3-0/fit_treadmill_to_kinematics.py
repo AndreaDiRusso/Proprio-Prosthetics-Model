@@ -20,12 +20,12 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1.txt')
-parser.add_argument('--startTime', default = '27.760')
-parser.add_argument('--stopTime', default = '49.960')
+parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/MI locomotion data/Biomechanical Model/q19d20131124tkTRDMdsNORMt401/Q19_20131124_pre_TRDM_(4.0)_1_KIN_processed.txt')
+parser.add_argument('--startTime', default = '40.5')
+parser.add_argument('--stopTime', default = '50')
 parser.add_argument('--showViewer', dest='showViewer', action='store_true')
 parser.add_argument('--reIndex', dest='reIndex', type = tuple, nargs = 1)
-parser.set_defaults(showViewer = False)
+parser.set_defaults(showViewer = True)
 parser.set_defaults(reIndex = None)
 args = parser.parse_args()
 
@@ -40,10 +40,10 @@ print(reIndex)
 
 resourcesDir = curDir + '/Resources/Murdoc'
 
-templateFilePath = curDir + '/murdoc_template_static_seat.xml'
+templateFilePath = curDir + '/murdoc_template_static_treadmill.xml'
 fcsvFilePath = resourcesDir + '/Aligned-To-Pelvis/Fiducials.fcsv'
 
-meshScale = 1.1e-3
+meshScale = .9e-3
 specification = fcsv_to_spec(fcsvFilePath)
 modelXML = populate_model(templateFilePath, specification,
     resourcesDir, meshScale = meshScale, showTendons = True)
@@ -59,7 +59,7 @@ if showContactForces and showViewer:
 else:
     viewer = None
 
-whichSide = 'Left'
+whichSide = 'Right'
 sitesToFit = ['MT_' + whichSide, 'M_' + whichSide, 'C_' + whichSide, 'GT_' + whichSide, 'K_' + whichSide]
 
 jointsToFit = {
@@ -70,8 +70,8 @@ jointsToFit = {
     'World:y':[0,math.radians(-180),math.radians(180)],
     'World:z':[-1.76,math.radians(-180),math.radians(180)],
     'Hip_' + whichSide + ':x':[-1.04,math.radians(-60),math.radians(120)],
-    'Hip_' + whichSide + ':y':[0.48,math.radians(-30),math.radians(30)],
-    'Hip_' + whichSide + ':z':[0.19,math.radians(-15),math.radians(15)],
+    'Hip_' + whichSide + ':y':[0.48,math.radians(-5),math.radians(5)],
+    'Hip_' + whichSide + ':z':[0.19,math.radians(-5),math.radians(5)],
     'Knee_' + whichSide + ':x':[1.75,math.radians(0),math.radians(120)],
     'Ankle_' + whichSide + ':x':[-1.57,math.radians(-90),math.radians(30)],
     'Ankle_' + whichSide + ':y':[0.11,math.radians(-60),math.radians(60)],
@@ -83,8 +83,8 @@ jointsToFit = {
         'World:y':[-0.56,math.radians(-180),math.radians(180)],
         'World:z':[1.72,math.radians(-180),math.radians(180)],
         'Hip_' + whichSide + ':x':[-1,math.radians(-120),math.radians(60)],
-        'Hip_' + whichSide + ':y':[0,math.radians(-30),math.radians(30)],
-        'Hip_' + whichSide + ':z':[0.05,math.radians(-15),math.radians(15)],
+        'Hip_' + whichSide + ':y':[0,math.radians(-5),math.radians(5)],
+        'Hip_' + whichSide + ':z':[0.05,math.radians(-5),math.radians(5)],
         'Knee_' + whichSide + ':x':[-1.57,math.radians(-120),math.radians(0)],
         'Ankle_' + whichSide + ':x':[1.58,math.radians(-30),math.radians(90)],
         'Ankle_' + whichSide + ':y':[0.1,math.radians(-60),math.radians(60)],
@@ -165,16 +165,13 @@ worldCoords = pd.DataFrame({
 #TODO: populate specification with world transformation
 specification = specification.append(worldCoords, ignore_index = True)
 secondTemplateFilePath = '/'.join(templateFilePath.split('/')[:-1]) +\
-    '/murdoc_template_mobile_seat.xml'
+    '/murdoc_template_mobile_treadmill.xml'
 modelXML2 = populate_model(secondTemplateFilePath, specification, resourcesDir,
-    showTendons = True)
+    meshScale = meshScale, showTendons = True)
 
 #model that will be varied for optimization fitting
 optModel = load_model_from_xml(modelXML2)
 optSim = MjSim(optModel)
-# model that will be posed for inverse dynamics
-poseModel = load_model_from_xml(modelXML2)
-poseSim = MjSim(poseModel)
 
 #viewer = MjViewerBasic(simulation) if showViewer else None
 #TODO: make flag for enabling and disabling contact force rendering
@@ -212,14 +209,22 @@ statistics = {
     'redchi': []
     }
 
+"""
 for i in range(int(2e3)):
     #settle model
     optSim.step()
     if viewer2:
         viewer2.render()
-
+"""
 printing = True
 for t, kinSeries in kinematics.iterrows():
+
+    referenceSeries =\
+        copy.deepcopy(get_site_pos(kinSeries, optSim).loc[referenceJoint, :])\
+        -copy.deepcopy(kinSeries.loc[referenceJoint, :])
+
+    solver2.alignTo = referenceSeries
+
     stats = solver2.fit(t, kinSeries)
 
     if printing:
