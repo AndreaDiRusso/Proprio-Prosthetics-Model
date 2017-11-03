@@ -1,7 +1,7 @@
 <mujoco model="Murdoc">
 
     <compiler inertiafromgeom='true' angle='degree'/>
-    <option gravity='$gravity:x$ $gravity:y$ $gravity:z$'/>
+    <option gravity='0 0 -9.78'/>
     <option timestep='0.01' impratio = '2'/>
     <option>
     <flag fwdinv = 'enable'/>

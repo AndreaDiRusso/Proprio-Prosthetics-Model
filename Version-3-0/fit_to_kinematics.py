@@ -39,7 +39,7 @@ resourcesDir = curDir + '/Resources/Murdoc'
 templateFilePath = curDir + '/murdoc_template_floating.xml'
 fcsvFilePath = resourcesDir + '/Aligned-To-Pelvis/Fiducials.fcsv'
 
-meshScale = .9e-3
+meshScale = 1.2e-3
 specification = fcsv_to_spec(fcsvFilePath)
 modelXML = populate_model(templateFilePath, specification, resourcesDir,
     meshScale = meshScale, showTendons = True)
@@ -47,6 +47,10 @@ modelXML = populate_model(templateFilePath, specification, resourcesDir,
 model = load_model_from_xml(modelXML)
 simulation = MjSim(model)
 
+statistics = {
+    'nfev': [],
+    'redchi': []
+    }
 #viewer = MjViewerBasic(simulation) if showViewer else None
 #TODO: make flag for enabling and disabling contact force rendering
 if showContactForces and showViewer:
@@ -55,7 +59,7 @@ if showContactForces and showViewer:
 else:
     viewer = None
 
-whichSide = 'Right'
+whichSide = 'Left'
 sitesToFit = ['MT_' + whichSide, 'M_' + whichSide, 'C_' + whichSide, 'GT_' + whichSide, 'K_' + whichSide]
 
 #initial guesses for eitehr side

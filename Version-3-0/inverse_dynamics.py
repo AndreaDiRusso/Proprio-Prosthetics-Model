@@ -19,8 +19,8 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_kinematics.pickle')
-parser.add_argument('--modelFile', default = 'murdoc_gen.xml')
+parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_filtered_kinematics.pickle')
+parser.add_argument('--modelFile', default = 'murdoc_template_mobile_seat.xml')
 
 args = parser.parse_args()
 
@@ -28,13 +28,17 @@ kinematicsFile = args.kinematicsFile
 modelFile = args.modelFile
 
 resourcesDir = curDir + '/Resources/Murdoc'
+templateFilePath = curDir + '/' + modelFile
 
-with open(curDir + '/' + modelFile, 'r') as f:
-    model = load_model_from_xml(f.read())
+fcsvFilePath = resourcesDir + '/Aligned-To-Pelvis/Fiducials.fcsv'
+
+specification = fcsv_to_spec(fcsvFilePath)
+modelXML = populate_model(templateFilePath, specification, resourcesDir, showTendons = True)
 
 with open(kinematicsFile, 'rb') as f:
     kinematics = pickle.load(f)
 
+model = load_model_from_xml(modelXML)
 simulation = MjSim(model)
 dt = simulation.model.opt.timestep
 
@@ -46,6 +50,40 @@ viewer._render_every_frame = True
 #get resting lengths
 nJoints = simulation.model.njnt
 allJoints = [simulation.model.joint_id2name(i) for i in range(nJoints)]
+
+modelQAcc = pd.DataFrame(index = kinematics['site_pos'].index,
+    columns = kinematics['qpos'].columns)
+modelQFrcInverse = pd.DataFrame(index = kinematics['site_pos'].index,
+    columns = kinematics['qpos'].columns)
+modelQfrcConstraint = pd.DataFrame(index = kinematics['site_pos'].index,
+    columns = kinematics['qpos'].columns)
+
+jointMask = dict.fromkeys(kinematics['qpos'].columns)
+for jointName in kinematics['qpos'].columns:
+    try:
+        jointId = simulation.model.get_joint_qvel_addr(jointName)
+        jointMask[jointName] = jointId
+        print(jointName)
+    except:
+        pass
+
+for i in range(int(2e3)):
+    #settle model
+    simulation.step()
+    viewer.render()
+
+allActiveContacts = []
+
+#Do an initial pose to void discontinuities:
+jointDict = series_to_dict( kinematics['qpos'].iloc[0, :])
+
+skip = ['World:' + i for i in
+    ['xq', 'yq', 'zq', 'xt', 'yt', 'zt']]
+
+for name in skip:
+    jointDict.pop(name)
+
+simulation = pose_model(simulation,jointDict, method = 'forward')
 
 bufferSize = 3
 
@@ -59,25 +97,8 @@ mybuffer = {
     'qpos': dummyQPos
     }
 
-
-modelQAcc = pd.DataFrame(index = kinematics['site_pos'].index,
-    columns = kinematics['qpos'].columns)
-modelQFrcInverse = pd.DataFrame(index = kinematics['site_pos'].index,
-    columns = kinematics['qpos'].columns)
-modelQfrcConstraint = pd.DataFrame(index = kinematics['site_pos'].index,
-    columns = kinematics['qpos'].columns)
-
-jointMask = dict.fromkeys(kinematics['qpos'].columns)
-for jointName in kinematics['qpos'].columns:
-    jointId = simulation.model.get_joint_qvel_addr(jointName)
-    jointMask[jointName] = jointId
-
-for i in range(int(2e3)):
-    #settle model
-    simulation.step()
-    viewer.render()
-
-allActiveContacts = []
+#TODO: rotate into alignment with the world so that gravity is pointing in the
+# proper direction. We can use the world entries from the qpos series to do this
 for t, kinSeries in kinematics['site_pos'].iterrows():
     # calculate qAcc and pass to pose model
     qPosMat = np.asarray(mybuffer['qpos'])
@@ -101,15 +122,22 @@ for t, kinSeries in kinematics['site_pos'].iterrows():
     activeContacts = contact_summary(simulation)
     allActiveContacts.append(activeContacts)
 
-    simulation = pose_model(simulation, kinematics['qpos'].loc[t, :],
+    jointDict = series_to_dict( kinematics['qpos'].loc[t, :])
+
+    skip = ['World:' + i for i in
+        ['xq', 'yq', 'zq', 'xt', 'yt', 'zt']]
+
+    for name in skip:
+        jointDict.pop(name)
+
+    simulation = pose_model(simulation,jointDict,
         qAcc = qAcc, qVel = qVelMat[-1], method = 'inverse')
 
     _ = mybuffer['qpos'].popleft()
     newValue = copy.deepcopy(simulation.data.qpos)
     mybuffer['qpos'].append(newValue)
 
-    #simulation.forward()
-    render_targets(viewer, kinematics['orig_site_pos'].loc[t, :])
+    simulation = pose_model(simulation,jointDict, method = 'forward')
     viewer.render()
 
 results = {
