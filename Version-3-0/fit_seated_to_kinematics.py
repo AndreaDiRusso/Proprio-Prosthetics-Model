@@ -58,22 +58,22 @@ if showContactForces and showViewer:
 else:
     viewer = None
 
-whichSide = 'Right'
+whichSide = 'Left'
 sitesToFit = ['MT_' + whichSide, 'M_' + whichSide, 'C_' + whichSide, 'GT_' + whichSide, 'K_' + whichSide]
 
 jointsToFit = {
-    'World:xt':[0.06,-10, 10],
-    'World:yt':[0.02,-10, 10],
-    'World:zt':[-0.001,-10, 10],
+    'World:xt':[0.0,-3, 3],
+    'World:yt':[0.0,-3, 3],
+    'World:zt':[0.0,-3, 3],
     'World:x':[0,math.radians(-180),math.radians(180)],
     'World:y':[0,math.radians(-180),math.radians(180)],
-    'World:z':[1.72,math.radians(-180),math.radians(180)],
-    'Hip_' + whichSide + ':x':[-1,math.radians(-60),math.radians(120)],
-    'Hip_' + whichSide + ':y':[0,math.radians(-30),math.radians(30)],
-    'Hip_' + whichSide + ':z':[0,math.radians(-15),math.radians(15)],
-    'Knee_' + whichSide + ':x':[-1.57,math.radians(0),math.radians(120)],
-    'Ankle_' + whichSide + ':x':[1.58,math.radians(-90),math.radians(30)],
-    'Ankle_' + whichSide + ':y':[0.1,math.radians(-60),math.radians(60)],
+    'World:z':[-1.76,math.radians(-180),math.radians(180)],
+    'Hip_' + whichSide + ':x':[-1.04,math.radians(-60),math.radians(120)],
+    'Hip_' + whichSide + ':y':[0.48,math.radians(-30),math.radians(30)],
+    'Hip_' + whichSide + ':z':[0.19,math.radians(-15),math.radians(15)],
+    'Knee_' + whichSide + ':x':[1.75,math.radians(0),math.radians(120)],
+    'Ankle_' + whichSide + ':x':[-1.57,math.radians(-90),math.radians(30)],
+    'Ankle_' + whichSide + ':y':[0.11,math.radians(-60),math.radians(60)],
     } if whichSide == 'Right' else {
         'World:xt':[0.06,-10, 10],
         'World:yt':[0.02,-10, 10],
@@ -89,11 +89,6 @@ jointsToFit = {
         'Ankle_' + whichSide + ':y':[0.1,math.radians(-60),math.radians(60)],
         }
 
-referenceJoint = 'C_' + whichSide
-solver = IKFit(simulation, sitesToFit, jointsToFit,
-    alignTo = referenceJoint, mjViewer = viewer, method = 'nelder',
-    simulationType = 'forward')
-
 #Get kinematics
 timeSelection = [startTime, stopTime]
 kinematics = get_kinematics(kinematicsFile,
@@ -103,6 +98,17 @@ kinematics = get_kinematics(kinematicsFile,
 #provide initial fit
 kinIterator = kinematics.iterrows()
 t, kinSeries = next(kinIterator)
+
+referenceJoint = 'C_' + whichSide
+referenceSeries =\
+    copy.deepcopy(get_site_pos(kinSeries, simulation).loc[referenceJoint, :])\
+    -copy.deepcopy(kinSeries.loc[referenceJoint, :])
+
+solver = IKFit(simulation, sitesToFit, jointsToFit,
+    skipThese = ['Hip_' + whichSide + ':y'],
+    alignTo = referenceSeries, mjViewer = viewer, method = 'nelder',
+    simulationType = 'forward')
+
 stats = solver.fit(t, kinSeries)
 
 #set initial guess to result of initial fit
@@ -112,7 +118,7 @@ for key, value in jointsToFit.items():
 
 # second model does not contain world joints:
 #TODO: make this less kludgy
-meshScale = 0.9e-3
+meshScale = 1.25e-3
 
 origGravity = np.array([0,0,0,-9.78])
 
@@ -190,7 +196,7 @@ for joint in skip:
     jointsToFit.pop(joint)
 
 solver2 = IKFit(optSim, sitesToFit, jointsToFit,
-    alignTo = referenceJoint, mjViewer = viewer2,
+    alignTo = referenceSeries, mjViewer = viewer2,
     method = 'nelder', simulationType = 'forward')
 solver2.jointsParam = dict_to_params(jointsToFit)
 
@@ -230,7 +236,7 @@ for t, kinSeries in kinematics.iterrows():
 
     modelKin.loc[t, :] = get_site_pos(kinSeries, optSim)
     modelQpos.loc[t, :] = params_to_series(stats.params)
-    alignedKin.loc[t, :] = alignToModel(optSim, kinSeries, referenceJoint)
+    alignedKin.loc[t, :] = alignToModel(optSim, kinSeries, referenceSeries)
 
 results = {
     'site_pos' : modelKin,

@@ -66,7 +66,6 @@
 	<worldbody>
     <light directional='true' diffuse='1 1 1' specular='0 0 0' pos='0 0 40.5' dir='0 1 0'/>
 
-
     <body name='Seat' pos='$World_t:x$ $World_t:y$ $World_t:z$' euler='$World:x$ $World:y$ $World:z$'>
       <site name="T12_Attachment_Left" pos='$T12_Left:x$	$T12_Left:y$	$T12_Left:z$' rgba='0 0 1 0.33' size='15e-3'/>
       <site name="T12_Attachment_Right" pos='$T12_Right:x$	$T12_Right:y$	$T12_Right:z$' rgba='0 0 1 0.33' size='15e-3'/>
@@ -74,7 +73,7 @@
       <site name="Seat_Center" pos='$Seat_Center:x$ $Seat_Center:y$ $Seat_Center:z$' rgba='1 1 0 1' size='15e-3'/>
     </body>
 
-    <body name='Pelvis' pos='$World_t:x$ $World_t:y$ $World_t:z$' euler='$World:x$ $World:y$ $World:z$'>
+      <body name='Pelvis' pos='$World_t:x$ $World_t:y$ $World_t:z$' euler='$World:x$ $World:y$ $World:z$'>
       <joint name='world' type = 'free'/>
 
       <site name="T12_Left" pos='$T12_Left:x$	$T12_Left:y$	$T12_Left:z$' rgba='1 0 0 0.33' size='15e-3'/>

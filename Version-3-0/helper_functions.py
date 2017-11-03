@@ -277,30 +277,27 @@ def get_site_pos(kinSeries, simulation):
     return sitePos
 
 def alignToModel(simulation, kinSeries, referenceSeries):
-    modelSitePos = get_site_pos(kinSeries, simulation)
-
     alignedSitePos = copy.deepcopy(kinSeries)
 
     #e.g. kin[GT_left, x] = kin[GT_Left, x] - kin[Reference, x]
-    origFramePos = copy.deepcopy(alignedSitePos.loc[reference, ('x', 'y', 'z')])
-    destFramePos = copy.deepcopy(modelSitePos.loc[reference, ('x', 'y', 'z')])
+    referenceName = np.unique(referenceSeries.index.get_level_values('joint'))[0]
 
     for siteName in np.unique(alignedSitePos.index.get_level_values('joint')):
-        alignedSitePos[(siteName, 'x')] = alignedSitePos[(siteName, 'x')] - origFramePos[(reference, 'x')] + destFramePos[(reference, 'x')]
-        alignedSitePos[(siteName, 'y')] = alignedSitePos[(siteName, 'y')] - origFramePos[(reference, 'y')] + destFramePos[(reference, 'y')]
-        alignedSitePos[(siteName, 'z')] = alignedSitePos[(siteName, 'z')] - origFramePos[(reference, 'z')] + destFramePos[(reference, 'z')]
+        alignedSitePos[(siteName, 'x')] = alignedSitePos[(siteName, 'x')] + referenceSeries[(referenceName, 'x')]
+        alignedSitePos[(siteName, 'y')] = alignedSitePos[(siteName, 'y')] + referenceSeries[(referenceName, 'y')]
+        alignedSitePos[(siteName, 'z')] = alignedSitePos[(siteName, 'z')] + referenceSeries[(referenceName, 'z')]
 
     return alignedSitePos
 
-def plot_sites_3D(kinSeries, useRange = slice(None)):
+def plot_sites_3D(kinDF, useRange = slice(None)):
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    for siteName in np.unique(kinSeries.columns.get_level_values('joint')):
-        ax.plot(kinSeries[(siteName, 'x')].values[useRange],
-            kinSeries[(siteName, 'y')].values[useRange],
-            kinSeries[(siteName, 'z')].values[useRange], marker = 'o')
+    for siteName in np.unique(kinDF.columns.get_level_values('joint')):
+        ax.plot(kinDF[(siteName, 'x')].values[useRange],
+            kinDF[(siteName, 'y')].values[useRange],
+            kinDF[(siteName, 'z')].values[useRange], marker = 'o')
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')

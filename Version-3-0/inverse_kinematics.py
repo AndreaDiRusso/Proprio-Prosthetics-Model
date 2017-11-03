@@ -38,12 +38,13 @@ def fcn2min(params, t, kinSeries, solver):
 
 class IKFit:
 
-    def __init__(self, simulation, sitesToFit, jointsToFit, alignTo = None,
-        mjViewer = None, method = 'leastsq', simulationType = 'forward'):
+    def __init__(self, simulation, sitesToFit, jointsToFit, skipThese = [],
+        alignTo = None, mjViewer = None, method = 'leastsq',
+        simulationType = 'forward'):
 
         # which site to align model and data to
         if alignTo is None:
-            self.alignTo = sitesToFit[0]
+            self.alignTo = None
         else:
             self.alignTo = alignTo
 
@@ -52,7 +53,7 @@ class IKFit:
         self.simulation = simulation
         # joints to vary in order to fit
         # as set of Parameters
-        self.jointsParam = dict_to_params(jointsToFit)
+        self.jointsParam = dict_to_params(jointsToFit, skip = skipThese)
         self.jointsDict = jointsToFit
         # sites to check for fit
         self.sitesToFit = sitesToFit
