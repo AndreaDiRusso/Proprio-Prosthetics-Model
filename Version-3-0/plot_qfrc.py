@@ -48,7 +48,7 @@ matplotlib.rcParams.update({'ytick.color': 'black' if invertColors else 'white'}
 g = sns.FacetGrid(qFrc, row = 'Tendon', size = 3, aspect = 3,
     despine = False, sharey = False, sharex = True)
 g.map(plt.plot, 'Time (sec)', 'Joint Torque (N*m)', lw = 3)
-g.set(ylim=(-.25, .25))
+g.set(ylim=(-.5, .5))
 
 plt.savefig(kineticsFile.split('_kinetics')[0] + '_qfrc_plot.png')
 

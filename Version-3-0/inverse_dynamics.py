@@ -36,21 +36,12 @@ with open(kinematicsFile, 'rb') as f:
     kinematics = pickle.load(f)
 
 simulation = MjSim(model)
+dt = simulation.model.opt.timestep
 
 viewer = MjViewer(simulation)
 viewer.vopt.flags[10] = viewer.vopt.flags[11] = not viewer.vopt.flags[10]
 #viewer._hide_overlay = True
 viewer._render_every_frame = True
-
-
-#optionally, low pass filter the kinematics
-dt = simulation.model.opt.timestep
-fr = 1 / dt
-lowCutoff = 5
-Wn = 2 * lowCutoff / fr
-b, a = signal.butter(8, Wn, analog=False)
-for column in kinematics['qpos']:
-    kinematics['qpos'].loc[:, column] = signal.filtfilt(b, a, kinematics['qpos'].loc[:, column])
 
 #get resting lengths
 nJoints = simulation.model.njnt

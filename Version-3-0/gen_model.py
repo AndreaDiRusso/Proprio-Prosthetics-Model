@@ -10,8 +10,14 @@ import seaborn as sns
 import itertools
 from lmfit import Parameters, Parameter
 from mujoco_py.generated import const
-import pdb, copy, os
+import pdb, copy, os, argparse
 from helper_functions import *
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--modelFile', default = 'murdoc_template.xml')
+args = parser.parse_args()
+modelFile = args.modelFile
+
 
 curfilePath = os.path.abspath(__file__)
 #print(curfilePath)
@@ -22,9 +28,8 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 
 resourcesDir = curDir + '/Resources/Murdoc'
 
-templateFilePath = curDir + '/murdoc_template.xml'
+templateFilePath = curDir + '/' + modelFile
 fcsvFilePath = resourcesDir + '/Aligned-To-Pelvis/Fiducials.fcsv'
-
 
 specification = fcsv_to_spec(fcsvFilePath)
 modelXML = populate_model(templateFilePath, specification, resourcesDir, showTendons = True)

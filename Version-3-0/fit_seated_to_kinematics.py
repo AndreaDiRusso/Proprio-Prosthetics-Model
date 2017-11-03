@@ -24,22 +24,28 @@ parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/gro
 parser.add_argument('--startTime', default = '27.760')
 parser.add_argument('--stopTime', default = '49.960')
 parser.add_argument('--showViewer', dest='showViewer', action='store_true')
+parser.add_argument('--reIndex', dest='reIndex', type = tuple, nargs = 1)
 parser.set_defaults(showViewer = False)
+parser.set_defaults(reIndex = None)
 args = parser.parse_args()
 
 kinematicsFile = args.kinematicsFile
 startTime = float(args.startTime)
 stopTime = float(args.stopTime)
 showViewer = args.showViewer
+reIndex = args.reIndex
 showContactForces = True
+
+print(reIndex)
 
 resourcesDir = curDir + '/Resources/Murdoc'
 
-templateFilePath = curDir + '/murdoc_template.xml'
+templateFilePath = curDir + '/murdoc_template_static_seat.xml'
 fcsvFilePath = resourcesDir + '/Aligned-To-Pelvis/Fiducials.fcsv'
 
 specification = fcsv_to_spec(fcsvFilePath)
-modelXML = populate_model(templateFilePath, specification, resourcesDir, showTendons = True)
+modelXML = populate_model(templateFilePath, specification,
+    resourcesDir, meshScale = 1e-3, showTendons = True)
 
 alignModel= load_model_from_xml(modelXML)
 simulation = MjSim(alignModel)
@@ -52,32 +58,47 @@ if showContactForces and showViewer:
 else:
     viewer = None
 
-sitesToFit = ['MT_Left', 'M_Left', 'C_Left', 'GT_Left', 'K_Left']
+whichSide = 'Right'
+sitesToFit = ['MT_' + whichSide, 'M_' + whichSide, 'C_' + whichSide, 'GT_' + whichSide, 'K_' + whichSide]
 
 jointsToFit = {
-    'World:xt':[0.06,-1, 1],
-    'World:yt':[0.02,-1, 1],
-    'World:zt':[-0.001,-1, 1],
-    'World:x':[1.73,math.radians(-180),math.radians(180)],
-    'World:y':[-0.56,math.radians(-180),math.radians(180)],
+    'World:xt':[0.06,-10, 10],
+    'World:yt':[0.02,-10, 10],
+    'World:zt':[-0.001,-10, 10],
+    'World:x':[0,math.radians(-180),math.radians(180)],
+    'World:y':[0,math.radians(-180),math.radians(180)],
     'World:z':[1.72,math.radians(-180),math.radians(180)],
-    'Hip_Left:x':[-1,math.radians(-120),math.radians(60)],
-    'Hip_Left:y':[0,math.radians(-30),math.radians(30)],
-    'Hip_Left:z':[0.05,math.radians(-15),math.radians(15)],
-    'Knee_Left:x':[-1.57,math.radians(-120),math.radians(0)],
-    'Ankle_Left:x':[1.58,math.radians(-30),math.radians(90)],
-    'Ankle_Left:y':[0.1,math.radians(-60),math.radians(60)],
-    }
+    'Hip_' + whichSide + ':x':[-1,math.radians(-60),math.radians(120)],
+    'Hip_' + whichSide + ':y':[0,math.radians(-30),math.radians(30)],
+    'Hip_' + whichSide + ':z':[0,math.radians(-15),math.radians(15)],
+    'Knee_' + whichSide + ':x':[-1.57,math.radians(0),math.radians(120)],
+    'Ankle_' + whichSide + ':x':[1.58,math.radians(-90),math.radians(30)],
+    'Ankle_' + whichSide + ':y':[0.1,math.radians(-60),math.radians(60)],
+    } if whichSide == 'Right' else {
+        'World:xt':[0.06,-10, 10],
+        'World:yt':[0.02,-10, 10],
+        'World:zt':[-0.001,-10, 10],
+        'World:x':[1.73,math.radians(-180),math.radians(180)],
+        'World:y':[-0.56,math.radians(-180),math.radians(180)],
+        'World:z':[1.72,math.radians(-180),math.radians(180)],
+        'Hip_' + whichSide + ':x':[-1,math.radians(-120),math.radians(60)],
+        'Hip_' + whichSide + ':y':[0,math.radians(-30),math.radians(30)],
+        'Hip_' + whichSide + ':z':[0.05,math.radians(-15),math.radians(15)],
+        'Knee_' + whichSide + ':x':[-1.57,math.radians(-120),math.radians(0)],
+        'Ankle_' + whichSide + ':x':[1.58,math.radians(-30),math.radians(90)],
+        'Ankle_' + whichSide + ':y':[0.1,math.radians(-60),math.radians(60)],
+        }
 
-referenceJoint = 'C_Left'
+referenceJoint = 'C_' + whichSide
 solver = IKFit(simulation, sitesToFit, jointsToFit,
     alignTo = referenceJoint, mjViewer = viewer, method = 'nelder',
     simulationType = 'forward')
 
 #Get kinematics
+timeSelection = [startTime, stopTime]
 kinematics = get_kinematics(kinematicsFile,
     selectHeaders = sitesToFit,
-    selectTime = [startTime, stopTime], reIndex = None)
+    selectTime = timeSelection, reIndex = reIndex)
 
 #provide initial fit
 kinIterator = kinematics.iterrows()
@@ -91,7 +112,7 @@ for key, value in jointsToFit.items():
 
 # second model does not contain world joints:
 #TODO: make this less kludgy
-meshScale = 1.1e-3
+meshScale = 0.9e-3
 
 origGravity = np.array([0,0,0,-9.78])
 

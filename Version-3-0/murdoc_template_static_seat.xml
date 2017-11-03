@@ -35,8 +35,9 @@
 	<default>
     <site size='0.5e-3 0.5e-3 0.5e-3' rgba='1 0 0 0'/>
 
+                <!--
     <default class='Hip:x'>
-      <joint type='hinge' axis='0 1 0' ref='0' range='-90 60' limited='true' armature='0.0001' stiffness='0' springref='0'/>
+      <joint type='hinge' axis='0 1 0' ref='0' range='-120 60' limited='true' armature='0.0001' stiffness='0' springref='0'/>
 		</default>
 		<default class='Hip:y'>
             <joint type='hinge' axis='0 1 0' range='-30 30' damping='5' limited='true' stiffness='0' armature='0.0080' />
@@ -56,19 +57,65 @@
 		<default class = 'Ankle:y'>
 			<joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
 		</default>
+  -->
+
+  <default class='Hip:x'>
+    <joint type='hinge' axis='0 1 0' ref='0' range='-60 120' limited='true' armature='0.0001' stiffness='0' springref='0'/>
+  </default>
+  <default class='Hip:y'>
+          <joint type='hinge' axis='0 1 0' range='-30 30' damping='5' limited='true' stiffness='0' armature='0.0080' />
+  </default>
+  <default class='Hip:z'>
+          <joint type='hinge' axis='0 0 1' range='-15 15' damping='5' limited='true' stiffness='0' armature='0.0080' />
+  </default>
+  <default class = 'Knee:x'>
+    <joint type='hinge' axis='1 0 0' range='0  120' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
+  </default>
+  <default class = 'Knee:y'>
+    <joint type='hinge' axis='1 0 0' range='-120 40' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
+  </default>
+  <default class = 'Ankle:x'>
+    <joint type='hinge' axis='1 0 0' pos='0 0 0' range='-90 30' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+  </default>
+  <default class = 'Ankle:y'>
+    <joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+  </default>
+
 	</default>
 
 	<worldbody>
     <light directional='true' diffuse='1 1 1' specular='0 0 0' pos='0 0 40.5' dir='0 1 0'/>
 
+    <body name = 'Init' pos = '0 0 0' euler = '0 0 0' >
+      <!--
+      <site name="C_Init" pos='0.195840  0.297248 0.314566' rgba='1 0 0 1' size='15e-3'/>
+      <site name="GT_Init" pos='0.179458 0.370936 0.272555' rgba='0 1 0 1' size='15e-3'/>
+      <site name="K_Init" pos='0.169138 0.270863 0.157712' rgba='0 0 1 1' size='15e-3'/>
+      <site name="MT_Init" pos='0.165478 0.387982 0.035678' rgba='0 1 1 1' size='15e-3'/>
+      <site name="M_Init" pos='0.181315 0.431752 0.093699' rgba='1 1 0 1' size='15e-3'/>
+    -->
+    <site name="C_Init" pos='-0.022000 -0.035000 0.015000' rgba='1 0 0 1' size='15e-3'/>
+    <site name="GT_Init" pos='-0.038383 0.038689 -0.027012' rgba='0 1 0 1' size='15e-3'/>
+    <site name="K_Init" pos='-0.048703 -0.061385 -0.141855' rgba='0 0 1 1' size='15e-3'/>
+    <site name="MT_Init" pos='-0.052363 0.055734 -0.263889' rgba='0 1 1 1' size='15e-3'/>
+    <site name="M_Init" pos='-0.036526 0.099504 -0.205868' rgba='1 1 0 1' size='15e-3'/>
+    </body>
+
     <body name='Lower_Body' pos='0 0 0' euler='0 0 0'>
 
     <body name='Pelvis' pos='0 0 0' euler='0 0 0'>
 
-    <site name="T12_Left" pos='$T12_Left:x$	$T12_Left:y$	$T12_Left:z$' rgba='1 0 0 1' size='15e-3'/>
-    <site name="T12_Right" pos='$T12_Right:x$	$T12_Right:y$	$T12_Right:z$' rgba='1 0 0 1' size='15e-3'/>
+    <body name='Seat' pos='0 0 0' euler='0 0 0'>
+      <site name="T12_Attachment_Left" pos='$T12_Left:x$	$T12_Left:y$	$T12_Left:z$' rgba='1 1 0 .1' size='15e-3'/>
+      <site name="T12_Attachment_Right" pos='$T12_Right:x$	$T12_Right:y$	$T12_Right:z$' rgba='1 1 0 .1' size='15e-3'/>
+      <geom type='box' size="75e-3 75e-3 25e-3" density='1' pos='$Seat_Center:x$ $Seat_Center:y$ $Seat_Center:z$' euler='0 0 0' rgba='1 0 0 1'/>
+      <site name="Seat_Center" pos='$Seat_Center:x$ $Seat_Center:y$ $Seat_Center:z$' rgba='1 1 0 1' size='15e-3'/>
+    </body>
 
-    <camera name = 'Sagittal_Left' mode = 'fixed' pos = '3e-1 -5e-1 -2e-1' euler = '90 0 180'/>
+    <site name="T12_Left" pos='$T12_Left:x$	$T12_Left:y$	$T12_Left:z$' rgba='1 0 0 .1' size='15e-3'/>
+    <site name="T12_Right" pos='$T12_Right:x$	$T12_Right:y$	$T12_Right:z$' rgba='1 0 0 .1' size='15e-3'/>
+
+    <camera name = 'Sagittal_Left' mode = 'fixed' pos = '0 -1 -5e-2' euler = '90 0 0'/>
 
     <joint name='World:xt' type='slide' axis='1 0 0' pos='0 0 0' ref='0' limited='false' />
     <joint name='World:yt' type='slide' axis='0 1 0' pos='0 0 0' ref='0' limited='false' />

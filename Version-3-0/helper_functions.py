@@ -1,18 +1,23 @@
 import pandas as pd
 import numpy as np
 import seaborn as sns
+import matplotlib.pyplot as plt
 import itertools
 from lmfit import Parameters, Parameter
 from mujoco_py.generated import const
 from mujoco_py import functions
 import pdb, copy
+from mpl_toolkits.mplot3d import Axes3D
 
-def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None, reIndex = None):
+def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None,
+    flip = None, reIndex = None):
     raw = pd.read_table(kinematicsFile, index_col = 0, skiprows = [1])
+
     raw.index = np.around(raw.index, 3)
 
     if selectTime:
         raw = raw.loc[slice(selectTime[0], selectTime[1]), :]
+
     headings = sorted(raw.columns) # get column names
     coordinates = ['x', 'y', 'z']
 
@@ -28,13 +33,19 @@ def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None, reIn
                 mask = [
                     oldIndex.str.contains(name + ' ' + reindexPair[0]),
                     oldIndex.str.contains(name + ' ' + reindexPair[1])
-                ]
+                    ]
                 temp = newIndex[mask[0]]
                 newIndex[mask[0]] = newIndex[mask[1]]
                 newIndex[mask[1]] = temp
         raw.columns = newIndex
         headings = sorted(newIndex)
         raw = raw.reindex_axis(headings, axis = 1)
+
+    if flip is not None:
+        uniqueHeadings = set([name[:-2] for name in headings])
+        for name in uniqueHeadings:
+            for flipAxis in flip:
+                raw.loc[:,name + ' ' + flipAxis] = -raw.loc[:,name + ' ' + flipAxis]
 
     # create multiIndex column names
     if selectHeaders is not None:
@@ -46,26 +57,112 @@ def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None, reIn
             name + ' Z' for name in selectHeaders
         ]
         raw = raw[sorted(expandedHeadings)]
-        indexPD = pd.MultiIndex.from_product([sorted(selectHeaders), coordinates], names=['joint', 'coordinate'])
+        indexPD = pd.MultiIndex.from_product([sorted(selectHeaders),
+            coordinates], names=['joint', 'coordinate'])
     else:
         uniqueHeadings = set([name[:-2] for name in headings])
-        indexPD = pd.MultiIndex.from_product([sorted(uniqueHeadings), coordinates], names=['joint', 'coordinate'])
+        indexPD = pd.MultiIndex.from_product([sorted(uniqueHeadings),
+            coordinates], names=['joint', 'coordinate'])
 
     proc = pd.DataFrame(raw.values, columns = indexPD, index = raw.index)
 
     return proc
+
+def preproc_china_kinematics(kinematicsFile):
+    raw = pd.read_table(kinematicsFile, index_col = 1)
+    assert raw.index.name == 'Time'
+
+    raw.drop(['FRAME'], axis = 1, inplace = True)
+
+    lookupTable = {
+        'left scapula X' : 'S_Left X',
+        'left scapula Y' : 'S_Left Y',
+        'left scapula Z' : 'S_Left Z',
+        'left humerus head (H) X' : 'H_Left X',
+        'left humerus head (H) Y' : 'H_Left Y',
+        'left humerus head (H) Z' : 'H_Left Z',
+        'left elbow joint (E) X' : 'E_Left X',
+        'left elbow joint (E) Y' : 'E_Left Y',
+        'left elbow joint (E) Z' : 'E_Left Z',
+        'left distal head of ulna (U) X' : 'U_Left X',
+        'left distal head of ulna (U) Y' : 'U_Left Y',
+        'left distal head of ulna (U) Z' : 'U_Left Z',
+        'Metacarpo-phalangeal (MCP) X' : 'MCP_Left X',
+        'Metacarpo-phalangeal (MCP) Y' : 'MCP_Left Y',
+        'Metacarpo-phalangeal (MCP) Z' : 'MCP_Left Z',
+        'left tip of the 3rd digit (D) X' : 'D_Left X',
+        'left tip of the 3rd digit (D) Y' : 'D_Left Y',
+        'left tip of the 3rd digit (D) Z' : 'D_Left Z',
+        'left crest X' : 'C_Right X',
+        'left crest Y' : 'C_Right Y',
+        'left crest Z' : 'C_Right Z',
+        'left trochanter major (GT) X' : 'GT_Right X',
+        'left trochanter major (GT) Y' : 'GT_Right Y',
+        'left trochanter major (GT) Z' : 'GT_Right Z',
+        'left knee-joint (K) X' : 'K_Right X',
+        'left knee-joint (K) Y' : 'K_Right Y',
+        'left knee-joint (K) Z' : 'K_Right Z',
+        'left malleolus (M) X' : 'M_Right X',
+        'left malleolus (M) Y' : 'M_Right Y',
+        'left malleolus (M) Z' : 'M_Right Z',
+        'left 5th metatarsal (MT) X' : 'MT_Right X',
+        'left 5th metatarsal (MT) Y' : 'MT_Right Y',
+        'left 5th metatarsal (MT) Z' : 'MT_Right Z',
+        'left outside tip of 5th digit (T) X' : 'T_Right X',
+        'left outside tip of 5th digit (T) Y' : 'T_Right Y',
+        'left outside tip of 5th digit (T) Z' : 'T_Right Z',
+        'right scapula X' : 'S_Right',
+        'right scapula Y' : 'S_Right',
+        'right scapula Z' : 'S_Right',
+        'right humerus head (H) X' : 'H_Right X',
+        'right humerus head (H) Y' : 'H_Right Y',
+        'right humerus head (H) Z' : 'H_Right Z',
+        'right elbow joint (E) X' : 'E_Right X',
+        'right elbow joint (E) Y' : 'E_Right Y',
+        'right elbow joint (E) Z' : 'E_Right Z',
+        'right distal head of ulna (U) X' : 'U_Right X',
+        'right distal head of ulna (U) Y' : 'U_Right Y',
+        'right distal head of ulna (U) Z' : 'U_Right Z',
+        #'Metacarpo-phalangeal (MCP) X' : 'MCP_Right X',
+        #'Metacarpo-phalangeal (MCP) Y' : 'MCP_Right Y',
+        #'Metacarpo-phalangeal (MCP) Z' : 'MCP_Right Z',
+        'right tip of the 3rd digit (D) X' : 'D_Right X',
+        'right tip of the 3rd digit (D) Y' : 'D_Right Y',
+        'right tip of the 3rd digit (D) Z' : 'D_Right Z',
+        'right crest X' : 'C_Left X',
+        'right crest Y' : 'C_Left Y',
+        'right crest Z' : 'C_Left Z',
+        'right trochanter major (GT) X' : 'GT_Left X',
+        'right trochanter major (GT) Y' : 'GT_Left Y',
+        'right trochanter major (GT) Z' : 'GT_Left Z',
+        'right knee-joint (K) X' : 'K_Left X',
+        'right knee-joint (K) Y' : 'K_Left Y',
+        'right knee-joint (K) Z' : 'K_Left Z',
+        'right malleolus (M) X' : 'M_Left X',
+        'right malleolus (M) Y' : 'M_Left Y',
+        'right malleolus (M) Z' : 'M_Left Z',
+        'right 5th metatarsal (MT) X' : 'MT_Left X',
+        'right 5th metatarsal (MT) Y' : 'MT_Left Y',
+        'right 5th metatarsal (MT) Z' : 'MT_Left Z',
+        'right outside tip of 5th digit (T) X' : 'T_Left X',
+        'right outside tip of 5th digit (T) Y' : 'T_Left Y',
+        'right outside tip of 5th digit (T) Z' : 'T_Left Z'
+        }
+
+    raw.rename(columns = lookupTable, inplace = True)
+    newName = '.'.join(kinematicsFile.split('.')[:-1]) + '_processed.txt'
+    raw.to_csv(newName, sep='\t')
 
 def fcsv_to_spec(fcsvFilePath):
     fcsv = pd.read_csv(fcsvFilePath, skiprows = 2)
     fcsv = fcsv.loc[:, ['label', 'x', 'y', 'z']]
     return fcsv
 
-def populate_model(templateFilePath, specification, resourcesDir, showTendons = False):
+def populate_model(templateFilePath, specification, resourcesDir,
+    meshScale = 1.1e-3, showTendons = False):
 
     with open(templateFilePath, 'r') as f:
         modelXML = f.read()
-
-    meshScale = 1.1e-3
 
     tendonAlpha = 1 if showTendons else 0
     modelXML = modelXML.replace('$resourcesDir$', resourcesDir)
@@ -179,17 +276,35 @@ def get_site_pos(kinSeries, simulation):
 
     return sitePos
 
-def alignToModel(simulation, kinSeries, reference):
+def alignToModel(simulation, kinSeries, referenceSeries):
     modelSitePos = get_site_pos(kinSeries, simulation)
 
     alignedSitePos = copy.deepcopy(kinSeries)
+
     #e.g. kin[GT_left, x] = kin[GT_Left, x] - kin[Reference, x]
+    origFramePos = copy.deepcopy(alignedSitePos.loc[reference, ('x', 'y', 'z')])
+    destFramePos = copy.deepcopy(modelSitePos.loc[reference, ('x', 'y', 'z')])
+
     for siteName in np.unique(alignedSitePos.index.get_level_values('joint')):
-        alignedSitePos[(siteName, 'x')] = alignedSitePos[(siteName, 'x')] - alignedSitePos[(reference, 'x')] + modelSitePos[(reference, 'x')]
-        alignedSitePos[(siteName, 'y')] = alignedSitePos[(siteName, 'y')] - alignedSitePos[(reference, 'y')] + modelSitePos[(reference, 'y')]
-        alignedSitePos[(siteName, 'z')] = alignedSitePos[(siteName, 'z')] - alignedSitePos[(reference, 'z')] + modelSitePos[(reference, 'z')]
+        alignedSitePos[(siteName, 'x')] = alignedSitePos[(siteName, 'x')] - origFramePos[(reference, 'x')] + destFramePos[(reference, 'x')]
+        alignedSitePos[(siteName, 'y')] = alignedSitePos[(siteName, 'y')] - origFramePos[(reference, 'y')] + destFramePos[(reference, 'y')]
+        alignedSitePos[(siteName, 'z')] = alignedSitePos[(siteName, 'z')] - origFramePos[(reference, 'z')] + destFramePos[(reference, 'z')]
 
     return alignedSitePos
+
+def plot_sites_3D(kinSeries, useRange = slice(None)):
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    for siteName in np.unique(kinSeries.columns.get_level_values('joint')):
+        ax.plot(kinSeries[(siteName, 'x')].values[useRange],
+            kinSeries[(siteName, 'y')].values[useRange],
+            kinSeries[(siteName, 'z')].values[useRange], marker = 'o')
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
+    plt.show()
 
 def render_targets(viewer, kinSeries):
     # Markers and overlay are regenerated in every pass.
