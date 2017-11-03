@@ -98,7 +98,7 @@
     <body name='Lower_Body' pos='0 0 0' euler='0 0 0'>
     -->
     <body name='Pelvis' pos='0 0 0' euler='0 0 0'>
-      <body name = 'Treadmill' pos='$World_t:x$ $World_t:y$ $World_t:z$' euler='$World:x$ $World:y$ $World:z$'>
+      <body name = 'Treadmill' pos='0 0 0' euler='0 0 0'>
 
       </body>
 

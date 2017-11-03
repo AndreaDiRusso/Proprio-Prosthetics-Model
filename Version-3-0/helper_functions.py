@@ -229,7 +229,7 @@ def pose_model(simulation, jointDict, qAcc = None,
     qVel = None, method = 'forward'):
 
     simState = simulation.get_state()
-    # TODO implement quaternion as degree of freedom
+
     quatJointNames = set([])
     for jointName in jointDict.keys():
         try:
@@ -241,8 +241,7 @@ def pose_model(simulation, jointDict, qAcc = None,
             # probably one of the quaternion joints
             quatJointName = jointName[:-3]
             quatJointNames.add(quatJointName)
-            #TODO: RuntimeError: dictionary changed size during iteration
-    #
+
     for quatJointName in quatJointNames:
 
         jointId = simulation.model.get_joint_qpos_addr(quatJointName)
@@ -254,7 +253,9 @@ def pose_model(simulation, jointDict, qAcc = None,
             )
 
         simState.qpos[jointId[0]    ] = jointDict[quatJointName + ':xt']['value']
+        
         simState.qpos[jointId[0] + 1] = jointDict[quatJointName + ':yt']['value']
+        
         simState.qpos[jointId[0] + 2] = jointDict[quatJointName + ':zt']['value']
 
         simState.qpos[jointId[0] + 3] = rotation.normalized().w
