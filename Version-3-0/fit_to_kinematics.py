@@ -23,7 +23,7 @@ parser.add_argument('--startTime', default = '27.760')
 parser.add_argument('--stopTime', default = '49.960')
 parser.add_argument('--showViewer', dest='showViewer', action='store_true')
 parser.add_argument('--reIndex', dest='reIndex', type = tuple, nargs = 1)
-parser.set_defaults(showViewer = True)
+parser.set_defaults(showViewer = False)
 parser.set_defaults(reIndex = None)
 args = parser.parse_args()
 

@@ -99,10 +99,10 @@
           <site name="M_Init" pos='-0.036526 0.099504 -0.205868' rgba='1 1 0 1' size='15e-3'/>
       </body>
     -->
-      <body name = 'Treadmill' pos='$World_t:x$ $World_t:y$ $World_t:z$' euler='$World:x$ $World:y$ $World:z$'>
+      <body name = 'Treadmill' pos = '0 0 0' euler = '0 0 0'>
 
       </body>
-      <body name='Pelvis' pos='$World_t:x$ $World_t:y$ $World_t:z$' euler='$World:x$ $World:y$ $World:z$'>
+      <body name='Pelvis' pos = '0 0 0' euler = '0 0 0'>
       <joint name='World' type = 'free'/>
 
       <site name="T12_Left" pos='$T12_Left:x$	$T12_Left:y$	$T12_Left:z$' rgba='1 0 0 0.33' size='15e-3'/>
@@ -386,9 +386,5 @@
   <general name='GAS_Right'  gear='1' tendon='GAS_Right'  ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -91'/>
   <general name='GAS_Left'  gear='1' tendon='GAS_Left'  ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -91'/>
 </actuator>
-
-<keyframe>
-<key time="0" qpos="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" />
-</keyframe>
 
 </mujoco>
