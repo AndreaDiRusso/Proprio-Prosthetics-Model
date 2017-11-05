@@ -37,27 +37,43 @@ timeIdx = pd.Index(times, name = 'Time')
 columns = []
 for joint, value in qFrcInverse[t0].items():
     if type(value) == np.float64:
-        columns.append(joint[:-2])
+        columns.append(joint.split(':')[0])
     if type(value) == np.ndarray:
         columns.append(joint)
 
-qFrcInverseDF = pd.DataFrame(index = times, columns = columns)
+columns = np.unique(columns)
+coordinates = ['xt', 'yt', 'zt', 'x', 'y', 'z']
+columnIdx = pd.MultiIndex.from_product([columns, coordinates],
+    names=['joint', 'coordinate'])
+
+qFrcInverseDF = pd.DataFrame(index = timeIdx, columns = columnIdx)
 
 for time, reading in qFrcInverse.items():
     for joint, value in reading.items():
         if type(value) == np.float64:
-            qFrcInverseDF.loc[time, joint] = value
+            jointCoordinate = joint.split(':')[1]
+            jointName = joint.split(':')[0]
+            qFrcInverseDF.loc[time, (jointName, jointCoordinate)] = value
         if type(value) == np.ndarray:
-            qFrcInverseDF.loc[time, joint + ':xt'] = value[0]
-            qFrcInverseDF.loc[time, joint + ':yt'] = value[1]
-            qFrcInverseDF.loc[time, joint + ':zt'] = value[2]
-            qFrcInverseDF.loc[time, joint + ':x'] = value[3]
-            qFrcInverseDF.loc[time, joint + ':y'] = value[4]
-            qFrcInverseDF.loc[time, joint + ':z'] = value[5]
+            qFrcInverseDF.loc[time, (joint , 'xt')] = value[0]
+            qFrcInverseDF.loc[time, (joint , 'yt')] = value[1]
+            qFrcInverseDF.loc[time, (joint , 'zt')] = value[2]
+            qFrcInverseDF.loc[time, (joint , 'x')] = value[3]
+            qFrcInverseDF.loc[time, (joint , 'y')] = value[4]
+            qFrcInverseDF.loc[time, (joint , 'z')] = value[5]
 
 qFrc = long_form_df(qFrcInverseDF,
-    overrideColumns = ['Tendon', 'Time (sec)', 'Joint Torque (N*m)'])
+    overrideColumns = ['Joint', 'Coordinate', 'Time (sec)', 'Joint Torque (N*m)'])
+qFrc.fillna(0, inplace = True)
 qFrc.sort_values(by='Time (sec)', inplace = True)
+
+lineNames = np.unique(qFrc['Coordinate'])
+
+hueOpts = {
+    'ls' : ['solid' for i in range(6)],
+    'label' : list(lineNames),
+    'lw' : [3 for i in range(6)]
+    }
 
 sns.set_style('darkgrid')
 plt.style.use('seaborn-darkgrid')
@@ -74,10 +90,16 @@ matplotlib.rcParams.update({'axes.labelcolor': 'black' if invertColors else 'whi
 matplotlib.rcParams.update({'xtick.color': 'black' if invertColors else 'white'})
 matplotlib.rcParams.update({'ytick.color': 'black' if invertColors else 'white'})
 
-g = sns.FacetGrid(qFrc, row = 'Tendon', size = 3, aspect = 3,
+g = sns.FacetGrid(qFrc, row = 'Joint', size = 3, aspect = 3,
+    hue = 'Coordinate', hue_order = lineNames, hue_kws = hueOpts,
     despine = False, sharey = False, sharex = True)
-g.map(plt.plot, 'Time (sec)', 'Joint Torque (N*m)', lw = 3)
-#g.set(ylim=(-.5, .5))
+g.map(plt.plot, 'Time (sec)', 'Joint Torque (N*m)')
+
+for idx, ax in enumerate(g.axes.flat):
+    box = ax.get_position()
+    ax.set_position([box.x0,box.y0,box.width*0.75,box.height])
+
+plt.legend(loc='center right', bbox_to_anchor = (1.15,0.5))
 
 plt.savefig(kineticsFile.split('_kinetics')[0] + '_qfrc_plot.png')
 

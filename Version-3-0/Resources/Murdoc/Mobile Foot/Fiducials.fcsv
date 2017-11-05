@@ -71,3 +71,5 @@ vtkMRMLMarkupsFiducialNode_60,-354.631,70.5624,-31.7357,0,0,0,1,1,1,1,GAS_Ankle_
 vtkMRMLMarkupsFiducialNode_65,-8.41035,19.1955,-67.3279,0,0,0,1,1,1,1,Pad_Right,,
 vtkMRMLMarkupsFiducialNode_33,-454.923,53.9211,2.81243,0,0,0,1,1,1,1,Toes_Right:o,,vtkMRMLScalarVolumeNode1
 vtkMRMLMarkupsFiducialNode_35,-460.11,70.3642,-0.13228,0,0,0,1,1,1,1,Toes_Right:x,,vtkMRMLModelNode8
+vtkMRMLMarkupsFiducialNode_35,30,0,250,0,0,0,1,1,1,0,T12,,vtkMRMLScalarVolumeNode2
+vtkMRMLMarkupsFiducialNode_36,-36,18,-72,0,0,0,1,1,1,1,Seat_Center,,

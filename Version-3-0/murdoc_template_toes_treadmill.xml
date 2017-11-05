@@ -101,12 +101,11 @@
     <!--
     <body name='Lower_Body' pos='0 0 0' euler='0 0 0'>
     -->
-    <body name = 'Treadmill'>
-      <geom name = 'Treadmill' type = 'box' size = '1 1 1e-3' pos = '$Floor:x$ $Floor:y$ $Floor:z$'/>
-    </body>
-    <body name='Pelvis' pos='0 0 0' euler='0 0 0'>
+    <body name = 'Monkey' pos='0 0 0' euler='0 0 0'>
     <joint name='World' type = 'free'/>
-
+    <geom name = "T12" pos='$T12:x$	$T12:y$	$T12:z$' type = 'sphere' size = '5e-3' rgba='0 1 1 1' mass = '1'/>
+    <body name='Pelvis' pos='0 0 0' euler='0 0 0'>
+    <inertial pos = '$T12:x$	$T12:y$	$T12:z$' mass = '1' diaginertia = '1 1 1'/>
     <camera name = 'Sagittal_Left' mode = 'fixed' pos = '1e-1 -1 -5e-2' euler = '90 0 75'/>
 
      <site name="BF_Pelvis_Left" pos='$BF_Pelvis_Left:x$	$BF_Pelvis_Left:y$	$BF_Pelvis_Left:z$' rgba='1 0 0 0'/>
@@ -256,12 +255,41 @@
      End Pelvis
    -->
 
-   <!-- End Lower bod
     </body>
     <!-- End Lower bod
     -->
+    <body name = 'Treadmill'>
+      <geom name = 'Treadmill' type = 'box' size = '1 1 1e-6' pos = '$Floor:x$ $Floor:y$ $Floor:z$'/>
+
+    </body>
+
+    <body name = 'Posture Constraint' pos = '$World:xt$ $World:yt$ $World:zt$' quat = '$World:wq$ $World:xq$ $World:yq$ $World:zq$'>
+      <geom name = 'Posture Constraint' type = 'sphere' size = '10e-3' rgba = '1 0 1 0.2' pos = '$T12:x$	$T12:y$	$T12:z$'/>
+      <joint name = 'Posture:x' type = 'slide' axis = '1 0 0'/>
+      <joint name = 'Posture:y' type = 'slide' axis = '0 1 0'/>
+    </body>
+
 	</worldbody>
 
+
+    <equality>
+      <connect body1='Posture Constraint' body2 ='Pelvis' anchor='$T12:x$	$T12:y$	$T12:z$'/>
+    </equality>
+  <contact>
+<exclude body1='Pelvis'     body2='Posture Constraint'/>
+    <!--
+    <exclude body1='Toes_Right'     body2='Treadmill'/>
+      <exclude body1='Toes_Left'     body2='Treadmill'/>
+    <exclude body1='Leg_Right'     body2='Enclosure'/>
+    <exclude body1='Leg_Left'     body2='Enclosure'/>
+    <exclude body1='Shin_Right'     body2='Enclosure'/>
+    <exclude body1='Shin_Left'     body2='Enclosure'/>
+    <exclude body1='Foot_Right'     body2='Enclosure'/>
+    <exclude body1='Foot_Left'     body2='Enclosure'/>
+    <exclude body1='Toes_Right'     body2='Enclosure'/>
+    <exclude body1='Toes_Left'     body2='Enclosure'/>
+  -->
+  </contact>
   <tendon>
     <spatial name="IL_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='IL_Pelvis_Left'/>
@@ -369,12 +397,10 @@
   <general name='GAS_Left'  gear='1' tendon='GAS_Left'  ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -91'/>
 </actuator>
 
-  <contact>
-    <exclude body1='Toes_Right'     body2='Treadmill'/>
-  </contact>
+
 <keyframe>
-    <key time="0" qpos="0 0 0 1 0 0 0 0 0 0 0 0 0 0 1.05 0.52 0.3 -2.09 1.57 0 0" />
-        <key time="0" qpos="0 0 0 1 0 0 0 0 0 0 0 0 0 0 1.05 -0.52 -0.1 -2.09 1.57 0 2.09" />
+    <key time="0" qpos="0 0 0 1 0 0 0 0 0 0 0 0 0 0 1.05 0.52 0.3 -2.09 1.57 0 0 0 0" />
+        <key time="0" qpos="0 0 0 1 0 0 0 0 0 0 0 0 0 0 1.05 -0.52 -0.1 -2.09 1.57 0 0 0 0" />
 </keyframe>
 
 </mujoco>

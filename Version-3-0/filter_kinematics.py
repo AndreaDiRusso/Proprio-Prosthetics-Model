@@ -21,7 +21,7 @@ with open(kinematicsFile, 'rb') as f:
     kinematics = pickle.load(f)
 
 fr = 1 / dt
-lowCutoff = 2
+lowCutoff = 1
 Wn = 2 * lowCutoff / fr
 b, a = signal.butter(8, Wn, analog=False)
 for column in kinematics['qpos']:

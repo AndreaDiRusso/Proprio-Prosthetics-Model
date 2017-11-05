@@ -44,6 +44,7 @@ model['Coordinate'] = pd.Series(['Model ' + coord for coord in model['Coordinate
 orig['Coordinate'] = pd.Series(['Original ' + coord for coord in orig['Coordinate']])
 
 stack = pd.concat([model, orig], axis = 0)
+stack.sort_values(by='Time (sec)', inplace = True)
 
 lineNames = np.unique(stack['Coordinate'])
 

@@ -23,7 +23,7 @@ parser.add_argument('--startTime', default = '27.760')
 parser.add_argument('--stopTime', default = '49.960')
 parser.add_argument('--meshScale', default = '1.1e-3')
 parser.add_argument('--whichSide', default = 'Left')
-parser.add_argument('--modelFile', default = 'murdoc_template_floating.xml')
+parser.add_argument('--modelFile', default = 'murdoc_template_toes_floating.xml')
 parser.add_argument('--showViewer', dest='showViewer', action='store_true')
 parser.add_argument('--reIndex', dest='reIndex', type = tuple, nargs = 1)
 parser.set_defaults(showViewer = False)
@@ -65,23 +65,25 @@ else:
     viewer = None
 
 sitesToFit = ['MT_' + whichSide, 'M_' + whichSide, 'C_' + whichSide,
-    'GT_' + whichSide, 'K_' + whichSide, 'T_' + whichSide]
+    'GT_' + whichSide, 'K_' + whichSide
+    #, 'T_' + whichSide
+    ]
 
 #initial guesses for eitehr side
 jointsToFit = {
-    'World:xt':{'value':0.002,'min':-3,'max':3},
-    'World:yt':{'value':-0.004,'min':-3,'max':3},
-    'World:zt':{'value':0.015,'min':-3,'max':3},
-    'World:xq':{'value':0.89,'min':math.radians(-180),'max':math.radians(180)},
-    'World:yq':{'value':-0.51,'min':math.radians(-180),'max':math.radians(180)},
-    'World:zq':{'value':-1.57,'min':math.radians(-180),'max':math.radians(180)},
-    'Hip_' + whichSide + ':x':{'value':-0.34,'min':math.radians(-60),'max':math.radians(120)},
+    'World:xt':{'value':0.09,'min':-3,'max':3},
+    'World:yt':{'value':0.07,'min':-3,'max':3},
+    'World:zt':{'value':0.05,'min':-3,'max':3},
+    'World:xq':{'value':1.07,'min':math.radians(-180),'max':math.radians(180)},
+    'World:yq':{'value':-1.78,'min':math.radians(-180),'max':math.radians(180)},
+    'World:zq':{'value':0.1,'min':math.radians(-180),'max':math.radians(180)},
+    'Hip_' + whichSide + ':x':{'value':-1.05,'min':math.radians(-60),'max':math.radians(120)},
     'Hip_' + whichSide + ':y':{'value':0.08,'min':math.radians(-5),'max':math.radians(5)},
-    'Hip_' + whichSide + ':z':{'value':0.085,'min':math.radians(-5),'max':math.radians(5)},
+    'Hip_' + whichSide + ':z':{'value':0.03,'min':math.radians(-5),'max':math.radians(5)},
     'Knee_' + whichSide + ':x':{'value':1.64,'min':math.radians(0),'max':math.radians(120)},
-    'Ankle_' + whichSide + ':x':{'value':-1.56,'min':math.radians(-90),'max':math.radians(30)},
-    'Ankle_' + whichSide + ':y':{'value':0.14,'min':math.radians(-60),'max':math.radians(60)},
-    'Toes_' + whichSide + ':x':{'value':0.14,'min':math.radians(-90),'max':math.radians(120)}
+    'Ankle_' + whichSide + ':x':{'value':-1,'min':math.radians(-90),'max':math.radians(30)},
+    'Ankle_' + whichSide + ':y':{'value':-0.1,'min':math.radians(-60),'max':math.radians(60)},
+    #'Toes_' + whichSide + ':x':{'value':0.02,'min':math.radians(-90),'max':math.radians(120)}
     } if whichSide == 'Right' else {
         'World:xt':{'value':0.06,'min':-10, 'max':10},
         'World:yt':{'value':0.02,'min':-10, 'max':10},
@@ -95,7 +97,7 @@ jointsToFit = {
         'Knee_' + whichSide + ':x':{'value':-1.57,'min':math.radians(-120),'max':math.radians(0)},
         'Ankle_' + whichSide + ':x':{'value':1.58,'min':math.radians(-30),'max':math.radians(90)},
         'Ankle_' + whichSide + ':y':{'value':0.1,'min':math.radians(-60),'max':math.radians(60)},
-        'Toes_' + whichSide + ':x':{'value':0.14,'min':math.radians(-120),'max':math.radians(90)}
+        #'Toes_' + whichSide + ':x':{'value':0.14,'min':math.radians(-120),'max':math.radians(90)}
         }
 
 #Get kinematics

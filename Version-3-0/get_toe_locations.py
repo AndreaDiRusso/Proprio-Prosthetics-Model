@@ -18,21 +18,21 @@ curDir = os.path.abspath(os.path.join(curfilePath,os.pardir)) # this will return
 parser = argparse.ArgumentParser()
 parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1.txt')
 parser.add_argument('--meshScale', default = '1.1e-3')
+parser.add_argument('--startTime', default = '27.760')
+parser.add_argument('--stopTime', default = '49.960')
 parser.add_argument('--whichSide', default = 'Left')
-parser.add_argument('--showViewer', dest='showViewer', action='store_true')
-parser.set_defaults(showViewer = False)
 args = parser.parse_args()
 
 kinematicsFile = args.kinematicsFile
 meshScale = float(args.meshScale)
+startTime = float(args.startTime)
+stopTime = float(args.stopTime)
 whichSide = args.whichSide
-showViewer = args.showViewer
-showContactForces = True
 
 resourcesDir = curDir + '/Resources/Murdoc'
 
-templateFilePath = curDir + '/murdoc_template_floating.xml'
-fcsvFilePath = resourcesDir + '/Aligned-To-Pelvis/Fiducials.fcsv'
+templateFilePath = curDir + '/murdoc_template_toes_floating.xml'
+fcsvFilePath = resourcesDir + '/Mobile Foot/Fiducials.fcsv'
 
 specification = fcsv_to_spec(fcsvFilePath)
 modelXML = populate_model(templateFilePath, specification, extraLocations = {},
@@ -41,15 +41,7 @@ modelXML = populate_model(templateFilePath, specification, extraLocations = {},
 model = load_model_from_xml(modelXML)
 simulation = MjSim(model)
 
-#viewer = MjViewerBasic(simulation) if showViewer else None
-#TODO: make flag for enabling and disabling contact force rendering
-if showContactForces and showViewer:
-    viewer = MjViewer(simulation) if showViewer else None
-    viewer.vopt.flags[10] = viewer.vopt.flags[11] = not viewer.vopt.flags[10]
-else:
-    viewer = None
-
-sitesToFit = ['C_' + whichSide, 'T_' + whichSide]
+sitesToFit = ['C_' + whichSide, 'MT_' + whichSide, 'T_' + whichSide]
 
 #Get kinematics
 kinematics = get_kinematics(kinematicsFile, selectHeaders = sitesToFit)
@@ -67,4 +59,5 @@ alignedKin = pd.DataFrame(index = kinematics.index, columns = kinematics.columns
 for t, kinSeries in kinematics.iterrows():
     alignedKin.loc[t, :] = alignToModel(simulation, kinSeries, referenceSeries)
 
-alignedKin.min(axis = 0)
+print('Kinematics:')
+print(alignedKin.min(axis = 0))

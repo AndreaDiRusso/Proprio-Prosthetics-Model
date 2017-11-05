@@ -20,14 +20,15 @@ curDir = os.path.abspath(os.path.join(curfilePath,os.pardir)) # this will return
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_filtered_kinematics.pickle')
-parser.add_argument('--modelFile', default = 'murdoc_template_mobile_seat.xml')
+parser.add_argument('--modelFile', default = 'murdoc_template_toes_treadmill.xml')
 parser.add_argument('--meshScale', default = '1.1e-3')
-
+parser.add_argument('--slowDown', default = '0')
 args = parser.parse_args()
 
 kinematicsFile = args.kinematicsFile
 modelFile = args.modelFile
 meshScale = float(args.meshScale)
+slowDown = float(args.slowDown)
 
 resourcesDir = curDir + '/Resources/Murdoc'
 templateFilePath = curDir + '/' + modelFile
@@ -41,7 +42,7 @@ with open(kinematicsFile, 'rb') as f:
 
 #meshScale = kinematics['meshScale']
 extraCoords = {}
-if modelFile == 'murdoc_template_mobile_seat.xml':
+if modelFile == 'murdoc_template_seat.xml':
 
     t0 = kinematics['qpos'].index[0]
     worldQ = quat.from_euler_angles(
@@ -59,11 +60,26 @@ if modelFile == 'murdoc_template_mobile_seat.xml':
                 'World:zq': worldQ.z }
 
 if modelFile == 'murdoc_template_toes_treadmill.xml':
+
+    t0 = kinematics['qpos'].index[0]
+    worldQ = quat.from_euler_angles(
+        kinematics['qpos'].loc[t0, 'World:xq'],
+        kinematics['qpos'].loc[t0, 'World:yq'],
+        kinematics['qpos'].loc[t0, 'World:zq']
+        )
     extraCoords = {
-        'Floor:x' : 0,
-        'Floor:y' : 0,
-        'Floor:z' : -0.36
-        }
+                'World:xt': kinematics['qpos'].loc[t0, 'World:xt'],
+                'World:yt': kinematics['qpos'].loc[t0, 'World:yt'],
+                'World:zt': kinematics['qpos'].loc[t0, 'World:zt'],
+                'World:wq': worldQ.w,
+                'World:xq': worldQ.x,
+                'World:yq': worldQ.y,
+                'World:zq': worldQ.z,
+                'Floor:x' : 0,
+                'Floor:y' : 0,
+                'Floor:z' : -0.38,
+                'minT12Height': 0.5
+                }
 
 modelXML = populate_model(templateFilePath, specification, extraCoords, resourcesDir,
     meshScale = meshScale, showTendons = True)
@@ -114,12 +130,15 @@ mybuffer = {
 
 allActiveContacts = {}
 
+counter = 0
 for t, kinSeries in kinematics['site_pos'].iterrows():
-    #time.sleep(0.025)
+    time.sleep(slowDown)
+
     #constraintsSummary = constraints_summary(simulation)
     #if constraintsSummary is not None:
     #    print(t)
     #    print(constraintsSummary)
+
     # calculate qAcc and pass to pose model
     qPosMat = np.asarray(mybuffer['qpos'])
 
@@ -136,9 +155,9 @@ for t, kinSeries in kinematics['site_pos'].iterrows():
     tempQfrcConstraint = copy.deepcopy(simulation.data.qfrc_constraint)
 
     for jointName in allJoints:
-        modelQAcc[t][jointName] = qAcc[jointMask[jointName]]
-        modelQFrcInverse[t][jointName] = tempQFrc[jointMask[jointName]]
-        modelQfrcConstraint[t][jointName] = tempQfrcConstraint[jointMask[jointName]]
+        modelQAcc[t][jointName] = qAcc[jointMask[jointName]] if counter > 3 else 0
+        modelQFrcInverse[t][jointName] = tempQFrc[jointMask[jointName]] if counter > 3 else 0
+        modelQfrcConstraint[t][jointName] = tempQfrcConstraint[jointMask[jointName]] if counter > 3 else 0
 
     activeContacts = contact_summary(simulation, zeroPad = True)
 
@@ -164,6 +183,7 @@ for t, kinSeries in kinematics['site_pos'].iterrows():
     #simulation = pose_model(simulation,jointDict, method = 'step')
     simulation.forward()
     viewer.render()
+    counter = counter + 1
 
 results = {
     'qacc' : modelQAcc,
