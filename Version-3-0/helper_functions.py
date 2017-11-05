@@ -160,8 +160,8 @@ def fcsv_to_spec(fcsvFilePath):
     fcsv = fcsv.loc[:, ['label', 'x', 'y', 'z']]
     return fcsv
 
-def populate_model(templateFilePath, specification, resourcesDir,
-    meshScale = 1.1e-3, showTendons = False):
+def populate_model(templateFilePath, fiducialLocations, extraLocations = {},
+    resourcesDir = '', meshScale = 1.1e-3, showTendons = False):
 
     with open(templateFilePath, 'r') as f:
         modelXML = f.read()
@@ -171,15 +171,14 @@ def populate_model(templateFilePath, specification, resourcesDir,
     modelXML = modelXML.replace('$showTendons$', str(tendonAlpha))
     modelXML = modelXML.replace('$meshScale$', str(meshScale))
 
-    for idx, row in specification.iterrows():
-
+    for idx, row in fiducialLocations.iterrows():
         if ':x' in row['label'] or ':y' in row['label'] or ':z' in row['label']:
             jointAxis = row['label'].split(':')[-1][0]
             jointName = row['label'].split(':')[0]
             originName = jointName + ':o'
-            row['x'] = - row['x'] + specification[specification['label'] == originName]['x'].values[0]
-            row['y'] = - row['y'] + specification[specification['label'] == originName]['y'].values[0]
-            row['z'] = - row['z'] + specification[specification['label'] == originName]['z'].values[0]
+            row['x'] = - row['x'] + fiducialLocations[fiducialLocations['label'] == originName]['x'].values[0]
+            row['y'] = - row['y'] + fiducialLocations[fiducialLocations['label'] == originName]['y'].values[0]
+            row['z'] = - row['z'] + fiducialLocations[fiducialLocations['label'] == originName]['z'].values[0]
 
         placeHolder = '$' + row['label'] + ':' + 'x$'
         modelXML = modelXML.replace(placeHolder, str(row['x']*meshScale))
@@ -189,6 +188,10 @@ def populate_model(templateFilePath, specification, resourcesDir,
 
         placeHolder = '$' + row['label'] + ':' + 'z$'
         modelXML = modelXML.replace(placeHolder, str(row['z']*meshScale))
+
+    for key, value in extraLocations.items():
+        placeHolder = '$' + key + '$'
+        modelXML = modelXML.replace(placeHolder, str(value))
 
     templateDir = '/'.join(templateFilePath.split('/')[:-1])
     with open(templateDir + '/murdoc_gen.xml', 'w') as f:
@@ -252,20 +255,27 @@ def pose_model(simulation, jointDict, qAcc = None,
             jointDict[quatJointName + ':zq']['value']
             )
 
-        simState.qpos[jointId[0]    ] = jointDict[quatJointName + ':xt']['value']
-        
-        simState.qpos[jointId[0] + 1] = jointDict[quatJointName + ':yt']['value']
-        
-        simState.qpos[jointId[0] + 2] = jointDict[quatJointName + ':zt']['value']
+        try:
+            simState.qpos[jointId[0]    ] = jointDict[quatJointName + ':xt']['value']
 
-        simState.qpos[jointId[0] + 3] = rotation.normalized().w
+            simState.qpos[jointId[0] + 1] = jointDict[quatJointName + ':yt']['value']
 
-        simState.qpos[jointId[0] + 4] = rotation.normalized().x
+            simState.qpos[jointId[0] + 2] = jointDict[quatJointName + ':zt']['value']
+        except:
+            #will fail if there are no instructions for translation
+            pass
 
-        simState.qpos[jointId[0] + 5] = rotation.normalized().y
+        try:
+            simState.qpos[jointId[0] + 3] = rotation.normalized().w
 
-        simState.qpos[jointId[0] + 6] = rotation.normalized().z
+            simState.qpos[jointId[0] + 4] = rotation.normalized().x
 
+            simState.qpos[jointId[0] + 5] = rotation.normalized().y
+
+            simState.qpos[jointId[0] + 6] = rotation.normalized().z
+        except:
+            #will fail if there are no instructions for rotation
+            pass
     # make the changes to joint state
     simulation.set_state(simState)
     # advance the simulation one step
@@ -298,6 +308,17 @@ def pose_model(simulation, jointDict, qAcc = None,
                 print(simulation.data.qvel[idx])
         functions.mj_inverse(simulation.model, simulation.data)
 
+    return simulation
+
+def pose_to_key(simulation, keyIdx):
+
+    keyPosValues = simulation.model.key_qpos[keyIdx]
+    simState = simulation.get_state()
+    for idx, value in enumerate(keyPosValues):
+        simState.qpos[idx] = value
+
+    simulation.set_state(simState)
+    simulation.forward()
     return simulation
 
 def get_tendon_length(tendonSeries, simulation):

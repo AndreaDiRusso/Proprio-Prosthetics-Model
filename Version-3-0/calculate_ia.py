@@ -13,8 +13,9 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_kinematics.pickle')
+parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_filtered_kinematics.pickle')
 parser.add_argument('--modelFile', default = 'murdoc_gen.xml')
+parser.add_argument('--whichSide', default = 'Left')
 parser.add_argument('--showViewer', dest='showViewer', action='store_true')
 parser.set_defaults(showViewer = False)
 
@@ -23,17 +24,18 @@ args = parser.parse_args()
 kinematicsFile = args.kinematicsFile
 modelFile = args.modelFile
 showViewer = args.showViewer
+whichSide = args.whichSide
 
 resourcesDir = curDir + '/Resources/Murdoc'
 tendonNames = [
-    'BF_Left',
-    'TA_Left',
-    'IL_Left',
-    'RF_Left',
-    'GMED_Left',
-    'GAS_Left',
-    'VAS_Left',
-    'SOL_Left'
+    'BF_' + whichSide,
+    'TA_' + whichSide,
+    'IL_' + whichSide,
+    'RF_' + whichSide,
+    'GMED_' + whichSide,
+    'GAS_' + whichSide,
+    'VAS_' + whichSide,
+    'SOL_' + whichSide
     ]
 
 with open(curDir + '/' + modelFile, 'r') as f:
@@ -48,21 +50,15 @@ viewer = MjViewer(simulation)
 
 #get resting lengths
 nJoints = simulation.model.njnt
-
-allJoints = [simulation.model.joint_id2name(i) for i in range(nJoints)]
-allJoints.remove('world')
-
-keyPos = pd.Series({jointName: simulation.model.key_qpos[0][i] for i, jointName in enumerate(allJoints)})
-
-pose_model(simulation, keyPos)
-
+simulation = pose_to_key(simulation, 0)
 tendonL0 = pd.Series(index = tendonNames)
 tendonL0 = get_tendon_length(tendonL0, simulation)
 
 tendonL = pd.DataFrame(columns = tendonNames)
 for t, kinSeries in kinematics['site_pos'].iterrows():
 
-    pose_model(simulation, kinematics['qpos'].loc[t, :])
+    jointDict = series_to_dict( kinematics['qpos'].loc[t, :])
+    pose_model(simulation, jointDict)
     tendonL.loc[t, :] = get_tendon_length(tendonL0, simulation)
 
     if showViewer:

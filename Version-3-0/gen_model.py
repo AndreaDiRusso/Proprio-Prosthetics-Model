@@ -15,8 +15,10 @@ from helper_functions import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--modelFile', default = 'murdoc_template.xml')
+parser.add_argument('--meshScale', default = '1.1e-3')
 args = parser.parse_args()
 modelFile = args.modelFile
+meshScale = float(args.meshScale)
 
 
 curfilePath = os.path.abspath(__file__)
@@ -29,7 +31,8 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 resourcesDir = curDir + '/Resources/Murdoc'
 
 templateFilePath = curDir + '/' + modelFile
-fcsvFilePath = resourcesDir + '/Aligned-To-Pelvis/Fiducials.fcsv'
+fcsvFilePath = resourcesDir + '/Mobile Foot/Fiducials.fcsv'
 
 specification = fcsv_to_spec(fcsvFilePath)
-modelXML = populate_model(templateFilePath, specification, resourcesDir, showTendons = True)
+modelXML = populate_model(templateFilePath, specification, extraLocations = {},
+    resourcesDir = resourcesDir, meshScale = meshScale, showTendons = True)

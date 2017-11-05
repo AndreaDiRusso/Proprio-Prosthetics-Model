@@ -21,6 +21,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1.txt')
 parser.add_argument('--startTime', default = '27.760')
 parser.add_argument('--stopTime', default = '49.960')
+parser.add_argument('--meshScale', default = '1.1e-3')
+parser.add_argument('--whichSide', default = 'Left')
+parser.add_argument('--modelFile', default = 'murdoc_template_floating.xml')
 parser.add_argument('--showViewer', dest='showViewer', action='store_true')
 parser.add_argument('--reIndex', dest='reIndex', type = tuple, nargs = 1)
 parser.set_defaults(showViewer = False)
@@ -30,19 +33,21 @@ args = parser.parse_args()
 kinematicsFile = args.kinematicsFile
 startTime = float(args.startTime)
 stopTime = float(args.stopTime)
+meshScale = float(args.meshScale)
+whichSide = args.whichSide
+modelFile = args.modelFile
 showViewer = args.showViewer
 reIndex = args.reIndex
 showContactForces = True
 
 resourcesDir = curDir + '/Resources/Murdoc'
 
-templateFilePath = curDir + '/murdoc_template_floating.xml'
-fcsvFilePath = resourcesDir + '/Aligned-To-Pelvis/Fiducials.fcsv'
+templateFilePath = curDir + '/' + modelFile
+fcsvFilePath = resourcesDir + '/Mobile Foot/Fiducials.fcsv'
 
-meshScale = 1.2e-3
 specification = fcsv_to_spec(fcsvFilePath)
-modelXML = populate_model(templateFilePath, specification, resourcesDir,
-    meshScale = meshScale, showTendons = True)
+modelXML = populate_model(templateFilePath, specification, extraLocations = {},
+    resourcesDir = resourcesDir, meshScale = meshScale, showTendons = True)
 
 model = load_model_from_xml(modelXML)
 simulation = MjSim(model)
@@ -59,8 +64,8 @@ if showContactForces and showViewer:
 else:
     viewer = None
 
-whichSide = 'Left'
-sitesToFit = ['MT_' + whichSide, 'M_' + whichSide, 'C_' + whichSide, 'GT_' + whichSide, 'K_' + whichSide]
+sitesToFit = ['MT_' + whichSide, 'M_' + whichSide, 'C_' + whichSide,
+    'GT_' + whichSide, 'K_' + whichSide, 'T_' + whichSide]
 
 #initial guesses for eitehr side
 jointsToFit = {
@@ -76,6 +81,7 @@ jointsToFit = {
     'Knee_' + whichSide + ':x':{'value':1.64,'min':math.radians(0),'max':math.radians(120)},
     'Ankle_' + whichSide + ':x':{'value':-1.56,'min':math.radians(-90),'max':math.radians(30)},
     'Ankle_' + whichSide + ':y':{'value':0.14,'min':math.radians(-60),'max':math.radians(60)},
+    'Toes_' + whichSide + ':x':{'value':0.14,'min':math.radians(-90),'max':math.radians(120)}
     } if whichSide == 'Right' else {
         'World:xt':{'value':0.06,'min':-10, 'max':10},
         'World:yt':{'value':0.02,'min':-10, 'max':10},
@@ -89,6 +95,7 @@ jointsToFit = {
         'Knee_' + whichSide + ':x':{'value':-1.57,'min':math.radians(-120),'max':math.radians(0)},
         'Ankle_' + whichSide + ':x':{'value':1.58,'min':math.radians(-30),'max':math.radians(90)},
         'Ankle_' + whichSide + ':y':{'value':0.1,'min':math.radians(-60),'max':math.radians(60)},
+        'Toes_' + whichSide + ':x':{'value':0.14,'min':math.radians(-120),'max':math.radians(90)}
         }
 
 #Get kinematics
@@ -155,10 +162,11 @@ for t, kinSeries in kinematics.iterrows():
 results = {
     'site_pos' : modelKin,
     'orig_site_pos': alignedKin,
-    'qpos' : modelQpos
+    'qpos' : modelQpos,
+    'meshScale' : meshScale
 }
 
-saveName = kinematicsFile.split('.')[0] + "_kinematics.pickle"
+saveName = '.'.join(kinematicsFile.split('.')[:-1]) + "_kinematics.pickle"
 with open(saveName, 'wb') as f:
     pickle.dump(results, f)
 

@@ -1,7 +1,7 @@
 <mujoco model="Murdoc">
 
     <compiler inertiafromgeom='true' angle='degree'/>
-    <option gravity='0 0 -9.78'/>
+    <option gravity='0 0 -9.78' integrator = 'Euler'/>
     <option timestep='0.01' impratio = '2'/>
     <option>
     <flag fwdinv = 'enable'/>
@@ -38,60 +38,57 @@
 
 	<default>
     <site size='0.5e-3 0.5e-3 0.5e-3' rgba='1 0 0 0'/>
-    <geom solimp="0.99 0.99 0" solref="0.01 1" friction = "5 0.01e6 0.001e6" condim='6'/>
-
-
-    <default class='Hip:x'>
+    <geom solimp="0.99 0.99 0" solref="0.01 1" friction = "5 0.01e3 0.001e3" condim='6'/>
+    <default class='Hip_Left:x'>
       <joint type='hinge' axis='0 1 0' ref='0' range='-120 60' limited='true' armature='0.0001' stiffness='0' springref='0'/>
-    </default>
-    <default class='Hip:y'>
+		</default>
+		<default class='Hip_Left:y'>
             <joint type='hinge' axis='0 1 0' range='-30 30' damping='5' limited='true' stiffness='0' armature='0.0080' />
-    </default>
-    <default class='Hip:z'>
-            <joint type='hinge' axis='0 0 1' range='-15 15' damping='5' limited='true' stiffness='0' armature='0.0080' />
-    </default>
-    <default class = 'Knee:x'>
-      <joint type='hinge' axis='1 0 0' range='-120  0' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
-    </default>
-    <default class = 'Knee:y'>
-      <joint type='hinge' axis='1 0 0' range='-40 120' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
-    </default>
-    <default class = 'Ankle:x'>
-      <joint type='hinge' axis='1 0 0' pos='0 0 0' range='-60 90' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
-    </default>
-    <default class = 'Ankle:y'>
-      <joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
-    </default>
+		</default>
+		<default class='Hip_Left:z'>
+            <joint type='hinge' axis='0 0 1' range='-5 5' damping='5' limited='true' stiffness='0' armature='0.0080' />
+		</default>
+		<default class = 'Knee_Left:x'>
+			<joint type='hinge' axis='1 0 0' range='-120  0' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
+		</default>
+		<default class = 'Knee_Left:y'>
+			<joint type='hinge' axis='1 0 0' range='-40 120' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
+		</default>
+		<default class = 'Ankle_Left:x'>
+			<joint type='hinge' axis='1 0 0' pos='0 0 0' range='-60 90' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+		</default>
+		<default class = 'Ankle_Left:y'>
+			<joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+		</default>
 
-                            <!--
-    <default class='Hip:x'>
+  <default class='Hip_Right:x'>
     <joint type='hinge' axis='0 1 0' ref='0' range='-60 120' limited='true' armature='0.0001' stiffness='0' springref='0'/>
-    </default>
-    <default class='Hip:y'>
+  </default>
+  <default class='Hip_Right:y'>
           <joint type='hinge' axis='0 1 0' range='-30 30' damping='5' limited='true' stiffness='0' armature='0.0080' />
-    </default>
-    <default class='Hip:z'>
-          <joint type='hinge' axis='0 0 1' range='-15 15' damping='5' limited='true' stiffness='0' armature='0.0080' />
-    </default>
-    <default class = 'Knee:x'>
+  </default>
+  <default class='Hip_Right:z'>
+          <joint type='hinge' axis='0 0 1' range='-5 5' damping='5' limited='true' stiffness='0' armature='0.0080' />
+  </default>
+  <default class = 'Knee_Right:x'>
     <joint type='hinge' axis='1 0 0' range='0  120' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
-    </default>
-    <default class = 'Knee:y'>
+  </default>
+  <default class = 'Knee_Right:y'>
     <joint type='hinge' axis='1 0 0' range='-120 40' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
-    </default>
-    <default class = 'Ankle:x'>
+  </default>
+  <default class = 'Ankle_Right:x'>
     <joint type='hinge' axis='1 0 0' pos='0 0 0' range='-90 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
-    </default>
-    <default class = 'Ankle:y'>
+  </default>
+  <default class = 'Ankle_Right:y'>
     <joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
-    </default>
-    -->
+  </default>
 	</default>
 
 	<worldbody>
     <light directional='true' diffuse='1 1 1' specular='0 0 0' pos='0 0 40.5' dir='0 1 0'/>
 
-    <body name='Seat' pos = '0 0 0' euler = '0 0 0'>
+    <body name='Seat' pos = '$World:xt$ $World:yt$ $World:zt$' quat = '$World:wq$ $World:xq$ $World:yq$ $World:zq$'>
+
       <site name="T12_Attachment_Left" pos='$T12_Left:x$	$T12_Left:y$	$T12_Left:z$' rgba='0 0 1 0.33' size='15e-3'/>
       <site name="T12_Attachment_Right" pos='$T12_Right:x$	$T12_Right:y$	$T12_Right:z$' rgba='0 0 1 0.33' size='15e-3'/>
       <geom name = 'Seat' type='box' size="75e-3 75e-3 25e-3" density='1' pos='$Seat_Center:x$ $Seat_Center:y$ $Seat_Center:z$' euler='0 0 0' rgba='1 0 0 0.5'/>
@@ -126,9 +123,9 @@
 
     <body name='Leg_Right' pos='0 0 0' euler='0 0 0'>
 
-      <joint name='Hip_Right:x' class='Hip:x' axis='$Hip_Right:x:x$	$Hip_Right:x:y$	$Hip_Right:x:z$' ref = '0' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
-      <joint name='Hip_Right:y' class='Hip:y' axis='$Hip_Right:y:x$	$Hip_Right:y:y$	$Hip_Right:y:z$' ref = '0' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
-      <joint name='Hip_Right:z' class='Hip:z' axis='$Hip_Right:z:x$	$Hip_Right:z:y$	$Hip_Right:z:z$' ref = '0' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
+      <joint name='Hip_Right:x' class='Hip_Right:x' axis='$Hip_Right:x:x$	$Hip_Right:x:y$	$Hip_Right:x:z$' ref = '0' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
+      <joint name='Hip_Right:y' class='Hip_Right:y' axis='$Hip_Right:y:x$	$Hip_Right:y:y$	$Hip_Right:y:z$' ref = '0' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
+      <joint name='Hip_Right:z' class='Hip_Right:z' axis='$Hip_Right:z:x$	$Hip_Right:z:y$	$Hip_Right:z:z$' ref = '0' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
 
   	  <geom type='mesh' name='Femur_Right' mesh='Femur_Right-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
 
@@ -152,10 +149,10 @@
           <site name="RF_Tibia_Right" pos='$RF_Tibia_Right:x$	$RF_Tibia_Right:y$	$RF_Tibia_Right:z$' rgba='0 0 1 0'/>
           <site name="BF_Tibia_Right" pos='$BF_Tibia_Right:x$	$BF_Tibia_Right:y$	$BF_Tibia_Right:z$' rgba='0 0 1 0'/>
 
-          <joint name='Knee_Right:x' class='Knee:x' axis='$Knee_Right:x:x$	$Knee_Right:x:y$	$Knee_Right:x:z$' ref='0' pos='$Knee_Right:o:x$	$Knee_Right:o:y$	$Knee_Right:o:z$'/>
+          <joint name='Knee_Right:x' class='Knee_Right:x' axis='$Knee_Right:x:x$	$Knee_Right:x:y$	$Knee_Right:x:z$' ref='0' pos='$Knee_Right:o:x$	$Knee_Right:o:y$	$Knee_Right:o:z$'/>
 
   				<body name='Foot_Right' pos='0 0 0' >
-
+_Right
             <geom type='mesh' name='Foot_Right' mesh='Foot_Right-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
 
             <site name="M_Right" pos='$M_Right:x$	$M_Right:y$	$M_Right:z$' rgba='0.5 0.5 0.5 1' size='5e-3'/>
@@ -166,8 +163,8 @@
             <site name="SOL_Ankle_Right" pos='$SOL_Ankle_Right:x$	$SOL_Ankle_Right:y$	$SOL_Ankle_Right:z$' rgba='0 0 1 0'/>
             <site name="GAS_Ankle_Right" pos='$GAS_Ankle_Right:x$	$GAS_Ankle_Right:y$	$GAS_Ankle_Right:z$' rgba='0 0 1 0'/>
 
-            <joint name='Ankle_Right:x' class='Ankle:x' axis='$Ankle_Right:x:x$	$Ankle_Right:x:y$	$Ankle_Right:x:z$'  ref='0' pos='$Ankle_Right:o:x$	$Ankle_Right:o:y$	$Ankle_Right:o:z$'/>
-            <joint name='Ankle_Right:y' class='Ankle:y' axis='$Ankle_Right:y:x$	$Ankle_Right:y:y$	$Ankle_Right:y:z$'  pos='$Ankle_Right:o:x$	$Ankle_Right:o:y$	$Ankle_Right:o:z$'/>
+            <joint name='Ankle_Right:x' class='Ankle_Right:x' axis='$Ankle_Right:x:x$	$Ankle_Right:x:y$	$Ankle_Right:x:z$'  ref='0' pos='$Ankle_Right:o:x$	$Ankle_Right:o:y$	$Ankle_Right:o:z$'/>
+            <joint name='Ankle_Right:y' class='Ankle_Right:y' axis='$Ankle_Right:y:x$	$Ankle_Right:y:y$	$Ankle_Right:y:z$'  pos='$Ankle_Right:o:x$	$Ankle_Right:o:y$	$Ankle_Right:o:z$'/>
 
   				</body>
   				<!-- End foot
@@ -184,9 +181,9 @@
 
       <body name='Leg_Left' pos='0 0 0' euler='0 0 0'>
 
-        <joint name='Hip_Left:x' class='Hip:x' axis='$Hip_Left:x:x$	$Hip_Left:x:y$	$Hip_Left:x:z$' ref = '0' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
-        <joint name='Hip_Left:y' class='Hip:y' axis='$Hip_Left:y:x$	$Hip_Left:y:y$	$Hip_Left:y:z$' ref = '0' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
-        <joint name='Hip_Left:z' class='Hip:z' axis='$Hip_Left:z:x$	$Hip_Left:z:y$	$Hip_Left:z:z$' ref = '0' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
+        <joint name='Hip_Left:x' class='Hip_Left:x' axis='$Hip_Left:x:x$	$Hip_Left:x:y$	$Hip_Left:x:z$' ref = '0' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
+        <joint name='Hip_Left:y' class='Hip_Left:y' axis='$Hip_Left:y:x$	$Hip_Left:y:y$	$Hip_Left:y:z$' ref = '0' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
+        <joint name='Hip_Left:z' class='Hip_Left:z' axis='$Hip_Left:z:x$	$Hip_Left:z:y$	$Hip_Left:z:z$' ref = '0' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
 
     	  <geom type='mesh' name='Femur_Left' mesh='Femur_Left-Flipped' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
 
@@ -210,7 +207,7 @@
             <site name="RF_Tibia_Left" pos='$RF_Tibia_Left:x$	$RF_Tibia_Left:y$	$RF_Tibia_Left:z$' rgba='0 0 1 0'/>
             <site name="BF_Tibia_Left" pos='$BF_Tibia_Left:x$	$BF_Tibia_Left:y$	$BF_Tibia_Left:z$' rgba='0 0 1 0'/>
 
-            <joint name='Knee_Left:x' class='Knee:x' axis='$Knee_Left:x:x$	$Knee_Left:x:y$	$Knee_Left:x:z$'  ref='0' pos='$Knee_Left:o:x$	$Knee_Left:o:y$	$Knee_Left:o:z$'/>
+            <joint name='Knee_Left:x' class='Knee_Left:x' axis='$Knee_Left:x:x$	$Knee_Left:x:y$	$Knee_Left:x:z$'  ref='0' pos='$Knee_Left:o:x$	$Knee_Left:o:y$	$Knee_Left:o:z$'/>
 
     				<body name='Foot_Left' pos='0 0 0' >
 
@@ -224,8 +221,8 @@
               <site name="SOL_Ankle_Left" pos='$SOL_Ankle_Left:x$	$SOL_Ankle_Left:y$	$SOL_Ankle_Left:z$' rgba='0 0 1 0'/>
               <site name="GAS_Ankle_Left" pos='$GAS_Ankle_Left:x$	$GAS_Ankle_Left:y$	$GAS_Ankle_Left:z$' rgba='0 0 1 0'/>
 
-              <joint name='Ankle_Left:x' class='Ankle:x' axis='$Ankle_Left:x:x$	$Ankle_Left:x:y$	$Ankle_Left:x:z$'  ref='0' pos='$Ankle_Left:o:x$	$Ankle_Left:o:y$	$Ankle_Left:o:z$'/>
-              <joint name='Ankle_Left:y' class='Ankle:y' axis='$Ankle_Left:y:x$	$Ankle_Left:y:y$	$Ankle_Left:y:z$'  ref='0' pos='$Ankle_Left:o:x$	$Ankle_Left:o:y$	$Ankle_Left:o:z$'/>
+              <joint name='Ankle_Left:x' class='Ankle_Left:x' axis='$Ankle_Left:x:x$	$Ankle_Left:x:y$	$Ankle_Left:x:z$'  ref='0' pos='$Ankle_Left:o:x$	$Ankle_Left:o:y$	$Ankle_Left:o:z$'/>
+              <joint name='Ankle_Left:y' class='Ankle_Left:y' axis='$Ankle_Left:y:x$	$Ankle_Left:y:y$	$Ankle_Left:y:z$'  ref='0' pos='$Ankle_Left:o:x$	$Ankle_Left:o:y$	$Ankle_Left:o:z$'/>
     				</body>
     				<!-- End foot
     				-->
@@ -275,7 +272,9 @@
 
     <exclude body1='Foot_Left'   body2='Foot_Right'/>
   </contact>
-
+  <equality>
+    <distance geom1='Pelvis' geom2 = 'Seat' />
+  </equality>
   <tendon>
     <spatial name="IL_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='IL_Pelvis_Left'/>
@@ -355,7 +354,7 @@
         <site site='GAS_Femur_Right'/>
         <site site='GAS_Ankle_Right'/>
       </spatial>
-
+      <!--
       <spatial name='Neck_Restraint_Left' stiffness="1e3" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="true" range="0 1e-6">
         <site site='T12_Left'/>
         <site site='T12_Attachment_Left'/>
@@ -365,6 +364,7 @@
         <site site='T12_Right'/>
         <site site='T12_Attachment_Right'/>
       </spatial>
+    -->
 </tendon>
 
 <actuator>
@@ -394,7 +394,7 @@
 </actuator>
 
 <keyframe>
-<key time="0" qpos="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" />
+    <key time="0" qpos="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" />
 </keyframe>
 
 </mujoco>

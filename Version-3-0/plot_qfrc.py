@@ -14,7 +14,7 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--kineticsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_kinetics.pickle')
+parser.add_argument('--kineticsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_filtered_kinetics.pickle')
 parser.add_argument('--meanSubtract', dest='meanSubtract', action='store_true')
 parser.set_defaults(meanSubtract = False)
 
@@ -27,8 +27,40 @@ resourcesDir = curDir + '/Resources/Murdoc'
 with open(kineticsFile, 'rb') as f:
     kinetics = pickle.load(f)
 
-qFrc = long_form_df(kinetics['qfrc_inverse'],
+qFrcInverse = kinetics['qfrc_inverse']
+t0 = next(iter(qFrcInverse.keys()))
+times = []
+for time, value in qFrcInverse.items():
+    times.append(time)
+columns = []
+for joint, value in qFrcInverse[t0].items():
+    if type(value) == np.float64:
+        columns.append(joint)
+    if type(value) == np.ndarray:
+        columns.append(joint + ':xt')
+        columns.append(joint + ':yt')
+        columns.append(joint + ':zt')
+        columns.append(joint + ':x')
+        columns.append(joint + ':y')
+        columns.append(joint + ':z')
+
+qFrcInverseDF = pd.DataFrame(index = times, columns = columns)
+
+for time, reading in qFrcInverse.items():
+    for joint, value in reading.items():
+        if type(value) == np.float64:
+            qFrcInverseDF.loc[time, joint] = value
+        if type(value) == np.ndarray:
+            qFrcInverseDF.loc[time, joint + ':xt'] = value[0]
+            qFrcInverseDF.loc[time, joint + ':yt'] = value[1]
+            qFrcInverseDF.loc[time, joint + ':zt'] = value[2]
+            qFrcInverseDF.loc[time, joint + ':x'] = value[3]
+            qFrcInverseDF.loc[time, joint + ':y'] = value[4]
+            qFrcInverseDF.loc[time, joint + ':z'] = value[5]
+
+qFrc = long_form_df(qFrcInverseDF,
     overrideColumns = ['Tendon', 'Time (sec)', 'Joint Torque (N*m)'])
+qFrc.sort_values(by='Time (sec)', inplace = True)
 
 sns.set_style('darkgrid')
 plt.style.use('seaborn-darkgrid')
@@ -48,7 +80,7 @@ matplotlib.rcParams.update({'ytick.color': 'black' if invertColors else 'white'}
 g = sns.FacetGrid(qFrc, row = 'Tendon', size = 3, aspect = 3,
     despine = False, sharey = False, sharex = True)
 g.map(plt.plot, 'Time (sec)', 'Joint Torque (N*m)', lw = 3)
-g.set(ylim=(-.5, .5))
+#g.set(ylim=(-.5, .5))
 
 plt.savefig(kineticsFile.split('_kinetics')[0] + '_qfrc_plot.png')
 
