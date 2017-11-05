@@ -11,6 +11,7 @@ from mujoco_py.utils import rec_copy, rec_assign
 from helper_functions import *
 from collections import deque
 from scipy import signal
+import time
 
 curfilePath = os.path.abspath(__file__)
 #print(curfilePath)
@@ -20,16 +21,18 @@ curDir = os.path.abspath(os.path.join(curfilePath,os.pardir)) # this will return
 parser = argparse.ArgumentParser()
 parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_filtered_kinematics.pickle')
 parser.add_argument('--modelFile', default = 'murdoc_template_mobile_seat.xml')
+parser.add_argument('--meshScale', default = '1.1e-3')
 
 args = parser.parse_args()
 
 kinematicsFile = args.kinematicsFile
 modelFile = args.modelFile
+meshScale = float(args.meshScale)
 
 resourcesDir = curDir + '/Resources/Murdoc'
 templateFilePath = curDir + '/' + modelFile
 
-fcsvFilePath = resourcesDir + '/Aligned-To-Pelvis/Fiducials.fcsv'
+fcsvFilePath = resourcesDir + '/Mobile Foot/Fiducials.fcsv'
 
 specification = fcsv_to_spec(fcsvFilePath)
 
@@ -37,7 +40,6 @@ with open(kinematicsFile, 'rb') as f:
     kinematics = pickle.load(f)
 
 #meshScale = kinematics['meshScale']
-meshScale = 1.2e-3
 extraCoords = {}
 if modelFile == 'murdoc_template_mobile_seat.xml':
 
@@ -56,12 +58,13 @@ if modelFile == 'murdoc_template_mobile_seat.xml':
                 'World:yq': worldQ.y,
                 'World:zq': worldQ.z }
 
-if modelFile == 'murdoc_template_mobile_treadmill.xml':
+if modelFile == 'murdoc_template_toes_treadmill.xml':
     extraCoords = {
         'Floor:x' : 0,
         'Floor:y' : 0,
-        'Floor:z' : -0.54
+        'Floor:z' : -0.36
         }
+
 modelXML = populate_model(templateFilePath, specification, extraCoords, resourcesDir,
     meshScale = meshScale, showTendons = True)
 
@@ -109,9 +112,14 @@ mybuffer = {
     'qpos': dummyQPos
     }
 
-allActiveContacts = []
+allActiveContacts = {}
 
 for t, kinSeries in kinematics['site_pos'].iterrows():
+    #time.sleep(0.025)
+    #constraintsSummary = constraints_summary(simulation)
+    #if constraintsSummary is not None:
+    #    print(t)
+    #    print(constraintsSummary)
     # calculate qAcc and pass to pose model
     qPosMat = np.asarray(mybuffer['qpos'])
 
@@ -132,16 +140,19 @@ for t, kinSeries in kinematics['site_pos'].iterrows():
         modelQFrcInverse[t][jointName] = tempQFrc[jointMask[jointName]]
         modelQfrcConstraint[t][jointName] = tempQfrcConstraint[jointMask[jointName]]
 
-    activeContacts = contact_summary(simulation)
-    allActiveContacts.append(activeContacts)
+    activeContacts = contact_summary(simulation, zeroPad = True)
+
+    if activeContacts:
+        allActiveContacts.update({t: activeContacts})
+
 
     jointDict = series_to_dict( kinematics['qpos'].loc[t, :])
 
     """
-    skip = ['World:' + i for i in ['xt', 'yt', 'zt']]
-    for name in skip:
-        jointDict.pop(name)
-    """
+        skip = ['World:' + i for i in ['xt', 'yt', 'zt']]
+        for name in skip:
+            jointDict.pop(name)
+            """
 
     simulation = pose_model(simulation,jointDict,
         qAcc = qAcc, qVel = qVelMat[-1], method = 'inverse')
@@ -158,7 +169,7 @@ results = {
     'qacc' : modelQAcc,
     'qfrc_inverse' : modelQFrcInverse,
     'qfrc_constraint': modelQfrcConstraint,
-    'active_contacts': activeContacts
+    'active_contacts': allActiveContacts
     }
 
 saveName = kinematicsFile.split('_kinematics')[0] + "_kinetics.pickle"

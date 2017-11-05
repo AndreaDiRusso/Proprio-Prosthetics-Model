@@ -10,6 +10,7 @@ import pdb, copy
 from mpl_toolkits.mplot3d import Axes3D
 import math
 import quaternion as quat
+from constants import *
 
 def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None,
     flip = None, reIndex = None):
@@ -417,15 +418,14 @@ def get_euler_rotation_quaternion(jointsToFit, jointName):
         )
     return q
 
-def contact_summary(simulation, debugging = False):
-    activeContacts = []
+def contact_summary(simulation, debugging = False, zeroPad = True):
+    activeContacts = {}
     for idx, contact in enumerate(simulation.data.contact):
         contactForce = np.zeros((6))
         functions.mj_contactForce(simulation.model, simulation.data, idx, contactForce)
         if np.sum(contactForce**2) > 0:
-            activeContacts.append( {
-                'contactIdx' : idx,
-                'contactForce' : contactForce
+            activeContacts.update( {
+                idx : contactForce
                 } )
             if debugging:
                 print('Contact geom 1:')
@@ -435,4 +435,38 @@ def contact_summary(simulation, debugging = False):
                 print('Contact Force:')
                 print(contactForce)
                 print('------------------------------------------')
+    if zeroPad and not activeContacts:
+        activeContacts.update(
+            {
+                0 : np.zeros((6))
+                }
+            )
     return activeContacts
+
+def constraints_summary(simulation):
+
+    activeConstraintMask = [ mjtConstraintState(i).name != 'CNSTRSTATE_SATISFIED'
+        for i in simulation.data.efc_state]
+
+    activeConstraintState = pd.DataFrame([ mjtConstraintState(i).name
+        for i in simulation.data.efc_state[activeConstraintMask] ],
+        columns = ['State'])
+
+    activeConstraintType = pd.DataFrame([ mjtConstraint(i).name
+        for i in simulation.data.efc_type[activeConstraintMask] ],
+        columns = ['Type'])
+
+    activeConstraintId = pd.DataFrame(\
+        simulation.data.efc_id[activeConstraintMask],
+        columns = ['ID'])
+    activeConstraintForce = pd.DataFrame(\
+        simulation.data.efc_force[activeConstraintMask],
+        columns = ['Force'])
+
+    constraints = pd.concat( [
+        activeConstraintType,
+        activeConstraintState,
+        activeConstraintId,
+        activeConstraintForce
+        ], axis = 1 )
+    return constraints
