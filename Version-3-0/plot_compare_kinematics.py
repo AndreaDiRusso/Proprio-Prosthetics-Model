@@ -61,7 +61,7 @@ hueOpts = {
 
 sns.set_style('darkgrid')
 plt.style.use('seaborn-darkgrid')
-invertColors = False
+invertColors = True
 matplotlib.rcParams.update({'font.size': 30})
 matplotlib.rcParams.update({'text.color': 'black' if invertColors else 'white'})
 matplotlib.rcParams.update({'axes.facecolor': 'white' if invertColors else 'black'})

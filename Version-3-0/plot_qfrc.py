@@ -16,18 +16,30 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 parser = argparse.ArgumentParser()
 parser.add_argument('--kineticsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_filtered_kinetics.pickle')
 parser.add_argument('--meanSubtract', dest='meanSubtract', action='store_true')
+parser.add_argument('--whichSide', default = 'Left')
+parser.add_argument('--whichQfrc', default = 'qfrc_inverse')
 parser.set_defaults(meanSubtract = False)
 
 args = parser.parse_args()
 kineticsFile = args.kineticsFile
 meanSubtract = args.meanSubtract
+whichSide = args.whichSide
+whichQfrc = args.whichQfrc
 
 resourcesDir = curDir + '/Resources/Murdoc'
 
 with open(kineticsFile, 'rb') as f:
     kinetics = pickle.load(f)
 
-qFrcInverse = kinetics['qfrc_inverse']
+qFrcInverse = kinetics[whichQfrc]
+
+jointsToPlot = [
+    'Hip_' + whichSide,
+    'Knee_' + whichSide,
+    'Ankle_' + whichSide,
+    'Toes_' + whichSide
+    ]
+
 t0 = next(iter(qFrcInverse.keys()))
 times = []
 for time, value in qFrcInverse.items():
@@ -41,7 +53,7 @@ for joint, value in qFrcInverse[t0].items():
     if type(value) == np.ndarray:
         columns.append(joint)
 
-columns = np.unique(columns)
+columns = np.intersect1d(np.unique(columns), jointsToPlot)
 coordinates = ['xt', 'yt', 'zt', 'x', 'y', 'z']
 columnIdx = pd.MultiIndex.from_product([columns, coordinates],
     names=['joint', 'coordinate'])
@@ -53,14 +65,16 @@ for time, reading in qFrcInverse.items():
         if type(value) == np.float64:
             jointCoordinate = joint.split(':')[1]
             jointName = joint.split(':')[0]
-            qFrcInverseDF.loc[time, (jointName, jointCoordinate)] = value
+            if jointName in jointsToPlot:
+                qFrcInverseDF.loc[time, (jointName, jointCoordinate)] = value
         if type(value) == np.ndarray:
-            qFrcInverseDF.loc[time, (joint , 'xt')] = value[0]
-            qFrcInverseDF.loc[time, (joint , 'yt')] = value[1]
-            qFrcInverseDF.loc[time, (joint , 'zt')] = value[2]
-            qFrcInverseDF.loc[time, (joint , 'x')] = value[3]
-            qFrcInverseDF.loc[time, (joint , 'y')] = value[4]
-            qFrcInverseDF.loc[time, (joint , 'z')] = value[5]
+            if joint in jointsToPlot:
+                qFrcInverseDF.loc[time, (joint , 'xt')] = value[0]
+                qFrcInverseDF.loc[time, (joint , 'yt')] = value[1]
+                qFrcInverseDF.loc[time, (joint , 'zt')] = value[2]
+                qFrcInverseDF.loc[time, (joint , 'x')] = value[3]
+                qFrcInverseDF.loc[time, (joint , 'y')] = value[4]
+                qFrcInverseDF.loc[time, (joint , 'z')] = value[5]
 
 qFrc = long_form_df(qFrcInverseDF,
     overrideColumns = ['Joint', 'Coordinate', 'Time (sec)', 'Joint Torque (N*m)'])
@@ -77,7 +91,7 @@ hueOpts = {
 
 sns.set_style('darkgrid')
 plt.style.use('seaborn-darkgrid')
-invertColors = False
+invertColors = True
 matplotlib.rcParams.update({'font.size': 10})
 matplotlib.rcParams.update({'text.color': 'black' if invertColors else 'white'})
 matplotlib.rcParams.update({'axes.facecolor': 'white' if invertColors else 'black'})
@@ -101,8 +115,8 @@ for idx, ax in enumerate(g.axes.flat):
 
 plt.legend(loc='center right', bbox_to_anchor = (1.15,0.5))
 
-plt.savefig(kineticsFile.split('_kinetics')[0] + '_qfrc_plot.png')
+plt.savefig(kineticsFile.split('_kinetics')[0] + '_' + whichQfrc + '_plot.png')
 
-pickleName = kineticsFile.split('_kinetics')[0] + '_qfrc_plot.pickle'
+pickleName = kineticsFile.split('_kinetics')[0] + '_' + whichQfrc + '_plot.pickle'
 with open(pickleName, 'wb') as f:
     pickle.dump(g,f)

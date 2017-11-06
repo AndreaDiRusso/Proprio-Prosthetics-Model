@@ -77,7 +77,7 @@ if modelFile == 'murdoc_template_toes_treadmill.xml':
                 'World:zq': worldQ.z,
                 'Floor:x' : 0,
                 'Floor:y' : 0,
-                'Floor:z' : -0.38,
+                'Floor:z' : -0.36,
                 'minT12Height': 0.5
                 }
 
@@ -99,9 +99,10 @@ viewer._render_every_frame = True
 nJoints = simulation.model.njnt
 allJoints = [simulation.model.joint_id2name(i) for i in range(nJoints)]
 
-modelQAcc = {time : {joint : [] for joint in allJoints} for time in kinematics['site_pos'].index}
-modelQFrcInverse = {time : {joint : [] for joint in allJoints} for time in kinematics['site_pos'].index}
-modelQfrcConstraint = {time : {joint : [] for joint in allJoints} for time in kinematics['site_pos'].index}
+skipInitial = 3
+modelQAcc = {time : {joint : [] for joint in allJoints} for time in kinematics['site_pos'].index[skipInitial:]}
+modelQFrcInverse = {time : {joint : [] for joint in allJoints} for time in kinematics['site_pos'].index[skipInitial:]}
+modelQfrcConstraint = {time : {joint : [] for joint in allJoints} for time in kinematics['site_pos'].index[skipInitial:]}
 
 jointMask = dict.fromkeys(allJoints)
 for jointName in allJoints:
@@ -131,14 +132,33 @@ mybuffer = {
 allActiveContacts = {}
 
 counter = 0
+#TODO: kludgke
+####################################################################.
+#overrideForGait = True
+#if overrideForGait:
+#    simulation.model.opt.disableflags = 2**4
+#    gaitInfo = pd.read_table('W:/ENG_Neuromotion_Shared/group/MI locomotion data/Biomechanical Model/q19d20131124tkTRDMdsNORMt401/Q19_20131124_pre_TRDM_(4.0)_1_GAIT.txt')
+#    stanceTimes = gaitInfo.loc[:, 'RHL_STANCE'].dropna()
+####################################################################
 for t, kinSeries in kinematics['site_pos'].iterrows():
+    ################################################################
+    #if overrideForGait:
+    #    if t > 31.53 and t < 45.25:
+    #        simulation.model.opt.disableflags = 0
+    #    else if :
+    #        simulation.model.opt.disableflags = 2**4
+    #################################################################
     time.sleep(slowDown)
-
-    #constraintsSummary = constraints_summary(simulation)
-    #if constraintsSummary is not None:
-    #    print(t)
-    #    print(constraintsSummary)
-
+    """
+    try:
+        constraintsSummary = constraints_summary(simulation)
+        if constraintsSummary is not None:
+            print(t)
+            print(constraintsSummary)
+            print('')
+    except:
+        pass
+    """
     # calculate qAcc and pass to pose model
     qPosMat = np.asarray(mybuffer['qpos'])
 
@@ -154,15 +174,16 @@ for t, kinSeries in kinematics['site_pos'].iterrows():
     tempQFrc = copy.deepcopy(simulation.data.qfrc_inverse)
     tempQfrcConstraint = copy.deepcopy(simulation.data.qfrc_constraint)
 
-    for jointName in allJoints:
-        modelQAcc[t][jointName] = qAcc[jointMask[jointName]] if counter > 3 else 0
-        modelQFrcInverse[t][jointName] = tempQFrc[jointMask[jointName]] if counter > 3 else 0
-        modelQfrcConstraint[t][jointName] = tempQfrcConstraint[jointMask[jointName]] if counter > 3 else 0
+    if counter > skipInitial:
+        for jointName in allJoints:
+            modelQAcc[t][jointName] = qAcc[jointMask[jointName]]
+            modelQFrcInverse[t][jointName] = tempQFrc[jointMask[jointName]]
+            modelQfrcConstraint[t][jointName] = tempQfrcConstraint[jointMask[jointName]]
 
-    activeContacts = contact_summary(simulation, zeroPad = True)
-
-    if activeContacts:
-        allActiveContacts.update({t: activeContacts})
+    if counter > skipInitial:
+        activeContacts = contact_summary(simulation, zeroPad = True)
+        if activeContacts:
+            allActiveContacts.update({t: activeContacts})
 
 
     jointDict = series_to_dict( kinematics['qpos'].loc[t, :])

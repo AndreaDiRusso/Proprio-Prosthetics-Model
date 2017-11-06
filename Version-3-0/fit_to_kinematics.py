@@ -66,7 +66,7 @@ else:
 
 sitesToFit = ['MT_' + whichSide, 'M_' + whichSide, 'C_' + whichSide,
     'GT_' + whichSide, 'K_' + whichSide
-    #, 'T_' + whichSide
+    , 'T_' + whichSide
     ]
 
 #initial guesses for eitehr side
@@ -83,7 +83,7 @@ jointsToFit = {
     'Knee_' + whichSide + ':x':{'value':1.64,'min':math.radians(0),'max':math.radians(120)},
     'Ankle_' + whichSide + ':x':{'value':-1,'min':math.radians(-90),'max':math.radians(30)},
     'Ankle_' + whichSide + ':y':{'value':-0.1,'min':math.radians(-60),'max':math.radians(60)},
-    #'Toes_' + whichSide + ':x':{'value':0.02,'min':math.radians(-90),'max':math.radians(120)}
+    'Toes_' + whichSide + ':x':{'value':0.02,'min':math.radians(-90),'max':math.radians(120)}
     } if whichSide == 'Right' else {
         'World:xt':{'value':0.06,'min':-10, 'max':10},
         'World:yt':{'value':0.02,'min':-10, 'max':10},
@@ -97,7 +97,7 @@ jointsToFit = {
         'Knee_' + whichSide + ':x':{'value':-1.57,'min':math.radians(-120),'max':math.radians(0)},
         'Ankle_' + whichSide + ':x':{'value':1.58,'min':math.radians(-30),'max':math.radians(90)},
         'Ankle_' + whichSide + ':y':{'value':0.1,'min':math.radians(-60),'max':math.radians(60)},
-        #'Toes_' + whichSide + ':x':{'value':0.14,'min':math.radians(-120),'max':math.radians(90)}
+        'Toes_' + whichSide + ':x':{'value':0.14,'min':math.radians(-120),'max':math.radians(90)}
         }
 
 #Get kinematics

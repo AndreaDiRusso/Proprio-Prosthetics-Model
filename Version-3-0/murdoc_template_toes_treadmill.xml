@@ -263,23 +263,23 @@
 
     </body>
 
+        <!--
     <body name = 'Posture Constraint' pos = '$World:xt$ $World:yt$ $World:zt$' quat = '$World:wq$ $World:xq$ $World:yq$ $World:zq$'>
       <geom name = 'Posture Constraint' type = 'sphere' size = '10e-3' rgba = '1 0 1 0.2' pos = '$T12:x$	$T12:y$	$T12:z$'/>
       <joint name = 'Posture:x' type = 'slide' axis = '1 0 0'/>
       <joint name = 'Posture:y' type = 'slide' axis = '0 1 0'/>
     </body>
-
+      -->
 	</worldbody>
 
 
     <equality>
-      <connect body1='Posture Constraint' body2 ='Pelvis' anchor='$T12:x$	$T12:y$	$T12:z$'/>
+      <distance geom1='Treadmill' geom2 ='T12' distance = '1' solref = '0.05 10'/>
     </equality>
   <contact>
-<exclude body1='Pelvis'     body2='Posture Constraint'/>
-    <!--
     <exclude body1='Toes_Right'     body2='Treadmill'/>
       <exclude body1='Toes_Left'     body2='Treadmill'/>
+        <!--
     <exclude body1='Leg_Right'     body2='Enclosure'/>
     <exclude body1='Leg_Left'     body2='Enclosure'/>
     <exclude body1='Shin_Right'     body2='Enclosure'/>
@@ -399,8 +399,8 @@
 
 
 <keyframe>
-    <key time="0" qpos="0 0 0 1 0 0 0 0 0 0 0 0 0 0 1.05 0.52 0.3 -2.09 1.57 0 0 0 0" />
-        <key time="0" qpos="0 0 0 1 0 0 0 0 0 0 0 0 0 0 1.05 -0.52 -0.1 -2.09 1.57 0 0 0 0" />
+    <key time="0" qpos="0 0 0 1 0 0 0 0 0 0 0 0 0 0 1.05 0.52 0.3 -2.09 1.57 0 " />
+        <key time="0" qpos="0 0 0 1 0 0 0 0 0 0 0 0 0 0 1.05 -0.52 -0.1 -2.09 1.57 0 " />
 </keyframe>
 
 </mujoco>
