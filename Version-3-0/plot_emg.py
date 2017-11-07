@@ -27,8 +27,6 @@ with open(emgFile, 'rb') as f:
 
 musclesToPlot = [
     'RF',
-    'ST',
-    'GMD',
     'TA',
     'IPS',
     'GN'
@@ -62,7 +60,7 @@ g = sns.FacetGrid(emgLDF, row = 'Muscle', size = 3, aspect = 3,
 g.map(plt.plot, 'Time (sec)', 'EMG (mV)')
 
 plt.savefig(emgFile.split('_emg')[0] + '_emg_plot.png')
-
+plt.savefig(emgFile.split('_emg')[0] + '_emg_plot.eps')
 pickleName = emgFile.split('_emg')[0] + '_emg_plot.pickle'
 with open(pickleName, 'wb') as f:
     pickle.dump(g,f)

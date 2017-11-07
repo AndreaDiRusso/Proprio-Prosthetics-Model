@@ -301,7 +301,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
+*.ps1
 # Project specific
 .gitPath
 scratch.py

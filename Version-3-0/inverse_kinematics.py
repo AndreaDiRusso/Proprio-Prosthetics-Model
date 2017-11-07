@@ -4,7 +4,7 @@ import pdb
 from mujoco_py import functions
 
 def iter_cb(params, iterNo, resid, t, kinSeries, solver):
-    printing = True
+    printing = False
     if printing:
         try:
             print("Iteration number: %d" % iterNo, end = '\r')

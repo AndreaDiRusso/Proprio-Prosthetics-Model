@@ -58,7 +58,7 @@
 			<joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
 		</default>
 		<default class = 'Toes_Left:x'>
-			<joint type='hinge' axis='1 0 0' pos='0 0 0' range='-90 120' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+			<joint type='hinge' axis='1 0 0' pos='0 0 0' range='30 120' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
 		</default>
 
   <default class='Hip_Right:x'>
@@ -83,7 +83,7 @@
     <joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
   </default>
   <default class = 'Toes_Right:x'>
-    <joint type='hinge' axis='1 0 0' pos='0 0 0' range='-120 90' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+    <joint type='hinge' axis='1 0 0' pos='0 0 0' range='-120 -30' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
   </default>
 	</default>
 
@@ -168,6 +168,8 @@
 
             <joint name='Ankle_Right:x' class='Ankle_Right:x' axis='$Ankle_Right:x:x$	$Ankle_Right:x:y$	$Ankle_Right:x:z$'  ref='0' pos='$Ankle_Right:o:x$	$Ankle_Right:o:y$	$Ankle_Right:o:z$'/>
             <joint name='Ankle_Right:y' class='Ankle_Right:y' axis='$Ankle_Right:y:x$	$Ankle_Right:y:y$	$Ankle_Right:y:z$'  pos='$Ankle_Right:o:x$	$Ankle_Right:o:y$	$Ankle_Right:o:z$'/>
+            <geom name = 'Sole_Right' pos='$Sole_Right:x$ $Sole_Right:y$ $Sole_Right:z$' type = 'ellipsoid' size = '5e-2 2.5e-2 5e-3' rgba = '1 0.5 0.5 1' euler = '0 20 10'/>
+            <site name="Sole_Tip_Right" pos='$Sole_Tip_Right:x$	$Sole_Tip_Right:y$	$Sole_Tip_Right:z$' rgba='0 1 1 1' size='5e-3'/>
 
             <body name = 'Toes_Right' pos = '0 0 0' >
             <geom type='mesh' mesh='Toes_Right' mass='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
@@ -231,6 +233,8 @@
 
               <joint name='Ankle_Left:x' class='Ankle_Left:x' axis='$Ankle_Left:x:x$	$Ankle_Left:x:y$	$Ankle_Left:x:z$'  ref='0' pos='$Ankle_Left:o:x$	$Ankle_Left:o:y$	$Ankle_Left:o:z$'/>
               <joint name='Ankle_Left:y' class='Ankle_Left:y' axis='$Ankle_Left:y:x$	$Ankle_Left:y:y$	$Ankle_Left:y:z$'  ref='0' pos='$Ankle_Left:o:x$	$Ankle_Left:o:y$	$Ankle_Left:o:z$'/>
+              <geom name = 'Sole_Left' pos='$Sole_Left:x$ $Sole_Left:y$ $Sole_Left:z$' type = 'ellipsoid' size = '5e-2 2.5e-2 5e-3' rgba = '1 0.5 0.5 1' euler = '0 20 -10'/>
+              <site name="Sole_Tip_Left" pos='$Sole_Tip_Left:x$	$Sole_Tip_Left:y$	$Sole_Tip_Left:z$' rgba='0 1 1 1' size='5e-3'/>
 
               <body name = 'Toes_Left' pos = '0 0 0'>
 

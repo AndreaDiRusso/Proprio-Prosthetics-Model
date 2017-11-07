@@ -71,6 +71,15 @@ def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None,
 
     return proc
 
+def preproc_interp_na(kinematicsFile):
+    raw = pd.read_table(kinematicsFile)
+    allButFirstRow = copy.deepcopy(raw.iloc[1:, :])
+    allButFirstRow.interpolate(method = 'pchip', inplace = True)
+    raw.iloc[1:, :] = allButFirstRow
+    newName = kinematicsFile.split('.txt')[0] + '_interp.txt'
+    raw.to_csv(newName, sep='\t')
+
+
 def preproc_china_kinematics(kinematicsFile):
     raw = pd.read_table(kinematicsFile, index_col = 1)
     assert raw.index.name == 'Time'
@@ -420,12 +429,28 @@ def get_euler_rotation_quaternion(jointsToFit, jointName):
 
 def contact_summary(simulation, debugging = False, zeroPad = True):
     activeContacts = {}
+
     for idx, contact in enumerate(simulation.data.contact):
+
         contactForce = np.zeros((6))
         functions.mj_contactForce(simulation.model, simulation.data, idx, contactForce)
+        """
+            The first (X) axis of this frame is the contact normal direction,
+            while the remaining (Y and Z) axes define the tangent plane.
+            One might have expected the normal to correspond to the Z axis,
+            as in MuJoCo's visualization convention, but we support frictionless
+            contacts where only the normal axis is used, which is why we want
+            to have the normal in first position. Similar to limits,
+            the contact distance is positive when the two geoms are separated,
+            zero when they touch, and negative when they penetrate.
+            The contact point is in the middle between the two surfaces
+            along the normal axis (for mesh collisions this may be approximate).
+            """
+
+
         if np.sum(contactForce**2) > 0:
             activeContacts.update( {
-                idx : contactForce
+                idx : {'force' : contactForce, 'frame' : contact.frame}
                 } )
             if debugging:
                 print('Contact geom 1:')
@@ -435,10 +460,11 @@ def contact_summary(simulation, debugging = False, zeroPad = True):
                 print('Contact Force:')
                 print(contactForce)
                 print('------------------------------------------')
+
     if zeroPad and not activeContacts:
         activeContacts.update(
             {
-                0 : np.zeros((6))
+                0 : {'force' : np.zeros((6)), 'frame' : np.zeros((9))}
                 }
             )
     return activeContacts

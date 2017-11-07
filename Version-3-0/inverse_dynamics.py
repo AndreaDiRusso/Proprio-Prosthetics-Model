@@ -6,8 +6,10 @@ Example for how to modifying the MuJoCo qpos during execution.
 import os, argparse, pickle, copy
 import mujoco_py
 import glfw
-from mujoco_py import load_model_from_xml, MjSim, MjViewer
+from mujoco_py import load_model_from_xml, MjSim, MjViewer, functions
 from mujoco_py.utils import rec_copy, rec_assign
+
+from mujoco_py.generated import const
 from helper_functions import *
 from collections import deque
 from scipy import signal
@@ -22,6 +24,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_filtered_kinematics.pickle')
 parser.add_argument('--modelFile', default = 'murdoc_template_toes_treadmill.xml')
 parser.add_argument('--meshScale', default = '1.1e-3')
+parser.add_argument('--cameraId', default = None)
 parser.add_argument('--slowDown', default = '0')
 args = parser.parse_args()
 
@@ -29,6 +32,7 @@ kinematicsFile = args.kinematicsFile
 modelFile = args.modelFile
 meshScale = float(args.meshScale)
 slowDown = float(args.slowDown)
+cameraId = args.cameraId
 
 resourcesDir = curDir + '/Resources/Murdoc'
 templateFilePath = curDir + '/' + modelFile
@@ -77,7 +81,7 @@ if modelFile == 'murdoc_template_toes_treadmill.xml':
                 'World:zq': worldQ.z,
                 'Floor:x' : 0,
                 'Floor:y' : 0,
-                'Floor:z' : -0.36,
+                'Floor:z' : -0.385,
                 'minT12Height': 0.5
                 }
 
@@ -85,6 +89,8 @@ modelXML = populate_model(templateFilePath, specification, extraCoords, resource
     meshScale = meshScale, showTendons = True)
 
 model = load_model_from_xml(modelXML)
+
+functions.mj_setTotalmass(model, 10)
 simulation = MjSim(model)
 
 simulation = pose_to_key(simulation, 1)
@@ -95,6 +101,9 @@ viewer.vopt.flags[10] = viewer.vopt.flags[11] = not viewer.vopt.flags[10]
 #viewer._hide_overlay = True
 viewer._render_every_frame = True
 
+if cameraId is not None:
+    viewer.cam.fixedcamid += int(cameraId)
+    viewer.cam.type = const.CAMERA_FIXED
 #get resting lengths
 nJoints = simulation.model.njnt
 allJoints = [simulation.model.joint_id2name(i) for i in range(nJoints)]

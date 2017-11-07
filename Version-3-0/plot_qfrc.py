@@ -116,6 +116,7 @@ for idx, ax in enumerate(g.axes.flat):
 plt.legend(loc='center right', bbox_to_anchor = (1.15,0.5))
 
 plt.savefig(kineticsFile.split('_kinetics')[0] + '_' + whichQfrc + '_plot.png')
+plt.savefig(kineticsFile.split('_kinetics')[0] + '_' + whichQfrc + '_plot.eps')
 
 pickleName = kineticsFile.split('_kinetics')[0] + '_' + whichQfrc + '_plot.pickle'
 with open(pickleName, 'wb') as f:

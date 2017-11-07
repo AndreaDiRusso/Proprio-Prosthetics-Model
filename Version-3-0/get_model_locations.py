@@ -1,8 +1,15 @@
-import os, argparse, pickle
-from scipy import signal
-import numpy as np
+#!/usr/bin/env python3
+"""
+Example for how to modifying the MuJoCo qpos during execution.
+"""
+
+import os, argparse, pickle, copy
+import mujoco_py
+import glfw
+from mujoco_py import load_model_from_xml, MjSim, MjViewer
+from mujoco_py.utils import rec_copy, rec_assign
 from helper_functions import *
-from mujoco_py import load_model_from_xml, MjSim, MjViewerBasic, MjViewer
+import matplotlib.pyplot as plt
 
 curfilePath = os.path.abspath(__file__)
 #print(curfilePath)
@@ -13,17 +20,14 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_kinematics.pickle')
-parser.add_argument('--dt', default = '0.01')
+parser.add_argument('--modelFile', default = 'murdoc_template_toes_treadmill.xml')
 parser.add_argument('--meshScale', default = '1.1e-3')
-parser.add_argument('--lowCutoff', default = '5')
-parser.add_argument('--modelFile', default = 'murdoc_template_toes_floating.xml')
+
 args = parser.parse_args()
 
 kinematicsFile = args.kinematicsFile
-dt = float(args.dt)
 modelFile = args.modelFile
 meshScale = float(args.meshScale)
-lowCutoff = float(args.lowCutoff)
 
 resourcesDir = curDir + '/Resources/Murdoc'
 templateFilePath = curDir + '/' + modelFile
@@ -38,21 +42,33 @@ model = load_model_from_xml(modelXML)
 
 simulation = MjSim(model)
 
+viewer = MjViewer(simulation)
+
 with open(kinematicsFile, 'rb') as f:
     kinematics = pickle.load(f)
+#viewer.vopt.flags[10] = viewer.vopt.flags[11] = not viewer.vopt.flags[10]
 
-fr = 1 / dt
-Wn = 2 * lowCutoff / fr
-b, a = signal.butter(12, Wn, analog=False)
-for column in kinematics['qpos']:
-    kinematics['qpos'].loc[:, column] = signal.filtfilt(b, a, kinematics['qpos'].loc[:, column])
-
-for t, kinSeries in kinematics['orig_site_pos'].iterrows():
+sitesToShow = ['Sole_Tip_Right']
+colIdx = pd.MultiIndex.from_product([sitesToShow, ['x', 'y', 'z']], names = ['joint', 'coordinate'])
+modelKin = pd.DataFrame(index = kinematics['site_pos'].index, columns = colIdx)
+dontPose = ['World:xq', 'World:yq', 'World:zq','World:xt', 'World:yt', 'World:zt' ]
+import time
+for t, kinSeries in kinematics['site_pos'].iterrows():
 
     jointDict = series_to_dict( kinematics['qpos'].loc[t, :])
+    #for jointName in dontPose:
+    #    jointDict.pop(jointName)
     pose_model(simulation, jointDict)
-    kinematics['site_pos'].loc[t, :] = get_site_pos(kinSeries, simulation)
+    modelKin.loc[t, :] = get_site_pos(modelKin.loc[t, :], simulation)
 
-newName = kinematicsFile.split('_kinematics')[0] + '_filtered_kinematics.pickle'
-with open(newName, 'wb') as f:
-    pickle.dump(kinematics, f)
+    viewer._hide_overlay = True
+    viewer._render_every_frame = True
+    #render_targets(viewer, kinematics['orig_site_pos'].loc[t, :])
+    viewer.render()
+
+    #time.sleep(0.1)
+
+plt.plot(modelKin.loc[:, (sitesToShow[0], 'z')])
+plt.show()
+print('Kinematics:')
+print(modelKin.min(axis = 0))
