@@ -9,8 +9,8 @@
     <asset>
 		<!-- Sets sky rendering
 		-->
-        <texture type="skybox" builtin="gradient" width="100" height="100" rgb1="0 0 0"
-            rgb2="0 0 0"/>
+        <texture type="skybox" builtin="gradient" width="100" height="100" rgb1="1 1 1"
+            rgb2="1 1 1"/>
 		<!-- Not clear to me where this is used yet
 		-->
         <texture name="texgeom" type="cube" builtin="flat" mark="cross" width="127" height="1278"
@@ -212,6 +212,7 @@
 
               <geom type='mesh' name='Foot_Left' mesh='Foot_Left' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
                             <geom type='mesh' name='Toes_Left' mesh='Toes_Left' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
+                            
 
               <site name="M_Left" pos='$M_Left:x$	$M_Left:y$	$M_Left:z$' rgba='0.5 0.5 0.5 1' size='5e-3'/>
               <site name="MT_Left" pos='$MT_Left:x$	$MT_Left:y$	$MT_Left:z$' rgba='0 0 1 1' size='5e-3'/>
@@ -398,7 +399,8 @@
 </actuator>
 
 <keyframe>
-    <key time="0" qpos="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" />
+  <!-- reference for Ia calculation -->
+    <key time="0" qpos="0 0 0   1 0 0 0   0 0 0   1.3 -0.6 0    0 0 0   -1.3 0.6 0" />
         <key time="0" qpos="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" />
 </keyframe>
 

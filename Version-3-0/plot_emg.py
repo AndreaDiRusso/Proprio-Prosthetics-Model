@@ -25,6 +25,7 @@ meanSubtract = args.meanSubtract
 with open(emgFile, 'rb') as f:
     emg = pickle.load(f)['emg']
 
+pdb.set_trace()
 musclesToPlot = [
     'RF',
     'TA',

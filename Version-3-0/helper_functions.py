@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import seaborn as sns
+from scipy import interpolate
 import matplotlib.pyplot as plt
 import itertools
 from lmfit import Parameters, Parameter
@@ -333,7 +334,8 @@ def pose_to_key(simulation, keyIdx):
 
 def get_tendon_length(tendonSeries, simulation):
     for tendonName in tendonSeries.index:
-        tendonSeries.loc[tendonName] = simulation.data.actuator_length[simulation.model.actuator_name2id(tendonName)]
+        tendonId = functions.mj_name2id(simulation.model, mjtObj.OBJ_TENDON.value, tendonName)
+        tendonSeries.loc[tendonName] = simulation.data.ten_length[tendonId]
     return tendonSeries
 
 def get_site_pos(kinSeries, simulation):
@@ -406,11 +408,65 @@ def series_to_markers(kinSeries):
             }]
     return markers
 
-def Ia_model(k, tendonL, tendonV, tendonL0):
+def Ia_model_Radu(tendonL, tendonV, tendonL0, gains):
+    iAFiring = pd.DataFrame(index = tendonL.index, columns = tendonL.columns)
+
+    for t, tendonSeries in tendonL.iterrows():
+        v = tendonV.loc[t,:]/tendonL0
+        signV = np.sign(v)
+        u = v.abs()**gains[0]*signV
+
+        deltaL = (tendonL.loc[t,:]-tendonL0)/tendonL0
+
+        iAFiring.loc[t, :] = gains[1] * u + gains[2] * deltaL + gains[3]
+
+        iAFiring.loc[t, :] = iAFiring.loc[t, :].clip(lower = 0)
+
+        #pdb.set_trace()
+    return iAFiring
+
+def dynamic_index(tendonVSeries):
+    #tendonV will be in m/sec, convert to mm/sec
+    vel = copy.deepcopy(tendonVSeries) * 1000
+    # linearly interpolate the extrema of Fig. 5 from Cheney 1976
+    f = interpolate.interp1d([5, 45], [30, 95], fill_value = 'extrapolate')
+    return f(vel)
+
+def base_freq(tendonLSeries):
+    #tendonV will be in m, convert to mm
+    l = copy.deepcopy(tendonLSeries) * 1000
+    # linearly interpolate the extrema of Fig. 6 from Cheney 1976
+    f = interpolate.interp1d([2, 10], [12, 32], fill_value = 'extrapolate')
+    return f(l)
+
+def Ia_model_Yakovenko(k, tendonL, tendonV, tendonL0, restFiring = 60):
     iAFiring = pd.DataFrame(index = tendonL.index, columns = tendonL.columns)
     for t, tendonSeries in tendonL.iterrows():
-        positiveV = tendonV.loc[t,:].clip(lower = 0)
-        iAFiring.loc[t, :] = k*(positiveV*21*(positiveV/tendonL0)**0.5+200*(tendonL.loc[t,:]-tendonL0)/tendonL0+60)
+        #pdb.set_trace()
+        v = tendonV.loc[t,:]/tendonL0
+        signV = np.sign(v)
+        u = v.abs()**0.5*signV
+        #print('u = %4.4f' % u)
+        deltaL = (tendonL.loc[t,:]-tendonL0)/tendonL0
+        #print('deltaL = %4.4f' % deltaL)
+        iAFiring.loc[t, :] = k*(21*u+200*(deltaL) + restFiring)
+        iAFiring.loc[t, :] = iAFiring.loc[t, :].clip(lower = 0)
+        #iAFiring.loc[t, :] = k*(positiveV*21*(positiveV/tendonL0)**0.5+200*(tendonL.loc[t,:]-tendonL0)/tendonL0+60)
+    return iAFiring
+
+def Ia_model_Prochazka(k, tendonL, tendonV, tendonL0, restFiring = 60):
+    iAFiring = pd.DataFrame(index = tendonL.index, columns = tendonL.columns)
+    for t, tendonSeries in tendonL.iterrows():
+        #pdb.set_trace()
+        v = tendonV.loc[t,:]/tendonL0
+        signV = np.sign(v)
+        u = v.abs()**0.5*signV
+        #print('u = %4.4f' % u)
+        deltaL = (tendonL.loc[t,:]-tendonL0)/tendonL0
+        #print('deltaL = %4.4f' % deltaL)
+        iAFiring.loc[t, :] = 65*u+200*deltaL+restFiring
+        iAFiring.loc[t, :] = iAFiring.loc[t, :].clip(lower = 0)
+        #iAFiring.loc[t, :] = k*(positiveV*21*(positiveV/tendonL0)**0.5+200*(tendonL.loc[t,:]-tendonL0)/tendonL0+60)
     return iAFiring
 
 def long_form_df(kinDF, overrideColumns = None):

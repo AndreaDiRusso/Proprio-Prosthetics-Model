@@ -16,6 +16,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_filtered_kinematics.pickle')
 parser.add_argument('--modelFile', default = 'murdoc_gen.xml')
 parser.add_argument('--whichSide', default = 'Left')
+parser.add_argument('--dt', default = '0.01')
 parser.add_argument('--showViewer', dest='showViewer', action='store_true')
 parser.set_defaults(showViewer = False)
 
@@ -25,6 +26,7 @@ kinematicsFile = args.kinematicsFile
 modelFile = args.modelFile
 showViewer = args.showViewer
 whichSide = args.whichSide
+dt = float(args.dt)
 
 resourcesDir = curDir + '/Resources/Murdoc'
 tendonNames = [
@@ -46,6 +48,7 @@ with open(kinematicsFile, 'rb') as f:
 
 simulation = MjSim(model)
 
+gains = [0.5, 160, 380, 7]
 viewer = MjViewer(simulation)
 
 #get resting lengths
@@ -64,8 +67,8 @@ for t, kinSeries in kinematics['site_pos'].iterrows():
     if showViewer:
         viewer.render()
 
-tendonV = tendonL.diff(axis = 0).fillna(0)
-iARate = Ia_model(1, tendonL, tendonV,  tendonL0)
+tendonV = tendonL.diff(axis = 0).fillna(0) / dt
+iARate = Ia_model_Radu(tendonL, tendonV,  tendonL0, gains)
 
 kinematics.update(
     {

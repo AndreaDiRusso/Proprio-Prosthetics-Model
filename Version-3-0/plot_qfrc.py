@@ -60,21 +60,27 @@ columnIdx = pd.MultiIndex.from_product([columns, coordinates],
 
 qFrcInverseDF = pd.DataFrame(index = timeIdx, columns = columnIdx)
 
+
+if whichQfrc == 'qfrc_inverse':
+    scaling = 1e-3
+else:
+    scaling = 1
+    
 for time, reading in qFrcInverse.items():
     for joint, value in reading.items():
         if type(value) == np.float64:
             jointCoordinate = joint.split(':')[1]
             jointName = joint.split(':')[0]
             if jointName in jointsToPlot:
-                qFrcInverseDF.loc[time, (jointName, jointCoordinate)] = value
+                qFrcInverseDF.loc[time, (jointName, jointCoordinate)] = value * scaling
         if type(value) == np.ndarray:
             if joint in jointsToPlot:
-                qFrcInverseDF.loc[time, (joint , 'xt')] = value[0]
-                qFrcInverseDF.loc[time, (joint , 'yt')] = value[1]
-                qFrcInverseDF.loc[time, (joint , 'zt')] = value[2]
-                qFrcInverseDF.loc[time, (joint , 'x')] = value[3]
-                qFrcInverseDF.loc[time, (joint , 'y')] = value[4]
-                qFrcInverseDF.loc[time, (joint , 'z')] = value[5]
+                qFrcInverseDF.loc[time, (joint , 'xt')] = value[0] * scaling
+                qFrcInverseDF.loc[time, (joint , 'yt')] = value[1] * scaling
+                qFrcInverseDF.loc[time, (joint , 'zt')] = value[2] * scaling
+                qFrcInverseDF.loc[time, (joint , 'x')] = value[3] * scaling
+                qFrcInverseDF.loc[time, (joint , 'y')] = value[4] * scaling
+                qFrcInverseDF.loc[time, (joint , 'z')] = value[5] * scaling
 
 qFrc = long_form_df(qFrcInverseDF,
     overrideColumns = ['Joint', 'Coordinate', 'Time (sec)', 'Joint Torque (N*m)'])

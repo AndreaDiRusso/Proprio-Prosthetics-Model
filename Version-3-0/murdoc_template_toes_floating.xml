@@ -370,4 +370,12 @@
   <general name='GAS_Left'  gear='1' tendon='GAS_Left'  ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -91'/>
 </actuator>
 
+<keyframe>
+  <!-- reference for Ia calculation -->
+    <key time="0" qpos="0 0 0   1 0 0 0   0 0 0   1.3 -0.6 0 -0.52   0 0 0   -1.3 0.6 0 0.52" />
+      <!-- reference for Ia calculation -->
+    <key time="0" qpos="0 0 0 1 0 0 0 0 0 0 0 0 0 0  0   -0.08 0.05 -1.5 0.2 0.1 0.52" />
+    <key time = '0' qpos = '0.05 0.07 -0.05 0.57 0.45 -0.53 0.43 -0.6 0.08 -0.05 1.55 -1.51 0.11 30 0.6 -0.08 0.05 -1.55 1.51 -0.11 -30'/>
+</keyframe>
+
 </mujoco>
