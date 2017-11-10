@@ -43,7 +43,7 @@ matplotlib.rcParams.update({'ytick.color': 'black' if invertColors else 'white'}
 
 g = sns.FacetGrid(iARate, row = 'Tendon', size = 3, aspect = 3,
     despine = False, sharey = False)
-g.map(plt.plot, 'Time (sec)', 'Firing Rate (Hz)', lw = 3)
+g.map(plt.plot, 'Time (sec)', 'Firing Rate (Hz)', lw = 3, label = 'Firing Rate (Hz)')
 
 plt.savefig(frFile.split('_fr')[0] + '_fr_plot.png')
 plt.savefig(frFile.split('_fr')[0] + '_fr_plot.eps')
