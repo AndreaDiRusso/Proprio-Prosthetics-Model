@@ -3,13 +3,27 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import itertools
-from lmfit import Parameters, Parameter
-from mujoco_py.generated import const
-from mujoco_py import functions
+
+try:
+    from lmfit import Parameters, Parameter
+except:
+    pass
+
+try:
+    from mujoco_py.generated import const
+    from mujoco_py import functions
+except:
+    pass
+
 import pdb, copy
 from mpl_toolkits.mplot3d import Axes3D
 import math
-import quaternion as quat
+
+try:
+    import quaternion as quat
+except:
+    pass
+
 from constants import *
 
 def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None,

@@ -193,9 +193,9 @@ class SubplotAnimation(animation.TimedAnimation):
                     ax[rowIdx][colIdx].set_ylabel(self.y)
                     box = ax[rowIdx][colIdx].get_position()
                     ax[rowIdx][colIdx].set_position([box.x0,box.y0,box.width*0.95,box.height])
-                if not legendSet:
-                    ax[rowIdx][colIdx].legend(loc='center right', bbox_to_anchor = (1.4,-2.5))
-                    legendSet = True
+                #if not legendSet:
+                #    ax[rowIdx][colIdx].legend(loc='center right', bbox_to_anchor = (1.4,-2.5))
+                #    legendSet = True
         animation.TimedAnimation.__init__(self, self.fig, interval=10, blit=True)
 
     def _draw_frame(self, framedata):
