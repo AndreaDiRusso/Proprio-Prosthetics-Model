@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import seaborn as sns
-from scipy import interpolate
+from scipy import interpolate, signal
 import matplotlib.pyplot as plt
 import itertools
 from lmfit import Parameters, Parameter
@@ -14,7 +14,7 @@ import quaternion as quat
 from constants import *
 
 def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None,
-    flip = None, reIndex = None):
+    flip = None, reIndex = None, lowCutoff = None):
     raw = pd.read_table(kinematicsFile, index_col = 0, skiprows = [1])
 
     raw.index = np.around(raw.index, 3)
@@ -69,6 +69,13 @@ def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None,
             coordinates], names=['joint', 'coordinate'])
 
     proc = pd.DataFrame(raw.values, columns = indexPD, index = raw.index)
+
+    if lowCutoff is not None:
+        fr = 1 / 0.01
+        Wn = 2 * lowCutoff / fr
+        b, a = signal.butter(12, Wn, analog=False)
+        for column in proc:
+            proc.loc[:, column] = signal.filtfilt(b, a, proc.loc[:, column])
 
     return proc
 
@@ -192,6 +199,7 @@ def populate_model(templateFilePath, fiducialLocations, extraLocations = {},
             row['z'] = - row['z'] + fiducialLocations[fiducialLocations['label'] == originName]['z'].values[0]
 
         placeHolder = '$' + row['label'] + ':' + 'x$'
+        #pdb.set_trace()
         modelXML = modelXML.replace(placeHolder, str(row['x']*meshScale))
 
         placeHolder = '$' + row['label'] + ':' + 'y$'
@@ -225,9 +233,11 @@ def params_to_dict(params):
     for key, value in params.valuesdict().items():
         # silly workaround because Parameter() does not allow ':' in name
         # TODO: fix
-        key = key[::-1].replace('_', ':', 1)[::-1]
-        jointDict.update({key: {'value': None, 'min' : None, 'max' : None}})
-        jointDict[key].update({'value' : value})
+        dictKey = key[::-1].replace('_', ':', 1)[::-1]
+        jointDict.update({dictKey: {'value': None, 'min' : None, 'max' : None}})
+        jointDict[dictKey].update({'value' : value})
+        jointDict[dictKey].update({'min' : params[key].min})
+        jointDict[dictKey].update({'max' : params[key].max})
     return jointDict
 
 def params_to_series(params):

@@ -14,12 +14,6 @@ def iter_cb(params, iterNo, resid, t, kinSeries, solver):
     if solver.mjViewer is not None:
         render_targets(solver.mjViewer, alignToModel(solver.simulation, kinSeries, solver.alignTo))
         solver.mjViewer.render()
-    #print("Residual array:")
-    #print(resid)
-    #print("params: ")
-    #print(params)
-    #print("SSQ: ")
-    #print(np.sum(resid**2))
     pass
 
 # define objective function: returns the array to be minimized
@@ -54,7 +48,7 @@ class IKFit:
         # joints to vary in order to fit
         # as set of Parameters
         self.jointsParam = dict_to_params(jointsToFit, skip = skipThese)
-        self.jointsDict = jointsToFit
+        #self.jointsDict = jointsToFit
         # sites to check for fit
         self.sitesToFit = sitesToFit
         # optimization method

@@ -22,6 +22,7 @@ parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/gro
 parser.add_argument('--startTime', default = '27.760')
 parser.add_argument('--stopTime', default = '49.960')
 parser.add_argument('--meshScale', default = '1.1e-3')
+parser.add_argument('--lowCutoff')
 parser.add_argument('--whichSide', default = 'Left')
 parser.add_argument('--solverMethod', default = 'nelder')
 parser.add_argument('--modelFile', default = 'murdoc_template_toes_floating.xml')
@@ -35,6 +36,7 @@ kinematicsFile = args.kinematicsFile
 startTime = float(args.startTime)
 stopTime = float(args.stopTime)
 meshScale = float(args.meshScale)
+lowCutoff = float(args.lowCutoff) if args.lowCutoff else None
 whichSide = args.whichSide
 modelFile = args.modelFile
 showViewer = args.showViewer
@@ -107,7 +109,7 @@ jointsToFit = {
 #Get kinematics
 timeSelection = [startTime, stopTime]
 kinematics = get_kinematics(kinematicsFile,
-    selectHeaders = sitesToFit,
+    selectHeaders = sitesToFit, lowCutoff = lowCutoff,
     selectTime = timeSelection, reIndex = reIndex)
 
 #provide initial fit
@@ -120,7 +122,7 @@ referenceSeries =\
     -copy.deepcopy(kinSeries.loc[referenceJoint, :])
 
 solver = IKFit(simulation, sitesToFit, jointsToFit,
-    skipThese = ['Hip_' + whichSide + ':y'],
+    #skipThese = ['Hip_' + whichSide + ':y'],
     alignTo = referenceSeries, mjViewer = viewer, method = solverMethod,
     simulationType = 'forward')
 
@@ -135,14 +137,27 @@ if printing:
     except:
         pass
 
-solver.jointsParam = stats.params
+initSolution = stats.params
+initDict = params_to_dict(initSolution)
+skipThese = [
+    #'Hip_' + whichSide + ':y',
+    'World:xt',
+    'World:yt',
+    'World:zt',
+    'World:xq',
+    'World:yq',
+    'World:zq',
+    ]
+newParams = dict_to_params(initDict, skip = skipThese)
+#pdb.set_trace()
+solver.jointsParam = newParams
 
 modelKin = pd.DataFrame(index = kinematics.index, columns = kinematics.columns)
 modelQpos = pd.DataFrame(index = kinematics.index, columns = params_to_series(stats.params).index)
 alignedKin = pd.DataFrame(index = kinematics.index, columns = kinematics.columns)
 
 for t, kinSeries in kinematics.iterrows():
-
+    #pdb.set_trace()
     stats = solver.fit(t, kinSeries)
 
     if printing:

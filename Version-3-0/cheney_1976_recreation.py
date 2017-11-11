@@ -16,8 +16,8 @@ curfilePath = os.path.abspath(__file__)
 curDir = os.path.abspath(os.path.join(curfilePath,os.pardir)) # this will return current directory in which python file resides.
 #curDir = 'C:/Users/Radu/Documents/GitHub/Proprio-Prosthetics-Model/Version-3-0'
 
-sns.set_style('darkgrid')
-plt.style.use('seaborn-darkgrid')
+#sns.set_style('darkgrid')
+#plt.style.use('seaborn-darkgrid')
 invertColors = True
 matplotlib.rcParams.update({'font.size': 10})
 matplotlib.rcParams.update({'text.color': 'black' if invertColors else 'white'})
@@ -142,15 +142,18 @@ for speed in speeds:
         f, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
 
         ax1.plot(t, iARate)
+        ax1.tick_params(direction = 'in')
         plt.suptitle('Prochazka muscle spindle model')
         ax1.set_ylabel('Ia afferent firing rate (Hz)')
 
         ax2.plot(t, 1000*(tendonL - 0.15))
+
+        ax2.tick_params(direction = 'in')
         ax2.set_xlabel('Time (sec)')
-        ax2.set_ylabel('Muscle Length (m)')
+        ax2.set_ylabel('Muscle length (m)')
 
         ax2.set_ylim((0,10))
-        sns.despine(offset=10, trim=True)
+        sns.despine(trim = True)
         plt.savefig('D:\Dropbox (Brown)\Borton lab\Lab presentations\Radu Posters\SfN 2017\cheney_plot.png')
         plt.savefig('D:\Dropbox (Brown)\Borton lab\Lab presentations\Radu Posters\SfN 2017\cheney_plot.eps')
 
@@ -163,12 +166,16 @@ for speed in speeds:
 f, ax = plt.subplots(1,1)
 ax.plot(dynamicIndices.index, dynamicIndices.values)
 #pdb.set_trace()
+
+ax.tick_params(direction = 'in')
 referenceIndices = dynamic_index(pd.Series(speeds) / 1000)
 #plt.plot(speeds, referenceIndices, 'r-')
-ax.set_xlabel('Stretch Rate (mm/sec)')
+ax.set_xlabel('Stretch rate (mm/sec)')
 ax.set_ylim((0,100))
-ax.set_ylabel('Dynamic Index (Hz)')
+ax.set_ylabel('Dynamic index (Hz)')
 
+ax2.tick_params(direction = 'in')
+sns.despine()
 plt.savefig('D:\Dropbox (Brown)\Borton lab\Lab presentations\Radu Posters\SfN 2017\cheney_plot_dynamic_index.png')
 plt.savefig('D:\Dropbox (Brown)\Borton lab\Lab presentations\Radu Posters\SfN 2017\cheney_plot_dynamic_index.eps')
 
@@ -188,8 +195,9 @@ f, ax = plt.subplots(1,1)
 ax.plot(iARate)
 referenceRates = base_freq(pd.Series(deltaLen) / 1000)
 #plt.plot(deltaLen, referenceRates, 'r-')
-ax.set_xlabel('Stretch Magnitude (mm)')
-ax.set_ylabel('Afferent Frequency (Hz)')
+ax.set_xlabel('Stretch magnitude (mm)')
+ax.set_ylabel('Afferent frequency (Hz)')
+sns.despine()
 plt.savefig('D:\Dropbox (Brown)\Borton lab\Lab presentations\Radu Posters\SfN 2017\cheney_plot_steady.png')
 plt.savefig('D:\Dropbox (Brown)\Borton lab\Lab presentations\Radu Posters\SfN 2017\cheney_plot_steady.eps')
 

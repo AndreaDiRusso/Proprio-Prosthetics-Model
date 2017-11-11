@@ -14,9 +14,10 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_filtered_kinematics.pickle')
-parser.add_argument('--modelFile', default = 'murdoc_gen.xml')
+parser.add_argument('--modelFile', default = 'murdoc_template_toes_treadmill.xml')
 parser.add_argument('--whichSide', default = 'Left')
 parser.add_argument('--dt', default = '0.01')
+parser.add_argument('--meshScale', default = '1.1e-3')
 parser.add_argument('--showViewer', dest='showViewer', action='store_true')
 parser.set_defaults(showViewer = False)
 
@@ -24,9 +25,13 @@ args = parser.parse_args()
 
 kinematicsFile = args.kinematicsFile
 modelFile = args.modelFile
+meshScale = float(args.meshScale)
 showViewer = args.showViewer
 whichSide = args.whichSide
 dt = float(args.dt)
+
+with open(kinematicsFile, 'rb') as f:
+    kinematics = pickle.load(f)
 
 resourcesDir = curDir + '/Resources/Murdoc'
 tendonNames = [
@@ -40,12 +45,19 @@ tendonNames = [
     'SOL_' + whichSide
     ]
 
-with open(curDir + '/' + modelFile, 'r') as f:
-    model = load_model_from_xml(f.read())
+resourcesDir = curDir + '/Resources/Murdoc'
+templateFilePath = curDir + '/' + modelFile
 
-with open(kinematicsFile, 'rb') as f:
-    kinematics = pickle.load(f)
+fcsvFilePath = resourcesDir + '/Mobile Foot/Fiducials.fcsv'
 
+specification = fcsv_to_spec(fcsvFilePath)
+
+modelXML = populate_model(templateFilePath, specification, resourcesDir = resourcesDir,
+    meshScale = meshScale, showTendons = True)
+
+model = load_model_from_xml(modelXML)
+
+functions.mj_setTotalmass(model, 10)
 simulation = MjSim(model)
 
 gains = [0.5, 160, 380, 7]
