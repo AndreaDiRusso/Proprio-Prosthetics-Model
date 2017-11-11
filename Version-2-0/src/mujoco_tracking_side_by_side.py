@@ -1,7 +1,7 @@
 import cv2, scipy.misc, pdb
 import numpy as np
 
-filePath = 'E:\\Google Drive\\Github\\tempdata\\Biomechanical Model\\figures\\'
+filePath = 'C:/Users/radud/Desktop/Starbuck Example'
 
 animalVideoName = 'side_view_2sec.avi'
 animalVideoPath = filePath + animalVideoName
@@ -11,11 +11,11 @@ mujocoVideoName = 'mujoco_video.avi'
 mujocoVideoPath = filePath + mujocoVideoName
 mujocoVideoPathOut = filePath + 'out_mujoco_video.avi'
 
-frVideoName = 'fr_animation.mp4'
+frVideoName = 'T_1_interp_filtered_fr_animation.mp4'
 frVideoPath = filePath + frVideoName
 frVideoPathOut = filePath + 'out_fr_animation.avi'
 
-xyzVideoName = 'xyz_animation.mp4'
+xyzVideoName = 'T_1_interp_filtered_kinematics_animation.mp4'
 xyzVideoPath = filePath + xyzVideoName
 xyzVideoPathOut = filePath + 'out_xyz_animation.avi'
 

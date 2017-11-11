@@ -28,7 +28,7 @@ iARate = long_form_df(kinematics['iARate'], overrideColumns = ['Tendon', 'Time (
 
 sns.set_style('darkgrid')
 plt.style.use('seaborn-darkgrid')
-invertColors = True
+invertColors = False
 matplotlib.rcParams.update({'font.size': 30})
 matplotlib.rcParams.update({'text.color': 'black' if invertColors else 'white'})
 matplotlib.rcParams.update({'axes.facecolor': 'white' if invertColors else 'black'})
@@ -41,10 +41,15 @@ matplotlib.rcParams.update({'axes.labelcolor': 'black' if invertColors else 'whi
 matplotlib.rcParams.update({'xtick.color': 'black' if invertColors else 'white'})
 matplotlib.rcParams.update({'ytick.color': 'black' if invertColors else 'white'})
 
-g = sns.FacetGrid(iARate, row = 'Tendon', size = 3, aspect = 3,
+g = sns.FacetGrid(iARate, row = 'Tendon', size = 24/8, aspect = 3,
     despine = False, sharey = False)
-g.map(plt.plot, 'Time (sec)', 'Firing Rate (Hz)', lw = 3)
+g.map(plt.plot, 'Time (sec)', 'Firing Rate (Hz)', lw = 3, label = 'Firing Rate (Hz)')
 
+for idx, ax in enumerate(g.axes.flat):
+    box = ax.get_position()
+    ax.set_position([box.x0,box.y0,box.width*0.75,box.height])
+
+plt.legend(loc='center right', bbox_to_anchor = (1.4,3))
 plt.savefig(frFile.split('_fr')[0] + '_fr_plot.png')
 plt.savefig(frFile.split('_fr')[0] + '_fr_plot.eps')
 
