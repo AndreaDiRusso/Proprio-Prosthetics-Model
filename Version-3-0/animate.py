@@ -23,6 +23,7 @@ parser.add_argument('--outputFile', dest='outputFile', action='store_true')
 parser.add_argument('--outputRawFile', dest='outputRawFile', action='store_true')
 parser.set_defaults(outputFile = False)
 parser.set_defaults(outputRawFile = False)
+parser.add_argument('--cameraId', default = None)
 parser.add_argument('--modelFile', default = 'murdoc_template_toes_treadmill.xml')
 parser.add_argument('--meshScale', default = '1.1e-3')
 
@@ -33,6 +34,7 @@ modelFile = args.modelFile
 outputFile = args.outputFile
 outputRawFile = args.outputRawFile
 meshScale = float(args.meshScale)
+cameraId = args.cameraId
 
 resourcesDir = curDir + '/Resources/Murdoc'
 templateFilePath = curDir + '/' + modelFile
@@ -48,6 +50,13 @@ model = load_model_from_xml(modelXML)
 simulation = MjSim(model)
 
 viewer = MjViewer(simulation)
+viewer._render_every_frame = True
+
+
+
+if cameraId is not None:
+    viewer.cam.fixedcamid += int(cameraId)
+    viewer.cam.type = const.CAMERA_FIXED
 #viewer.vopt.flags[10] = viewer.vopt.flags[11] = not viewer.vopt.flags[10]
 #get resting lengths
 with open(kinematicsFile, 'rb') as f:
@@ -76,7 +85,7 @@ for t, kinSeries in kinematics['orig_site_pos'].iterrows():
         offscreen_ctx = simulation._render_context_offscreen
         offscreen_ctx._markers[:] = markers[:]
 
-        img = simulation.render(*resolution, camera_name = 'Sagittal_Left')
+        img = simulation.render(*resolution, camera_name = 'Seat_Cam')
         img = cv2.flip(cv2.cvtColor(img, cv2.COLOR_RGB2BGR), 0)
 
         if outputFile and 'output' not in locals():

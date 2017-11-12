@@ -37,6 +37,7 @@ timeIdx = pd.Index(times, name = 'Time')
 columns = []
 for contactId, contactForce in activeContacts[t0].items():
     columns.append(contactId)
+
 coordinates = ['xt', 'yt', 'zt', 'x', 'y', 'z']
 columnIdx = pd.MultiIndex.from_product([columns, coordinates],
     names=['contactId', 'coordinate'])

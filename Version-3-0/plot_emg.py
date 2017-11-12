@@ -40,7 +40,9 @@ emgLDF = long_form_df(emg,
     overrideColumns = ['Muscle', 'Time (sec)', 'EMG (mV)'])
 emgLDF.fillna(0, inplace = True)
 emgLDF.sort_values(by='Time (sec)', inplace = True)
+
 emgLDF.loc[:, 'EMG (mV)'] = emgLDF.loc[:, 'EMG (mV)'] / 1000
+
 sns.set_style('darkgrid')
 plt.style.use('seaborn-darkgrid')
 invertColors = True

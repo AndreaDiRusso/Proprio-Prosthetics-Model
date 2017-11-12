@@ -25,6 +25,7 @@ with open(frFile, 'rb') as f:
     kinematics = pickle.load(f)
 
 iARate = long_form_df(kinematics['iARate'], overrideColumns = ['Tendon', 'Time (sec)', 'Firing Rate (Hz)'])
+colors = [sns.color_palette()[4], sns.color_palette()[4]] # purple
 
 sns.set_style('darkgrid')
 plt.style.use('seaborn-darkgrid')
@@ -44,12 +45,6 @@ matplotlib.rcParams.update({'ytick.color': 'black' if invertColors else 'white'}
 g = sns.FacetGrid(iARate, row = 'Tendon', size = 24/8, aspect = 3,
     despine = False, sharey = False)
 g.map(plt.plot, 'Time (sec)', 'Firing Rate (Hz)', lw = 3, label = 'Firing Rate (Hz)')
-
-for idx, ax in enumerate(g.axes.flat):
-    box = ax.get_position()
-    ax.set_position([box.x0,box.y0,box.width*0.75,box.height])
-
-plt.legend(loc='center right', bbox_to_anchor = (1.4,3))
 plt.savefig(frFile.split('_fr')[0] + '_fr_plot.png')
 plt.savefig(frFile.split('_fr')[0] + '_fr_plot.eps')
 

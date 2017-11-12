@@ -46,9 +46,9 @@ xw = int(xyzVideo.get(cv2.CAP_PROP_FRAME_WIDTH))
 print('xyz footage. Width = %d Heigth = %d' % (xw, xh))
 
 #Cropping
-x1a = 0 # top left coordinates
-y1a = 0
-x2a = aw # botom right coordinates
+x1a = 100 # top left coordinates
+y1a = 200
+x2a = aw - 500 # botom right coordinates
 y2a = ah
 aw_prime = x2a - x1a
 ah_prime = y2a - y1a

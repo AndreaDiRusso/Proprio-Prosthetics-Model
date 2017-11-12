@@ -65,7 +65,7 @@ if whichQfrc == 'qfrc_inverse':
     scaling = 1e-3
 else:
     scaling = 1
-    
+
 for time, reading in qFrcInverse.items():
     for joint, value in reading.items():
         if type(value) == np.float64:
@@ -110,7 +110,7 @@ matplotlib.rcParams.update({'axes.labelcolor': 'black' if invertColors else 'whi
 matplotlib.rcParams.update({'xtick.color': 'black' if invertColors else 'white'})
 matplotlib.rcParams.update({'ytick.color': 'black' if invertColors else 'white'})
 
-g = sns.FacetGrid(qFrc, row = 'Joint', size = 3, aspect = 3,
+g = sns.FacetGrid(qFrc, row = 'Joint', size = 24/6, aspect = 3,
     hue = 'Coordinate', hue_order = lineNames, hue_kws = hueOpts,
     despine = False, sharey = False, sharex = True)
 g.map(plt.plot, 'Time (sec)', 'Joint Torque (N*m)')

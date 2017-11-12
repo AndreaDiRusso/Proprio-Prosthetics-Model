@@ -23,10 +23,13 @@ import seaborn as sns
 parser = argparse.ArgumentParser()
 parser.add_argument('--file', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_kinematics.pickle')
 parser.add_argument('--y', default = 'Position (m)')
+parser.add_argument('--showLegend', dest='showLegend', action='store_true')
+parser.set_defaults(showLegend = None)
 
 args = parser.parse_args()
 argFile = args.file
 whichY = args.y
+showLegend = args.showLegend
 
 def get_new_lims(datum, x, y, ax):
     minXLim = datum[x].min() if datum[x].min() < ax.get_xlim()[0] else ax.get_xlim()[0]
@@ -52,7 +55,7 @@ class SubplotAnimation(animation.TimedAnimation):
         matplotlib.rcParams.update({'savefig.facecolor': 'white' if invertColors else 'black'})
         matplotlib.rcParams.update({'savefig.edgecolor': 'black' if invertColors else 'white'})
         matplotlib.rcParams.update({'savefig.bbox': 'tight'})
-        matplotlib.rcParams.update({'figure.figsize': (6, 9)})
+        matplotlib.rcParams.update({'figure.figsize': (6, 18)})
         matplotlib.rcParams.update({'figure.facecolor': 'white' if invertColors else 'black'})
         matplotlib.rcParams.update({'figure.edgecolor': 'black' if invertColors else 'white'})
         matplotlib.rcParams.update({'axes.labelcolor': 'black' if invertColors else 'white'})
@@ -88,11 +91,10 @@ class SubplotAnimation(animation.TimedAnimation):
             self.hueLabels = [whichY]
 
         self.allLabels = self.hueLabels
-
         if facetGrid._row_var is not None:
             self.rowLabels = facetGrid.data[facetGrid._row_var].unique()
             self.allLabels = list(itertools.product(self.rowLabels, self.allLabels))
-            self.allLabels = [i[0] + ' ' + i[1] for i in self.allLabels]
+            self.allLabels = [str(i[0]) + ' ' + str(i[1]) for i in self.allLabels]
             self.facetLabels = self.rowLabels
 
         if facetGrid._col_var is not None:
@@ -101,11 +103,13 @@ class SubplotAnimation(animation.TimedAnimation):
             self.allLabels = [i[0] + ' ' + i[1] for i in self.allLabels]
             if facetGrid._row_var is not None:
                 self.facetLabels = list(itertools.product(self.rowLabels, self.facetLabels))
-                self.facetLabels = [i[0] + ' ' + i[1] for i in self.facetLabels]
+                self.facetLabels = [str(i[0]) + ' ' + str(i[1]) for i in self.facetLabels]
             else:
                 self.facetLabels = self.colLabels
         else:
             self.colLabels = None
+
+
 
         nameIterator = iter(self.facetLabels)
         ax  = [
@@ -119,9 +123,11 @@ class SubplotAnimation(animation.TimedAnimation):
         nameIterator = itertools.cycle(self.hueLabels)
         self.line = [
                 [
-                    [Line2D([], [], color=facetGrid._colors[i],
+                    [Line2D([], [],
+                        color=facetGrid._colors[i],
                         lw = lws[i],
                         ls = lss[i],
+                        #color = sns.color_palette()[4],
                         label = next(nameIterator)
                         )
                         for i in range(self.nHues)
@@ -135,9 +141,11 @@ class SubplotAnimation(animation.TimedAnimation):
         #pdb.set_trace()
         self.lineA = [
                 [
-                    [Line2D([], [], color=facetGrid._colors[i],
+                    [Line2D([], [],
+                        color=facetGrid._colors[i],
                         lw = lws[i],
                         ls = lss[i],
+                        #color = sns.color_palette()[4],
                         #label = next(nameIterator) + ' head'
                         )
                         for i in range(self.nHues)
@@ -153,7 +161,9 @@ class SubplotAnimation(animation.TimedAnimation):
                     [Line2D([], [], color=facetGrid._colors[i],
                         lw = lws[i],
                         ls = lss[i],
-                        marker='o', markeredgecolor=facetGrid._colors[i],
+                        marker='o',
+                        markeredgecolor=facetGrid._colors[i],
+                        #markeredgecolor = sns.color_palette()[4],
                         #label = next(nameIterator) + ' tip'
                         )
                         for i in range(self.nHues)
@@ -193,28 +203,40 @@ class SubplotAnimation(animation.TimedAnimation):
                     ax[rowIdx][colIdx].set_ylabel(self.y)
                     box = ax[rowIdx][colIdx].get_position()
                     ax[rowIdx][colIdx].set_position([box.x0,box.y0,box.width*0.95,box.height])
-                #if not legendSet:
-                #    ax[rowIdx][colIdx].legend(loc='center right', bbox_to_anchor = (1.4,-2.5))
-                #    legendSet = True
+
+                if not legendSet and showLegend:
+                    ax[rowIdx][colIdx].legend(loc='center right', bbox_to_anchor = (1.4,-2.5))
+                    legendSet = True
+
         animation.TimedAnimation.__init__(self, self.fig, interval=10, blit=True)
 
     def _draw_frame(self, framedata):
         i = framedata
-        head = i - 1
 
         self._drawn_artists = []
 
         facetDict = dict(self.facetGrid.facet_data())
 
-        head_slice = ((facetDict[(0,0,0)][self.x] >\
-            facetDict[(0,0,0)][self.x].iloc[i] - 1.0) &\
-            (facetDict[(0,0,0)][self.x] <\
-            facetDict[(0,0,0)][self.x].iloc[i])).values
+
+        #pdb.set_trace()
+        firstX = facetDict[(0,0,0)][self.x]
+        #firstX = firstX.reset_index()[self.x]
+        head_slice = ((firstX >\
+            firstX.loc[i] - 1.0) &\
+            (firstX <\
+            firstX.loc[i])).values
+
+        theIdx = firstX.index.get_loc(i)
+        head = theIdx - 1
         """
         head_slice = slice((head - 100),head)
         """
         for idx, datum in facetDict.items():
+            theseX = datum[self.x].values
+            #theseX = theseX.reset_index()[self.x]
 
+            theseY = datum[self.y].values
+            #theseY = theseY.reset_index()[self.y]
             """
             print("i")
             print(i)
@@ -225,11 +247,14 @@ class SubplotAnimation(animation.TimedAnimation):
             headSliceEnd = head_slice[::-1].idxmax()
             """
             self.line[idx[0]][idx[1]][idx[2]].\
-                set_data(datum[self.x].iloc[:i], datum[self.y].iloc[:i])
+                set_data(theseX[:theIdx], theseY[:theIdx])
+
+            #pdb.set_trace()
             self.lineA[idx[0]][idx[1]][idx[2]].\
-                set_data(datum[self.x][head_slice], datum[self.y][head_slice])
+                set_data(theseX[head_slice], theseY[head_slice])
+            #pdb.set_trace()
             self.lineE[idx[0]][idx[1]][idx[2]].\
-                set_data(datum[self.x].iloc[head], datum[self.y].iloc[head])
+                set_data(theseX[head], theseY[head])
 
             self._drawn_artists = self._drawn_artists + \
                 [
