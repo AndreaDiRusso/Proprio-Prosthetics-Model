@@ -14,22 +14,38 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--kineticsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_kinetics.pickle')
+parser.add_argument('--emgFile', default = 'W:/ENG_Neuromotion_Shared/group/MI locomotion data/Biomechanical Model/q19d20131124tkTRDMdsNORMt401/Array_Q19_20131124_emg.pickle')
+parser.add_argument('--meanSubtract', dest='meanSubtract', action='store_true')
+parser.set_defaults(meanSubtract = False)
 
 args = parser.parse_args()
-kineticsFile = args.kineticsFile
+emgFile = args.emgFile
+meanSubtract = args.meanSubtract
 
-resourcesDir = curDir + '/Resources/Murdoc'
+with open(emgFile, 'rb') as f:
+    emg = pickle.load(f)['emg']
 
-with open(kineticsFile, 'rb') as f:
-    kinetics = pickle.load(f)
+#pdb.set_trace()
+musclesToPlot = [
+    'RF',
+    'TA',
+    'IPS',
+    'GN'
+    ]
 
-qFrcConstraint = long_form_df(kinetics['qfrc_constraint'],
-    overrideColumns = ['Tendon', 'Time (sec)', 'Constraint Joint Torque (N*m)'])
+selectMuscles = np.intersect1d(emg.columns, musclesToPlot)
+emg = emg.loc[:, selectMuscles]
+
+emgLDF = long_form_df(emg,
+    overrideColumns = ['Muscle', 'Time (sec)', 'EMG (mV)'])
+emgLDF.fillna(0, inplace = True)
+emgLDF.sort_values(by='Time (sec)', inplace = True)
+
+emgLDF.loc[:, 'EMG (mV)'] = emgLDF.loc[:, 'EMG (mV)'] / 1000
 
 sns.set_style('darkgrid')
 plt.style.use('seaborn-darkgrid')
-invertColors = False
+invertColors = True
 matplotlib.rcParams.update({'font.size': 10})
 matplotlib.rcParams.update({'text.color': 'black' if invertColors else 'white'})
 matplotlib.rcParams.update({'axes.facecolor': 'white' if invertColors else 'black'})
@@ -42,13 +58,12 @@ matplotlib.rcParams.update({'axes.labelcolor': 'black' if invertColors else 'whi
 matplotlib.rcParams.update({'xtick.color': 'black' if invertColors else 'white'})
 matplotlib.rcParams.update({'ytick.color': 'black' if invertColors else 'white'})
 
-g = sns.FacetGrid(qFrcConstraint, row = 'Tendon', size = 3, aspect = 3,
+g = sns.FacetGrid(emgLDF, row = 'Muscle', size = 3, aspect = 3,
     despine = False, sharey = False, sharex = True)
-g.map(plt.plot, 'Time (sec)', 'Constraint Joint Torque (N*m)', lw = 3)
-g.set(ylim=(-.25, .25))
+g.map(plt.plot, 'Time (sec)', 'EMG (mV)')
 
-plt.savefig(kineticsFile.split('_kinetics')[0] + '_qfrc_constraint_plot.png')
-
-pickleName = kineticsFile.split('_kinetics')[0] + '_qfrc_constraint_plot.pickle'
+plt.savefig(emgFile.split('_emg')[0] + '_emg_plot.png')
+plt.savefig(emgFile.split('_emg')[0] + '_emg_plot.eps')
+pickleName = emgFile.split('_emg')[0] + '_emg_plot.pickle'
 with open(pickleName, 'wb') as f:
     pickle.dump(g,f)

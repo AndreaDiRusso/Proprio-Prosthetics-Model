@@ -23,7 +23,9 @@ parser.add_argument('--outputFile', dest='outputFile', action='store_true')
 parser.add_argument('--outputRawFile', dest='outputRawFile', action='store_true')
 parser.set_defaults(outputFile = False)
 parser.set_defaults(outputRawFile = False)
-parser.add_argument('--modelFile', default = 'murdoc_gen.xml')
+parser.add_argument('--cameraId', default = None)
+parser.add_argument('--modelFile', default = 'murdoc_template_toes_treadmill.xml')
+parser.add_argument('--meshScale', default = '1.1e-3')
 
 args = parser.parse_args()
 
@@ -31,30 +33,83 @@ kinematicsFile = args.kinematicsFile
 modelFile = args.modelFile
 outputFile = args.outputFile
 outputRawFile = args.outputRawFile
+meshScale = float(args.meshScale)
+cameraId = args.cameraId
 
 resourcesDir = curDir + '/Resources/Murdoc'
+templateFilePath = curDir + '/' + modelFile
 
-with open(curDir + '/' + modelFile, 'r') as f:
-    model = load_model_from_xml(f.read())
+fcsvFilePath = resourcesDir + '/Mobile Foot/Fiducials.fcsv'
 
+specification = fcsv_to_spec(fcsvFilePath)
+extraCoords = {}
 with open(kinematicsFile, 'rb') as f:
     kinematics = pickle.load(f)
+if modelFile == 'murdoc_template_seat.xml':
+
+    t0 = kinematics['qpos'].index[0]
+    worldQ = quat.from_euler_angles(
+        kinematics['qpos'].loc[t0, 'World:xq'],
+        kinematics['qpos'].loc[t0, 'World:yq'],
+        kinematics['qpos'].loc[t0, 'World:zq']
+        )
+    extraCoords = {
+                'World:xt': kinematics['qpos'].loc[t0, 'World:xt'],
+                'World:yt': kinematics['qpos'].loc[t0, 'World:yt'],
+                'World:zt': kinematics['qpos'].loc[t0, 'World:zt'],
+                'World:wq': worldQ.w,
+                'World:xq': worldQ.x,
+                'World:yq': worldQ.y,
+                'World:zq': worldQ.z }
+
+if modelFile == 'murdoc_template_toes_treadmill.xml':
+
+    t0 = kinematics['qpos'].index[0]
+    worldQ = quat.from_euler_angles(
+        kinematics['qpos'].loc[t0, 'World:xq'],
+        kinematics['qpos'].loc[t0, 'World:yq'],
+        kinematics['qpos'].loc[t0, 'World:zq']
+        )
+    extraCoords = {
+                'World:xt': kinematics['qpos'].loc[t0, 'World:xt'],
+                'World:yt': kinematics['qpos'].loc[t0, 'World:yt'],
+                'World:zt': kinematics['qpos'].loc[t0, 'World:zt'],
+                'World:wq': worldQ.w,
+                'World:xq': worldQ.x,
+                'World:yq': worldQ.y,
+                'World:zq': worldQ.z,
+                'Floor:x' : 0,
+                'Floor:y' : 0,
+                'Floor:z' : -0.385,
+                'minT12Height': 0.5
+                }
+modelXML = populate_model(templateFilePath, specification, extraCoords, resourcesDir = resourcesDir,
+    meshScale = meshScale, showTendons = True)
+
+model = load_model_from_xml(modelXML)
 
 simulation = MjSim(model)
 
 viewer = MjViewer(simulation)
-viewer.vopt.flags[10] = viewer.vopt.flags[11] = not viewer.vopt.flags[10]
+viewer._render_every_frame = True
+
+
+
+if cameraId is not None:
+    viewer.cam.fixedcamid += int(cameraId)
+    viewer.cam.type = const.CAMERA_FIXED
+#viewer.vopt.flags[10] = viewer.vopt.flags[11] = not viewer.vopt.flags[10]
 #get resting lengths
+
 nJoints = simulation.model.njnt
 allJoints = [simulation.model.joint_id2name(i) for i in range(nJoints)]
-allJoints.remove('world')
-keyPos = pd.Series({jointName: simulation.model.key_qpos[0][i] for i, jointName in enumerate(allJoints)})
 
-pose_model(simulation, keyPos)
+simulation = pose_to_key(simulation, 0)
 
-for t, kinSeries in kinematics['site_pos'].iterrows():
+for t, kinSeries in kinematics['orig_site_pos'].iterrows():
 
-    pose_model(simulation, kinematics['qpos'].loc[t, :])
+    jointDict = series_to_dict( kinematics['qpos'].loc[t, :])
+    pose_model(simulation, jointDict)
 
     if outputFile or outputRawFile:
         import numpy as np
@@ -69,24 +124,27 @@ for t, kinSeries in kinematics['site_pos'].iterrows():
         offscreen_ctx = simulation._render_context_offscreen
         offscreen_ctx._markers[:] = markers[:]
 
-        img = simulation.render(*resolution, camera_name = 'Sagittal_Left')
+        img = simulation.render(*resolution, camera_name = 'Sagittal_Left_Treadmill')
         img = cv2.flip(cv2.cvtColor(img, cv2.COLOR_RGB2BGR), 0)
 
         if outputFile and 'output' not in locals():
             # Define the codec and create VideoWriter object
-            outputFileName = kinematicsFile.split('_kinematics')[0] + '_video.mpeg4'
+
+            outputFileName = kinematicsFile.split('_kinematics')[0] + '_video.avi'
             fourcc = cv2.VideoWriter_fourcc(*'MPEG')
             output = cv2.VideoWriter(outputFileName, fourcc, int(1 / viewer._time_per_render), (img.shape[1], img.shape[0]))
 
-        if outputRawFile is not None and 'output' not in locals():
+        if outputRawFile and 'outputRaw' not in locals():
             # Define the codec and create VideoWriter object
             outputRawFileName = kinematicsFile.split('_kinematics')[0] + '_raw_video.avi'
             fourcc = cv2.VideoWriter_fourcc(*'DIB ')
             outputRaw = cv2.VideoWriter(outputRawFileName, fourcc, int(1 / viewer._time_per_render), (img.shape[1], img.shape[0]))
 
+        #pdb.set_trace()
         # write the frame
         cv2.imshow('frame',img)
-        cv2.waitKey(10)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+          break
 
         if outputFile:
             output.write(img)
@@ -95,7 +153,7 @@ for t, kinSeries in kinematics['site_pos'].iterrows():
     else:
         viewer._hide_overlay = True
         viewer._render_every_frame = True
-        render_targets(viewer, alignToModel(simulation, kinematics['site_pos'].loc[t, :], 'C_Left'))
+        render_targets(viewer, kinematics['orig_site_pos'].loc[t, :])
         viewer.render()
 
 if outputFile:

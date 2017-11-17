@@ -4,7 +4,7 @@ import pdb
 from mujoco_py import functions
 
 def iter_cb(params, iterNo, resid, t, kinSeries, solver):
-    printing = False
+    printing = True
     if printing:
         try:
             print("Iteration number: %d" % iterNo, end = '\r')
@@ -14,12 +14,6 @@ def iter_cb(params, iterNo, resid, t, kinSeries, solver):
     if solver.mjViewer is not None:
         render_targets(solver.mjViewer, alignToModel(solver.simulation, kinSeries, solver.alignTo))
         solver.mjViewer.render()
-    #print("Residual array:")
-    #print(resid)
-    #print("params: ")
-    #print(params)
-    #print("SSQ: ")
-    #print(np.sum(resid**2))
     pass
 
 # define objective function: returns the array to be minimized
@@ -38,12 +32,13 @@ def fcn2min(params, t, kinSeries, solver):
 
 class IKFit:
 
-    def __init__(self, simulation, sitesToFit, jointsToFit, alignTo = None,
-        mjViewer = None, method = 'leastsq', simulationType = 'forward'):
+    def __init__(self, simulation, sitesToFit, jointsToFit, skipThese = [],
+        alignTo = None, mjViewer = None, method = 'leastsq',
+        simulationType = 'forward'):
 
         # which site to align model and data to
         if alignTo is None:
-            self.alignTo = sitesToFit[0]
+            self.alignTo = None
         else:
             self.alignTo = alignTo
 
@@ -52,8 +47,8 @@ class IKFit:
         self.simulation = simulation
         # joints to vary in order to fit
         # as set of Parameters
-        self.jointsParam = dict_to_params(jointsToFit)
-        self.jointsDict = jointsToFit
+        self.jointsParam = dict_to_params(jointsToFit, skip = skipThese)
+        #self.jointsDict = jointsToFit
         # sites to check for fit
         self.sitesToFit = sitesToFit
         # optimization method
@@ -67,7 +62,8 @@ class IKFit:
 
     def joint_pos2site_pos(self, jointSeries, kinSeries):
 
-        self.simulation = pose_model(self.simulation, jointSeries,
+        # TODO implement quaternion as degree of freedom
+        self.simulation = pose_model(self.simulation, series_to_dict(jointSeries),
             method = self.simulationType)
         # get resulting changes
         sitePos = get_site_pos(kinSeries, self.simulation)

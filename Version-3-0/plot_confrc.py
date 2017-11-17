@@ -16,79 +16,66 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 parser = argparse.ArgumentParser()
 parser.add_argument('--kineticsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_filtered_kinetics.pickle')
 parser.add_argument('--meanSubtract', dest='meanSubtract', action='store_true')
-parser.add_argument('--whichSide', default = 'Left')
-parser.add_argument('--whichQfrc', default = 'qfrc_inverse')
 parser.set_defaults(meanSubtract = False)
 
 args = parser.parse_args()
 kineticsFile = args.kineticsFile
 meanSubtract = args.meanSubtract
-whichSide = args.whichSide
-whichQfrc = args.whichQfrc
 
 resourcesDir = curDir + '/Resources/Murdoc'
 
 with open(kineticsFile, 'rb') as f:
     kinetics = pickle.load(f)
 
-qFrcInverse = kinetics[whichQfrc]
-
-jointsToPlot = [
-    'Hip_' + whichSide,
-    'Knee_' + whichSide,
-    'Ankle_' + whichSide,
-    'Toes_' + whichSide
-    ]
-
-t0 = next(iter(qFrcInverse.keys()))
+activeContacts = kinetics['active_contacts']
+t0 = next(iter(activeContacts.keys()))
 times = []
-for time, value in qFrcInverse.items():
+for time, value in activeContacts.items():
     times.append(time)
 timeIdx = pd.Index(times, name = 'Time')
 
 columns = []
-for joint, value in qFrcInverse[t0].items():
-    if type(value) == np.float64:
-        columns.append(joint.split(':')[0])
-    if type(value) == np.ndarray:
-        columns.append(joint)
+for contactId, contactForce in activeContacts[t0].items():
+    columns.append(contactId)
 
-columns = np.intersect1d(np.unique(columns), jointsToPlot)
 coordinates = ['xt', 'yt', 'zt', 'x', 'y', 'z']
 columnIdx = pd.MultiIndex.from_product([columns, coordinates],
-    names=['joint', 'coordinate'])
+    names=['contactId', 'coordinate'])
 
-qFrcInverseDF = pd.DataFrame(index = timeIdx, columns = columnIdx)
+activeContactsDF = pd.DataFrame(index = timeIdx, columns = columnIdx)
 
+for time, reading in activeContacts.items():
+    for contactId, contactForce in reading.items():
+        """
+        The first (X) axis of this frame is the contact normal direction,
+        while the remaining (Y and Z) axes define the tangent plane.
+        One might have expected the normal to correspond to the Z axis,
+        as in MuJoCo's visualization convention, but we support frictionless
+        contacts where only the normal axis is used, which is why we want
+        to have the normal in first position. Similar to limits,
+        the contact distance is positive when the two geoms are separated,
+        zero when they touch, and negative when they penetrate.
+        The contact point is in the middle between the two surfaces
+        along the normal axis (for mesh collisions this may be approximate).
+        """
+        activeContactsDF.loc[time, (contactId, 'xt')] = contactForce['force'][2]
+        activeContactsDF.loc[time, (contactId, 'yt')] = contactForce['force'][1]
+        activeContactsDF.loc[time, (contactId, 'zt')] = contactForce['force'][0]
+        activeContactsDF.loc[time, (contactId, 'x')] = contactForce['force'][5]
+        activeContactsDF.loc[time, (contactId, 'y')] = contactForce['force'][4]
+        activeContactsDF.loc[time, (contactId, 'z')] = contactForce['force'][3]
+        #print(contactForce['frame'])
 
-if whichQfrc == 'qfrc_inverse':
-    scaling = 1e-3
-else:
-    scaling = 1
+contactFrc = long_form_df(activeContactsDF,
+    overrideColumns = ['Contact ID', 'Coordinate', 'Time (sec)', 'Contact Force (N)'])
+contactFrc.sort_values(by='Time (sec)', inplace = True)
 
-for time, reading in qFrcInverse.items():
-    for joint, value in reading.items():
-        if type(value) == np.float64:
-            jointCoordinate = joint.split(':')[1]
-            jointName = joint.split(':')[0]
-            if jointName in jointsToPlot:
-                qFrcInverseDF.loc[time, (jointName, jointCoordinate)] = value * scaling
-        if type(value) == np.ndarray:
-            if joint in jointsToPlot:
-                qFrcInverseDF.loc[time, (joint , 'xt')] = value[0] * scaling
-                qFrcInverseDF.loc[time, (joint , 'yt')] = value[1] * scaling
-                qFrcInverseDF.loc[time, (joint , 'zt')] = value[2] * scaling
-                qFrcInverseDF.loc[time, (joint , 'x')] = value[3] * scaling
-                qFrcInverseDF.loc[time, (joint , 'y')] = value[4] * scaling
-                qFrcInverseDF.loc[time, (joint , 'z')] = value[5] * scaling
-
-qFrc = long_form_df(qFrcInverseDF,
-    overrideColumns = ['Joint', 'Coordinate', 'Time (sec)', 'Joint Torque (N*m)'])
-qFrc.fillna(0, inplace = True)
-qFrc.sort_values(by='Time (sec)', inplace = True)
-
-lineNames = np.unique(qFrc['Coordinate'])
-
+lineNames = np.unique(contactFrc['Coordinate'])
+"""
+    colors = sns.color_palette("Blues", n_colors = 3) +\
+        sns.color_palette("Reds", n_colors = 3)
+    colors = [colors[i] for i in [0,2,4,1,3,5]]
+    """
 hueOpts = {
     'ls' : ['solid' for i in range(6)],
     'label' : list(lineNames),
@@ -110,10 +97,10 @@ matplotlib.rcParams.update({'axes.labelcolor': 'black' if invertColors else 'whi
 matplotlib.rcParams.update({'xtick.color': 'black' if invertColors else 'white'})
 matplotlib.rcParams.update({'ytick.color': 'black' if invertColors else 'white'})
 
-g = sns.FacetGrid(qFrc, row = 'Joint', size = 24/6, aspect = 3,
-    hue = 'Coordinate', hue_order = lineNames, hue_kws = hueOpts,
-    despine = False, sharey = False, sharex = True)
-g.map(plt.plot, 'Time (sec)', 'Joint Torque (N*m)')
+g = sns.FacetGrid(contactFrc, row = 'Contact ID', size = 3,
+    hue = 'Coordinate', hue_order = lineNames, aspect = 3,
+    despine = False, hue_kws = hueOpts, sharey = False, sharex = True)
+g.map(plt.plot, 'Time (sec)', 'Contact Force (N)')
 
 for idx, ax in enumerate(g.axes.flat):
     box = ax.get_position()
@@ -121,9 +108,9 @@ for idx, ax in enumerate(g.axes.flat):
 
 plt.legend(loc='center right', bbox_to_anchor = (1.15,0.5))
 
-plt.savefig(kineticsFile.split('_kinetics')[0] + '_' + whichQfrc + '_plot.png')
-plt.savefig(kineticsFile.split('_kinetics')[0] + '_' + whichQfrc + '_plot.eps')
+plt.savefig(kineticsFile.split('_kinetics')[0] + '_confrc_plot.png')
+plt.savefig(kineticsFile.split('_kinetics')[0] + '_confrc_plot.eps')
 
-pickleName = kineticsFile.split('_kinetics')[0] + '_' + whichQfrc + '_plot.pickle'
+pickleName = kineticsFile.split('_kinetics')[0] + '_confrc_plot.pickle'
 with open(pickleName, 'wb') as f:
     pickle.dump(g,f)

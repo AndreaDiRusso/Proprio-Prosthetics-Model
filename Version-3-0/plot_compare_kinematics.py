@@ -14,7 +14,7 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--kinematicsFile', default = 'W:\\ENG_Neuromotion_Shared\\group\\Proprioprosthetics\\Data\\201709261100-Proprio\\T_1_kinematics.pickle')
+parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_filtered_kinematics.pickle')
 parser.add_argument('--meanSubtract', dest='meanSubtract', action='store_true')
 parser.set_defaults(meanSubtract = False)
 
@@ -44,6 +44,7 @@ model['Coordinate'] = pd.Series(['Model ' + coord for coord in model['Coordinate
 orig['Coordinate'] = pd.Series(['Original ' + coord for coord in orig['Coordinate']])
 
 stack = pd.concat([model, orig], axis = 0)
+stack.sort_values(by='Time (sec)', inplace = True)
 
 lineNames = np.unique(stack['Coordinate'])
 
@@ -60,7 +61,7 @@ hueOpts = {
 
 sns.set_style('darkgrid')
 plt.style.use('seaborn-darkgrid')
-invertColors = False
+invertColors = True
 matplotlib.rcParams.update({'font.size': 30})
 matplotlib.rcParams.update({'text.color': 'black' if invertColors else 'white'})
 matplotlib.rcParams.update({'axes.facecolor': 'white' if invertColors else 'black'})
@@ -85,6 +86,7 @@ for idx, ax in enumerate(g.axes.flat):
 
 plt.legend(loc='center right', bbox_to_anchor = (1.4,3))
 plt.savefig(kinematicsFile.split('_kinematics')[0] + '_kinematics_plot.png')
+plt.savefig(kinematicsFile.split('_kinematics')[0] + '_kinematics_plot.eps')
 
 pickleName = kinematicsFile.split('_kinematics')[0] + '_kinematics_plot.pickle'
 with open(pickleName, 'wb') as f:
