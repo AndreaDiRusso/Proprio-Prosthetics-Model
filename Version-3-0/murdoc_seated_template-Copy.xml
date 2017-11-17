@@ -40,25 +40,25 @@
     <site size='0.5e-3 0.5e-3 0.5e-3' rgba='1 0 0 0'/>
 
     <default class='Hip:x'>
-      <joint type='hinge' axis='0 1 0' ref='0' range='-120 60' limited='true' armature='0.0001' stiffness='0' springref='0'/>
+      <joint type='hinge' axis='0 1 0' ref='0' range='-120 -40' limited='true' armature='0.0001' stiffness='0' springref='0'/>
 		</default>
 		<default class='Hip:y'>
-            <joint type='hinge' axis='0 1 0' range='-30 30' damping='5' limited='true' stiffness='0' armature='0.0080' />
+            <joint type='hinge' axis='0 1 0' range='-20 50' damping='5' limited='true' stiffness='0' armature='0.0080' />
 		</default>
 		<default class='Hip:z'>
-            <joint type='hinge' axis='0 0 1' range='-15 15' damping='5' limited='true' stiffness='0' armature='0.0080' />
+            <joint type='hinge' axis='0 0 1' range='-40 40' damping='5' limited='true' stiffness='0' armature='0.0080' />
 		</default>
 		<default class = 'Knee:x'>
-			<joint type='hinge' axis='1 0 0' range='-120  0' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
+			<joint type='hinge' axis='1 0 0' range='20 120' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
 		</default>
 		<default class = 'Knee:y'>
 			<joint type='hinge' axis='1 0 0' range='-40 120' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
 		</default>
 		<default class = 'Ankle:x'>
-			<joint type='hinge' axis='1 0 0' pos='0 0 0' range='-30 90' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+			<joint type='hinge' axis='1 0 0' pos='0 0 0' range='-50 30' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
 		</default>
 		<default class = 'Ankle:y'>
-			<joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+			<joint type='hinge' axis='0 1 0' pos='0 0 0' range='-25 10' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
 		</default>
 	</default>
 
@@ -66,11 +66,11 @@
     <light directional='true' diffuse='1 1 1' specular='0 0 0' pos='0 0 40.5' dir='0 1 0'/>
 
     <body name='Pelvis' pos='$World_t:x$ $World_t:y$ $World_t:z$' euler='$World:x$ $World:y$ $World:z$'>
-    <joint name='world' type = 'free'/>
+   <!-- <joint name='world' type = 'free'/> -->
 
-        <site name="T12_Left" pos='$T12_Left:x$	$T12_Left:y$	$T12_Left:z$' rgba='1 0 0 0.33' size='15e-3'/>
+    <!--    <site name="T12_Left" pos='$T12_Left:x$	$T12_Left:y$	$T12_Left:z$' rgba='1 0 0 0.33' size='15e-3'/>
             <site name="T12_Right" pos='$T12_Right:x$	$T12_Right:y$	$T12_Right:z$' rgba='1 0 0 0.33' size='15e-3'/>
-    <camera name = 'Sagittal_Left' mode = 'fixed' pos = '3e-1 -5e-1 -2e-1' euler = '90 0 180'/>
+    <camera name = 'Sagittal_Left' mode = 'fixed' pos = '3e-1 -5e-1 -2e-1' euler = '90 0 180'/> -->
 
      <site name="BF_Pelvis_Left" pos='$BF_Pelvis_Left:x$	$BF_Pelvis_Left:y$	$BF_Pelvis_Left:z$' rgba='1 0 0 0'/>
      <site name="RF_Pelvis_Left" pos='$RF_Pelvis_Left:x$	$RF_Pelvis_Left:y$	$RF_Pelvis_Left:z$' rgba='1 0 0 0'/>
@@ -98,6 +98,10 @@
       <joint name='Hip_Right:z' class='Hip:z' axis='$Hip_Right:z:x$	$Hip_Right:z:y$	$Hip_Right:z:z$' ref = '0' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
 
   	  <geom type='mesh' name='Femur_Right' mesh='Femur_Right-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
+	  
+	  <geom type="cylinder" name='Knee_FR' density='0' fromto='0.17 -0.15 -0.121  0.19 -0.05 -0.121' size="0.015" rgba="0 0 0 0"/>
+	  
+	  <site name='slide1' pos='0.175 -0.08 -0.106'/>
 
       <site name="GMED_Femur_Right" pos='$GMED_Femur_Right:x$	$GMED_Femur_Right:y$	$GMED_Femur_Right:z$' rgba='0 0 1 0'/>
 
@@ -110,22 +114,31 @@
       <site name="K_Right" pos='$K_Right:x$	$K_Right:y$	$K_Right:z$' rgba='1 0 0 1' size='5e-3'/>
 
   	  <body name='Shin_Right' pos='0 0 0' euler='0 0 0'>
+		  
+		  <geom type="cylinder" name='Knee_FR2' density='0' fromto='0.185 -0.15 -0.135  0.205 -0.05 -0.135' size="0.012" rgba="0 0 0 0"/>
+	         <site name='slide2' pos='0.185 -0.08 -0.145'/>
 
           <geom type='mesh' name='Shin_Right' mesh='Shin_Right-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
 
-          <site name="VAS_Tibia_Right" pos='$VAS_Tibia_Right:x$	$VAS_Tibia_Right:y$	$VAS_Tibia_Right:z$' rgba='0 0 1 0'/>
+          <!--<site name="VAS_Tibia_Right" pos='0.22	-0.084	-0.13' rgba='0 0 1 0'/>-->
+		  <site name="VAS_Tibia_Right" pos='$VAS_Tibia_Right:x$	$VAS_Tibia_Right:y$	$VAS_Tibia_Right:z$' rgba='0 0 1 0'/>
           <site name="TA_Tibia_Right" pos='$TA_Tibia_Right:x$	$TA_Tibia_Right:y$	$TA_Tibia_Right:z$' rgba='0 0 1 0'/>
           <site name="SOL_Tibia_Right" pos='$SOL_Tibia_Right:x$	$SOL_Tibia_Right:y$	$SOL_Tibia_Right:z$' rgba='0 0 1 0'/>
-          <site name="RF_Tibia_Right" pos='$RF_Tibia_Right:x$	$RF_Tibia_Right:y$	$RF_Tibia_Right:z$' rgba='0 0 1 0'/>
-          <site name="BF_Tibia_Right" pos='$BF_Tibia_Right:x$	$BF_Tibia_Right:y$	$BF_Tibia_Right:z$' rgba='0 0 1 0'/>
+		  <site name="RF_Tibia_Right" pos='$RF_Tibia_Right:x$	$RF_Tibia_Right:y$	$RF_Tibia_Right:z$' rgba='0 0 1 0'/>
+          <!--<site name="RF_Tibia_Right" pos='0.22	-0.084	-0.13' rgba='0 0 1 0'/>-->
+          <!--<site name="BF_Tibia_Right" pos='$BF_Tibia_Right:x$	$BF_Tibia_Right:y$	$BF_Tibia_Right:z$' rgba='0 0 1 0'/>-->
+		  <site name="BF_Tibia_Right" pos='0.202	-0.103	-0.145' rgba='0 0 1 0'/>
 
           <joint name='Knee_Right:x' class='Knee:x' axis='$Knee_Right:x:x$	$Knee_Right:x:y$	$Knee_Right:x:z$' ref='20' pos='$Knee_Right:o:x$	$Knee_Right:o:y$	$Knee_Right:o:z$'/>
 
   				<body name='Foot_Right' pos='0 0 0' >
 
             <geom type='mesh' name='Foot_Right' mesh='Foot_Right-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
-
-            <site name="M_Right" pos='$M_Right:x$	$M_Right:y$	$M_Right:z$' rgba='0.5 0.5 0.5 1' size='5e-3'/>
+			
+				<!--  <geom type="cylinder" name='Knee_FR3' density='0' fromto='0.17 -0.15 -0.135  0.19 -0.05 -0.135' size="0.015" rgba=".3 .9 .3 .4"/>
+	         <site name='slide3' pos='0.17 -0.08 -0.150'/>-->
+		
+			<site name="M_Right" pos='$M_Right:x$	$M_Right:y$	$M_Right:z$' rgba='0.5 0.5 0.5 1' size='5e-3'/>
             <site name="MT_Right" pos='$MT_Right:x$	$MT_Right:y$	$MT_Right:z$' rgba='0 0 1 1' size='5e-3'/>
             <site name="T_Right" pos='$T_Right:x$	$T_Right:y$	$T_Right:z$' rgba='0 1 1 1' size='5e-3'/>
 
@@ -152,7 +165,7 @@
 
       <body name='Leg_Left' pos='0 0 0' euler='0 0 0'>
 
-        <joint name='Hip_Left:x' class='Hip:x' axis='$Hip_Left:x:x$	$Hip_Left:x:y$	$Hip_Left:x:z$' ref = '90' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
+        <joint name='Hip_Left:x' class='Hip:x' axis='$Hip_Left:x:x$	$Hip_Left:x:y$	$Hip_Left:x:z$' ref = '-90' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
         <joint name='Hip_Left:y' class='Hip:y' axis='$Hip_Left:y:x$	$Hip_Left:y:y$	$Hip_Left:y:z$' ref = '20' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
         <joint name='Hip_Left:z' class='Hip:z' axis='$Hip_Left:z:x$	$Hip_Left:z:y$	$Hip_Left:z:z$' ref = '0' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
 
@@ -178,7 +191,7 @@
             <site name="RF_Tibia_Left" pos='$RF_Tibia_Left:x$	$RF_Tibia_Left:y$	$RF_Tibia_Left:z$' rgba='0 0 1 0'/>
             <site name="BF_Tibia_Left" pos='$BF_Tibia_Left:x$	$BF_Tibia_Left:y$	$BF_Tibia_Left:z$' rgba='0 0 1 0'/>
 
-            <joint name='Knee_Left:x' class='Knee:x' axis='$Knee_Left:x:x$	$Knee_Left:x:y$	$Knee_Left:x:z$'  ref='-20' pos='$Knee_Left:o:x$	$Knee_Left:o:y$	$Knee_Left:o:z$'/>
+            <joint name='Knee_Left:x' class='Knee:x' axis='$Knee_Left:x:x$	$Knee_Left:x:y$	$Knee_Left:x:z$'  ref='20' pos='$Knee_Left:o:x$	$Knee_Left:o:y$	$Knee_Left:o:z$'/>
 
     				<body name='Foot_Left' pos='0 0 0' >
 
@@ -192,7 +205,7 @@
               <site name="SOL_Ankle_Left" pos='$SOL_Ankle_Left:x$	$SOL_Ankle_Left:y$	$SOL_Ankle_Left:z$' rgba='0 0 1 0'/>
               <site name="GAS_Ankle_Left" pos='$GAS_Ankle_Left:x$	$GAS_Ankle_Left:y$	$GAS_Ankle_Left:z$' rgba='0 0 1 0'/>
 
-              <joint name='Ankle_Left:x' class='Ankle:x' axis='$Ankle_Left:x:x$	$Ankle_Left:x:y$	$Ankle_Left:x:z$'  ref='-45' pos='$Ankle_Left:o:x$	$Ankle_Left:o:y$	$Ankle_Left:o:z$'/>
+              <joint name='Ankle_Left:x' class='Ankle:x' axis='$Ankle_Left:x:x$	$Ankle_Left:x:y$	$Ankle_Left:x:z$'  ref='45' pos='$Ankle_Left:o:x$	$Ankle_Left:o:y$	$Ankle_Left:o:z$'/>
               <joint name='Ankle_Left:y' class='Ankle:y' axis='$Ankle_Left:y:x$	$Ankle_Left:y:y$	$Ankle_Left:y:z$'  ref='0' pos='$Ankle_Left:o:x$	$Ankle_Left:o:y$	$Ankle_Left:o:z$'/>
     				</body>
     				<!-- End foot
@@ -336,10 +349,11 @@
 	  
 	  <spatial name='RF_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='RF_Pelvis_Right'/>
+		<!--<geom geom='Knee_FR' sidesite='slide1'/> -->
         <site site='RF_Tibia_Right'/>
-		<!--<geom geom='Hip_R'/> 
-	    <site site="Hip_Right"/>
-	    <geom geom='Knee_R'/> 
+		 
+	    <!--<site site="Hip_Right"/>
+	    <geom geom='Knee_FR'/> 
 	    <site site="Knee_Right"/>
 	    <geom geom='Ankle_R'/> 
 	    <site site="Ankle_Right"/> -->
@@ -347,6 +361,7 @@
 
       <spatial name='VAS_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='VAS_Femur_Right'/>
+		<!--<geom geom='Knee_FR' sidesite='slide1'/> -->
         <site site='VAS_Tibia_Right'/>
 		<!--<geom geom='Hip_R'/> 
 	    <site site="Hip_Right"/>
@@ -358,6 +373,7 @@
 	  
 	  <spatial name='GAS_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='GAS_Femur_Right'/>
+		<!--<geom geom='Knee_FR2' sidesite='slide2'/> -->
         <site site='GAS_Ankle_Right'/>
 		<!--<geom geom='Hip_R'/> 
 	    <site site="Hip_Right"/>
@@ -414,7 +430,7 @@
 </actuator>
 
 <keyframe>
-<key time="0" qpos="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" />
+<key time="0" qpos=" 0 0 0 0 0 0 0 0 0 0 0 0" />
 </keyframe>
 
 </mujoco>

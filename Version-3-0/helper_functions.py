@@ -81,6 +81,11 @@ def populate_model(templateFilePath, specification, resourcesDir, showTendons = 
             row['x'] = - row['x'] + specification[specification['label'] == originName]['x'].values[0]
             row['y'] = - row['y'] + specification[specification['label'] == originName]['y'].values[0]
             row['z'] = - row['z'] + specification[specification['label'] == originName]['z'].values[0]
+            
+        if 'Left:x' in row['label']:
+            row['x'] = - row['x']
+            row['y'] = - row['y']
+            row['z'] = - row['z']
 
         placeHolder = '$' + row['label'] + ':' + 'x$'
         modelXML = modelXML.replace(placeHolder, str(row['x']*meshScale))
