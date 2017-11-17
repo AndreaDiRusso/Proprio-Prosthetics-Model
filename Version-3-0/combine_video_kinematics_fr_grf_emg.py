@@ -82,17 +82,17 @@ y2a = ah
 aw_prime = x2a - x1a
 ah_prime = y2a - y1a
 
-x1m = 0 # top left coordinates
-y1m = 0
+x1m = 500 # top left coordinates
+y1m = 250
 x2m = mw # botom right coordinates
-y2m = mh
+y2m = mh - 250
 mw_prime = x2m - x1m
 mh_prime = y2m - y1m
 
 w = xw + 1800 + fw + ew + cw
 h = fh
 
-fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+fourcc = cv2.VideoWriter_fourcc(*'MPEG')
 fps=animalVideo.get(cv2.CAP_PROP_FPS)/4
 destinationPath = filePath + 'merged_video.avi'
 

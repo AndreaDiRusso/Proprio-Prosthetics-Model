@@ -102,7 +102,7 @@
     <!--
     <body name='Lower_Body' pos='0 0 0' euler='0 0 0'>
     -->
-    <camera name = 'Sagittal_Right_Corridor' mode = 'fixed' pos = '-4 -.1 -.2' euler = '-90 -85 180' fovy = '15'/>
+    <camera name = 'Sagittal_Right_Corridor' mode = 'fixed' pos = '-6 -.1 -.2' euler = '-90 -85 180' fovy = '15'/>
     <camera name = 'Sagittal_Right_Treadmill' mode = 'fixed' pos = '-4 0 .5' euler = '0 -80 -90' fovy = '10'/>
     <camera name = 'Sagittal_Left_Corridor' mode = 'fixed' pos = '-4 -.1 -.2' euler = '-90 -85 180' fovy = '15'/>
     <camera name = 'Sagittal_Left_Treadmill' mode = 'fixed' pos = '4 0 .5' euler = '0 80 90' fovy = '10'/>
@@ -213,11 +213,11 @@
         <site name="VAS_Femur_Left" pos='$VAS_Femur_Left:x$	$VAS_Femur_Left:y$	$VAS_Femur_Left:z$' rgba='0 0 1 0'/>
         <site name="GAS_Femur_Left" pos='$GAS_Femur_Left:x$	$GAS_Femur_Left:y$	$GAS_Femur_Left:z$' rgba='0 0 1 0'/>
 
-        <site name="K_Left" pos='$K_Left:x$	$K_Left:y$	$K_Left:z$' rgba='1 0 0 1' size='5e-3'/>
+        <site name="K_Left" pos='$K_Left:x$	$K_Left:y$	$K_Left:z$' rgba='1 0 0 0' size='5e-3'/>
 
     	  <body name='Shin_Left' pos='0 0 0' euler='0 0 0'>
 
-            <geom type='mesh' mesh='Shin_Left'  pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
+            <geom type='mesh' mesh='Shin_Left'  pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 0'/>
 
             <site name="VAS_Tibia_Left" pos='$VAS_Tibia_Left:x$	$VAS_Tibia_Left:y$	$VAS_Tibia_Left:z$' rgba='0 0 1 0'/>
             <site name="TA_Tibia_Left" pos='$TA_Tibia_Left:x$	$TA_Tibia_Left:y$	$TA_Tibia_Left:z$' rgba='0 0 1 0'/>
@@ -229,10 +229,10 @@
 
     				<body name='Foot_Left' pos='0 0 0' >
 
-              <geom type='mesh' mesh='Foot_Left'  pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
+              <geom type='mesh' mesh='Foot_Left'  pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 0'/>
 
-              <site name="M_Left" pos='$M_Left:x$	$M_Left:y$	$M_Left:z$' rgba='0.5 0.5 0.5 1' size='5e-3'/>
-              <site name="MT_Left" pos='$MT_Left:x$	$MT_Left:y$	$MT_Left:z$' rgba='0 0 1 1' size='5e-3'/>
+              <site name="M_Left" pos='$M_Left:x$	$M_Left:y$	$M_Left:z$' rgba='0.5 0.5 0.5 0' size='5e-3'/>
+              <site name="MT_Left" pos='$MT_Left:x$	$MT_Left:y$	$MT_Left:z$' rgba='0 0 1 0' size='5e-3'/>
 
               <site name="TA_Ankle_Left" pos='$TA_Ankle_Left:x$	$TA_Ankle_Left:y$	$TA_Ankle_Left:z$' rgba='0 0 1 0'/>
               <site name="SOL_Ankle_Left" pos='$SOL_Ankle_Left:x$	$SOL_Ankle_Left:y$	$SOL_Ankle_Left:z$' rgba='0 0 1 0'/>
@@ -246,8 +246,8 @@
                 </body>
               <body name = 'Toes_Left' pos = '0 0 0'>
 
-              <site name="T_Left" pos='$T_Left:x$	$T_Left:y$	$T_Left:z$' rgba='0 1 1 1' size='5e-3'/>
-              <geom type='mesh' name = 'Toes_Left' mesh='Toes_Left' mass='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
+              <site name="T_Left" pos='$T_Left:x$	$T_Left:y$	$T_Left:z$' rgba='0 1 1 0' size='5e-3'/>
+              <geom type='mesh' name = 'Toes_Left' mesh='Toes_Left' mass='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 0'/>
               <joint name='Toes_Left:x' class='Toes_Left:x' axis='$Toes_Left:x:x$	$Toes_Left:x:y$	$Toes_Left:x:z$'  ref='0' pos='$Toes_Left:o:x$	$Toes_Left:o:y$	$Toes_Left:o:z$'/>
 
               </body>
@@ -275,7 +275,7 @@
       <geom name = 'Treadmill' type = 'box' size = '1 1 1e-12' pos = '$Floor:x$ $Floor:y$ $Floor:z$'/>
     -->
     <body name = 'Treadmill'>
-      <geom name = 'Treadmill' type = 'box' size = '0.5 5 0.5' pos = '0 0 -0.84' rgba = '.2 .2 .2 1'/>
+      <geom name = 'Treadmill' type = 'box' size = '0.5 5 0.5' pos = '0 0 -0.96' rgba = '.2 .2 .2 1'/>
           <!-- -0.84 for corridor -->
               <!-- -0.96 for starbuck -->
 
@@ -321,42 +321,42 @@
  -->
   </contact>
   <tendon>
-    <spatial name="IL_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+    <spatial name="IL_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
         <site site='IL_Pelvis_Left'/>
         <site site='IL_Femur_Left'/>
     </spatial>
 
-    <spatial name="GMED_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+    <spatial name="GMED_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
       <site site='GMED_Pelvis_Left'/>
       <site site='GMED_Femur_Left'/>
     </spatial>
 
-    <spatial name='VAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+    <spatial name='VAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
       <site site='VAS_Femur_Left'/>
       <site site='VAS_Tibia_Left'/>
     </spatial>
 
-    <spatial name='TA_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+    <spatial name='TA_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
       <site site='TA_Tibia_Left'/>
       <site site='TA_Ankle_Left'/>
     </spatial>
 
-    <spatial name='SOL_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+    <spatial name='SOL_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
       <site site='SOL_Tibia_Left'/>
       <site site='SOL_Ankle_Left'/>
     </spatial>
 
-    <spatial name='RF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+    <spatial name='RF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
       <site site='RF_Pelvis_Left'/>
       <site site='RF_Tibia_Left'/>
     </spatial>
 
-    <spatial name='BF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+    <spatial name='BF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
       <site site='BF_Pelvis_Left'/>
       <site site='BF_Tibia_Left'/>
     </spatial>
 
-    <spatial name='GAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+    <spatial name='GAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 0" limited="false" range="0 0.33">
       <site site='GAS_Femur_Left'/>
       <site site='GAS_Ankle_Left'/>
     </spatial>

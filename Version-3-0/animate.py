@@ -42,7 +42,48 @@ templateFilePath = curDir + '/' + modelFile
 fcsvFilePath = resourcesDir + '/Mobile Foot/Fiducials.fcsv'
 
 specification = fcsv_to_spec(fcsvFilePath)
-modelXML = populate_model(templateFilePath, specification, resourcesDir = resourcesDir,
+extraCoords = {}
+with open(kinematicsFile, 'rb') as f:
+    kinematics = pickle.load(f)
+if modelFile == 'murdoc_template_seat.xml':
+
+    t0 = kinematics['qpos'].index[0]
+    worldQ = quat.from_euler_angles(
+        kinematics['qpos'].loc[t0, 'World:xq'],
+        kinematics['qpos'].loc[t0, 'World:yq'],
+        kinematics['qpos'].loc[t0, 'World:zq']
+        )
+    extraCoords = {
+                'World:xt': kinematics['qpos'].loc[t0, 'World:xt'],
+                'World:yt': kinematics['qpos'].loc[t0, 'World:yt'],
+                'World:zt': kinematics['qpos'].loc[t0, 'World:zt'],
+                'World:wq': worldQ.w,
+                'World:xq': worldQ.x,
+                'World:yq': worldQ.y,
+                'World:zq': worldQ.z }
+
+if modelFile == 'murdoc_template_toes_treadmill.xml':
+
+    t0 = kinematics['qpos'].index[0]
+    worldQ = quat.from_euler_angles(
+        kinematics['qpos'].loc[t0, 'World:xq'],
+        kinematics['qpos'].loc[t0, 'World:yq'],
+        kinematics['qpos'].loc[t0, 'World:zq']
+        )
+    extraCoords = {
+                'World:xt': kinematics['qpos'].loc[t0, 'World:xt'],
+                'World:yt': kinematics['qpos'].loc[t0, 'World:yt'],
+                'World:zt': kinematics['qpos'].loc[t0, 'World:zt'],
+                'World:wq': worldQ.w,
+                'World:xq': worldQ.x,
+                'World:yq': worldQ.y,
+                'World:zq': worldQ.z,
+                'Floor:x' : 0,
+                'Floor:y' : 0,
+                'Floor:z' : -0.385,
+                'minT12Height': 0.5
+                }
+modelXML = populate_model(templateFilePath, specification, extraCoords, resourcesDir = resourcesDir,
     meshScale = meshScale, showTendons = True)
 
 model = load_model_from_xml(modelXML)
@@ -59,8 +100,6 @@ if cameraId is not None:
     viewer.cam.type = const.CAMERA_FIXED
 #viewer.vopt.flags[10] = viewer.vopt.flags[11] = not viewer.vopt.flags[10]
 #get resting lengths
-with open(kinematicsFile, 'rb') as f:
-    kinematics = pickle.load(f)
 
 nJoints = simulation.model.njnt
 allJoints = [simulation.model.joint_id2name(i) for i in range(nJoints)]
@@ -85,7 +124,7 @@ for t, kinSeries in kinematics['orig_site_pos'].iterrows():
         offscreen_ctx = simulation._render_context_offscreen
         offscreen_ctx._markers[:] = markers[:]
 
-        img = simulation.render(*resolution, camera_name = 'Seat_Cam')
+        img = simulation.render(*resolution, camera_name = 'Sagittal_Left_Treadmill')
         img = cv2.flip(cv2.cvtColor(img, cv2.COLOR_RGB2BGR), 0)
 
         if outputFile and 'output' not in locals():
