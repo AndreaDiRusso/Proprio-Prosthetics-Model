@@ -1,11 +1,7 @@
 <mujoco model="Murdoc">
 
     <compiler inertiafromgeom='true' angle='degree'/>
-    <option gravity='$gravity:x$ $gravity:y$ $gravity:z$'/>
-    <option timestep='0.01' impratio = '2'/>
-    <option>
-    <flag fwdinv = 'enable'/>
-    </option>
+    <option gravity='0 0 0'/>
     <asset>
 		<!-- Sets sky rendering
 		-->
@@ -26,18 +22,21 @@
         <material name='geom' texture="texgeom" texuniform="true"/>
         <material name='bone' texture='bone_texture' reflectance='0' texuniform='true' specular='0' shininess='0'/>
 
-        <mesh file="$resourcesDir$/Aligned-To-Pelvis/Pelvis-Aligned-To-Pelvis.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
-        <mesh file="$resourcesDir$/Aligned-To-Pelvis/Femur_Left-Flipped.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
-        <mesh file="$resourcesDir$/Aligned-To-Pelvis/Femur_Right-Aligned-To-Pelvis.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
-        <mesh file="$resourcesDir$/Aligned-To-Pelvis/Shin_Left-Flipped.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
-        <mesh file="$resourcesDir$/Aligned-To-Pelvis/Shin_Right-Aligned-To-Pelvis.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
-        <mesh file="$resourcesDir$/Aligned-To-Pelvis/Foot_Left-Flipped.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
-        <mesh file="$resourcesDir$/Aligned-To-Pelvis/Foot_Right-Aligned-To-Pelvis.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Mobile Foot/Pelvis.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Mobile Foot/Femur_Left.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Mobile Foot/Femur_Right.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Mobile Foot/Shin_Left.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Mobile Foot/Shin_Right.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Mobile Foot/Foot_Left.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Mobile Foot/Foot_Right.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Mobile Foot/Toes_Left.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
+        <mesh file="$resourcesDir$/Mobile Foot/Toes_Right.stl" scale='$meshScale$ $meshScale$ $meshScale$' />
 
     </asset>
 
 	<default>
     <site size='0.5e-3 0.5e-3 0.5e-3' rgba='1 0 0 0'/>
+<<<<<<< HEAD:Version-3-0/murdoc_seated_template-Copy.xml
 
     <default class='Hip:x'>
       <joint type='hinge' axis='0 1 0' ref='0' range='-120 -40' limited='true' armature='0.0001' stiffness='0' springref='0'/>
@@ -50,27 +49,94 @@
 		</default>
 		<default class = 'Knee:x'>
 			<joint type='hinge' axis='1 0 0' range='20 120' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
+=======
+    <default class='Hip_Left:x'>
+      <joint type='hinge' axis='0 1 0' ref='0' range='-120 60' limited='true' armature='0.0001' stiffness='0' springref='0'/>
 		</default>
-		<default class = 'Knee:y'>
+		<default class='Hip_Left:y'>
+            <joint type='hinge' axis='0 1 0' range='-30 30' damping='5' limited='true' stiffness='0' armature='0.0080' />
+		</default>
+		<default class='Hip_Left:z'>
+            <joint type='hinge' axis='0 0 1' range='-5 5' damping='5' limited='true' stiffness='0' armature='0.0080' />
+		</default>
+		<default class = 'Knee_Left:x'>
+			<joint type='hinge' axis='1 0 0' range='-120  0' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
+>>>>>>> ca9af544e8616bb3b9a64cdeaab8d220a9f2596a:Version-3-0/murdoc_template_toes_floating.xml
+		</default>
+		<default class = 'Knee_Left:y'>
 			<joint type='hinge' axis='1 0 0' range='-40 120' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
 		</default>
+<<<<<<< HEAD:Version-3-0/murdoc_seated_template-Copy.xml
 		<default class = 'Ankle:x'>
 			<joint type='hinge' axis='1 0 0' pos='0 0 0' range='-50 30' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
 		</default>
 		<default class = 'Ankle:y'>
 			<joint type='hinge' axis='0 1 0' pos='0 0 0' range='-25 10' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+=======
+		<default class = 'Ankle_Left:x'>
+			<joint type='hinge' axis='1 0 0' pos='0 0 0' range='-60 90' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
 		</default>
+		<default class = 'Ankle_Left:y'>
+			<joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+>>>>>>> ca9af544e8616bb3b9a64cdeaab8d220a9f2596a:Version-3-0/murdoc_template_toes_floating.xml
+		</default>
+		<default class = 'Toes_Left:x'>
+			<joint type='hinge' axis='1 0 0' pos='0 0 0' range='30 120' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+		</default>
+
+  <default class='Hip_Right:x'>
+    <joint type='hinge' axis='0 1 0' ref='0' range='-60 120' limited='true' armature='0.0001' stiffness='0' springref='0'/>
+  </default>
+  <default class='Hip_Right:y'>
+          <joint type='hinge' axis='0 1 0' range='-30 30' damping='5' limited='true' stiffness='0' armature='0.0080' />
+  </default>
+  <default class='Hip_Right:z'>
+          <joint type='hinge' axis='0 0 1' range='-5 5' damping='5' limited='true' stiffness='0' armature='0.0080' />
+  </default>
+  <default class = 'Knee_Right:x'>
+    <joint type='hinge' axis='1 0 0' range='0  120' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
+  </default>
+  <default class = 'Knee_Right:y'>
+    <joint type='hinge' axis='1 0 0' range='-120 40' limited='true'  armature='0.0006'  stiffness='0' springref='0'/>
+  </default>
+  <default class = 'Ankle_Right:x'>
+    <joint type='hinge' axis='1 0 0' pos='0 0 0' range='-90 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+  </default>
+  <default class = 'Ankle_Right:y'>
+    <joint type='hinge' axis='0 1 0' pos='0 0 0' range='-60 60' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+  </default>
+  <default class = 'Toes_Right:x'>
+    <joint type='hinge' axis='1 0 0' pos='0 0 0' range='-120 -30' limited='true'  armature='0.0006' stiffness='0' springref='0'/>
+  </default>
 	</default>
 
 	<worldbody>
     <light directional='true' diffuse='1 1 1' specular='0 0 0' pos='0 0 40.5' dir='0 1 0'/>
+      <!--
+      <body name = 'Init' pos = '0 0 0' euler = '0 0 0'>
+          <site name="C_Init" pos='-0.022000 -0.035000 0.015000' rgba='1 0 0 1' size='15e-3'/>
+          <site name="GT_Init" pos='-0.038383 0.038689 -0.027012' rgba='0 1 0 1' size='15e-3'/>
+          <site name="K_Init" pos='-0.048703 -0.061385 -0.141855' rgba='0 0 1 1' size='15e-3'/>
+          <site name="MT_Init" pos='-0.052363 0.055734 -0.263889' rgba='0 1 1 1' size='15e-3'/>
+          <site name="M_Init" pos='-0.036526 0.099504 -0.205868' rgba='1 1 0 1' size='15e-3'/>
+      </body>
+    -->
+    <!--
+    <body name='Lower_Body' pos='0 0 0' euler='0 0 0'>
+    -->
+    <body name='Pelvis' pos='0 0 0' euler='0 0 0'>
+    <joint name='World' type = 'free'/>
 
+<<<<<<< HEAD:Version-3-0/murdoc_seated_template-Copy.xml
     <body name='Pelvis' pos='$World_t:x$ $World_t:y$ $World_t:z$' euler='$World:x$ $World:y$ $World:z$'>
    <!-- <joint name='world' type = 'free'/> -->
 
     <!--    <site name="T12_Left" pos='$T12_Left:x$	$T12_Left:y$	$T12_Left:z$' rgba='1 0 0 0.33' size='15e-3'/>
             <site name="T12_Right" pos='$T12_Right:x$	$T12_Right:y$	$T12_Right:z$' rgba='1 0 0 0.33' size='15e-3'/>
     <camera name = 'Sagittal_Left' mode = 'fixed' pos = '3e-1 -5e-1 -2e-1' euler = '90 0 180'/> -->
+=======
+    <camera name = 'Sagittal_Left' mode = 'fixed' pos = '1e-1 -1 -5e-2' euler = '90 0 75'/>
+>>>>>>> ca9af544e8616bb3b9a64cdeaab8d220a9f2596a:Version-3-0/murdoc_template_toes_floating.xml
 
      <site name="BF_Pelvis_Left" pos='$BF_Pelvis_Left:x$	$BF_Pelvis_Left:y$	$BF_Pelvis_Left:z$' rgba='1 0 0 0'/>
      <site name="RF_Pelvis_Left" pos='$RF_Pelvis_Left:x$	$RF_Pelvis_Left:y$	$RF_Pelvis_Left:z$' rgba='1 0 0 0'/>
@@ -85,7 +151,7 @@
      <site name="C_Right" group='1' pos='$C_Right:x$	$C_Right:y$	$C_Right:z$' rgba='1 1 1 1' size='5e-3'/>
      <site name="C_Left" group='1' pos='$C_Left:x$	$C_Left:y$	$C_Left:z$' rgba='1 1 1 1' size='5e-3'/>
 
-     <geom type='mesh' name='Pelvis' mesh='Pelvis-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
+     <geom type='mesh' mesh='Pelvis' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
 
       <body name='GT_Holder_Right' pos='0 0 0' euler='0 0 0'>
         <site name="GT_Right" group='1' pos='$GT_Right:x$	$GT_Right:y$	$GT_Right:z$' rgba='1 1 0 1' size='5e-3'/>
@@ -93,15 +159,19 @@
 
     <body name='Leg_Right' pos='0 0 0' euler='0 0 0'>
 
-      <joint name='Hip_Right:x' class='Hip:x' axis='$Hip_Right:x:x$	$Hip_Right:x:y$	$Hip_Right:x:z$' ref = '-90' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
-      <joint name='Hip_Right:y' class='Hip:y' axis='$Hip_Right:y:x$	$Hip_Right:y:y$	$Hip_Right:y:z$' ref = '-20' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
-      <joint name='Hip_Right:z' class='Hip:z' axis='$Hip_Right:z:x$	$Hip_Right:z:y$	$Hip_Right:z:z$' ref = '0' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
+      <joint name='Hip_Right:x' class='Hip_Right:x' axis='$Hip_Right:x:x$	$Hip_Right:x:y$	$Hip_Right:x:z$' ref = '0' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
+      <joint name='Hip_Right:y' class='Hip_Right:y' axis='$Hip_Right:y:x$	$Hip_Right:y:y$	$Hip_Right:y:z$' ref = '0' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
+      <joint name='Hip_Right:z' class='Hip_Right:z' axis='$Hip_Right:z:x$	$Hip_Right:z:y$	$Hip_Right:z:z$' ref = '0' pos='$Hip_Right:o:x$	$Hip_Right:o:y$	$Hip_Right:o:z$'/>
 
+<<<<<<< HEAD:Version-3-0/murdoc_seated_template-Copy.xml
   	  <geom type='mesh' name='Femur_Right' mesh='Femur_Right-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
 	  
 	  <geom type="cylinder" name='Knee_FR' density='0' fromto='0.17 -0.15 -0.121  0.19 -0.05 -0.121' size="0.015" rgba="0 0 0 0"/>
 	  
 	  <site name='slide1' pos='0.175 -0.08 -0.106'/>
+=======
+  	  <geom type='mesh' mesh='Femur_Right' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
+>>>>>>> ca9af544e8616bb3b9a64cdeaab8d220a9f2596a:Version-3-0/murdoc_template_toes_floating.xml
 
       <site name="GMED_Femur_Right" pos='$GMED_Femur_Right:x$	$GMED_Femur_Right:y$	$GMED_Femur_Right:z$' rgba='0 0 1 0'/>
 
@@ -118,7 +188,7 @@
 		  <geom type="cylinder" name='Knee_FR2' density='0' fromto='0.185 -0.15 -0.135  0.205 -0.05 -0.135' size="0.012" rgba="0 0 0 0"/>
 	         <site name='slide2' pos='0.185 -0.08 -0.145'/>
 
-          <geom type='mesh' name='Shin_Right' mesh='Shin_Right-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
+          <geom type='mesh' mesh='Shin_Right' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
 
           <!--<site name="VAS_Tibia_Right" pos='0.22	-0.084	-0.13' rgba='0 0 1 0'/>-->
 		  <site name="VAS_Tibia_Right" pos='$VAS_Tibia_Right:x$	$VAS_Tibia_Right:y$	$VAS_Tibia_Right:z$' rgba='0 0 1 0'/>
@@ -129,26 +199,38 @@
           <!--<site name="BF_Tibia_Right" pos='$BF_Tibia_Right:x$	$BF_Tibia_Right:y$	$BF_Tibia_Right:z$' rgba='0 0 1 0'/>-->
 		  <site name="BF_Tibia_Right" pos='0.202	-0.103	-0.145' rgba='0 0 1 0'/>
 
-          <joint name='Knee_Right:x' class='Knee:x' axis='$Knee_Right:x:x$	$Knee_Right:x:y$	$Knee_Right:x:z$' ref='20' pos='$Knee_Right:o:x$	$Knee_Right:o:y$	$Knee_Right:o:z$'/>
+          <joint name='Knee_Right:x' class='Knee_Right:x' axis='$Knee_Right:x:x$	$Knee_Right:x:y$	$Knee_Right:x:z$' ref='0' pos='$Knee_Right:o:x$	$Knee_Right:o:y$	$Knee_Right:o:z$'/>
 
   				<body name='Foot_Right' pos='0 0 0' >
 
+<<<<<<< HEAD:Version-3-0/murdoc_seated_template-Copy.xml
             <geom type='mesh' name='Foot_Right' mesh='Foot_Right-Aligned-To-Pelvis' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
 			
 				<!--  <geom type="cylinder" name='Knee_FR3' density='0' fromto='0.17 -0.15 -0.135  0.19 -0.05 -0.135' size="0.015" rgba=".3 .9 .3 .4"/>
 	         <site name='slide3' pos='0.17 -0.08 -0.150'/>-->
 		
 			<site name="M_Right" pos='$M_Right:x$	$M_Right:y$	$M_Right:z$' rgba='0.5 0.5 0.5 1' size='5e-3'/>
+=======
+            <geom type='mesh' mesh='Foot_Right' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
+
+            <site name="M_Right" pos='$M_Right:x$	$M_Right:y$	$M_Right:z$' rgba='0.5 0.5 0.5 1' size='5e-3'/>
+>>>>>>> ca9af544e8616bb3b9a64cdeaab8d220a9f2596a:Version-3-0/murdoc_template_toes_floating.xml
             <site name="MT_Right" pos='$MT_Right:x$	$MT_Right:y$	$MT_Right:z$' rgba='0 0 1 1' size='5e-3'/>
-            <site name="T_Right" pos='$T_Right:x$	$T_Right:y$	$T_Right:z$' rgba='0 1 1 1' size='5e-3'/>
 
             <site name="TA_Ankle_Right" pos='$TA_Ankle_Right:x$	$TA_Ankle_Right:y$	$TA_Ankle_Right:z$' rgba='0 0 1 0'/>
             <site name="SOL_Ankle_Right" pos='$SOL_Ankle_Right:x$	$SOL_Ankle_Right:y$	$SOL_Ankle_Right:z$' rgba='0 0 1 0'/>
             <site name="GAS_Ankle_Right" pos='$GAS_Ankle_Right:x$	$GAS_Ankle_Right:y$	$GAS_Ankle_Right:z$' rgba='0 0 1 0'/>
 
-            <joint name='Ankle_Right:x' class='Ankle:x' axis='$Ankle_Right:x:x$	$Ankle_Right:x:y$	$Ankle_Right:x:z$'  ref='45' pos='$Ankle_Right:o:x$	$Ankle_Right:o:y$	$Ankle_Right:o:z$'/>
-            <joint name='Ankle_Right:y' class='Ankle:y' axis='$Ankle_Right:y:x$	$Ankle_Right:y:y$	$Ankle_Right:y:z$'  pos='$Ankle_Right:o:x$	$Ankle_Right:o:y$	$Ankle_Right:o:z$'/>
+            <joint name='Ankle_Right:x' class='Ankle_Right:x' axis='$Ankle_Right:x:x$	$Ankle_Right:x:y$	$Ankle_Right:x:z$'  ref='0' pos='$Ankle_Right:o:x$	$Ankle_Right:o:y$	$Ankle_Right:o:z$'/>
+            <joint name='Ankle_Right:y' class='Ankle_Right:y' axis='$Ankle_Right:y:x$	$Ankle_Right:y:y$	$Ankle_Right:y:z$'  pos='$Ankle_Right:o:x$	$Ankle_Right:o:y$	$Ankle_Right:o:z$'/>
+            <geom name = 'Sole_Right' pos='$Sole_Right:x$ $Sole_Right:y$ $Sole_Right:z$' type = 'ellipsoid' size = '5e-2 2.5e-2 5e-3' rgba = '1 0.5 0.5 1' euler = '0 20 10'/>
+            <site name="Sole_Tip_Right" pos='$Sole_Tip_Right:x$	$Sole_Tip_Right:y$	$Sole_Tip_Right:z$' rgba='0 1 1 1' size='5e-3'/>
 
+            <body name = 'Toes_Right' pos = '0 0 0' >
+            <geom type='mesh' mesh='Toes_Right' mass='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
+            <joint name='Toes_Right:x' class='Toes_Right:x' axis='$Toes_Right:x:x$	$Toes_Right:x:y$	$Toes_Right:x:z$'  ref='0' pos='$Toes_Right:o:x$	$Toes_Right:o:y$	$Toes_Right:o:z$'/>
+            <site name="T_Right" pos='$T_Right:x$	$T_Right:y$	$T_Right:z$' rgba='0 1 1 1' size='5e-3'/>
+            </body>
   				</body>
   				<!-- End foot
   				-->
@@ -165,11 +247,17 @@
 
       <body name='Leg_Left' pos='0 0 0' euler='0 0 0'>
 
+<<<<<<< HEAD:Version-3-0/murdoc_seated_template-Copy.xml
         <joint name='Hip_Left:x' class='Hip:x' axis='$Hip_Left:x:x$	$Hip_Left:x:y$	$Hip_Left:x:z$' ref = '-90' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
         <joint name='Hip_Left:y' class='Hip:y' axis='$Hip_Left:y:x$	$Hip_Left:y:y$	$Hip_Left:y:z$' ref = '20' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
         <joint name='Hip_Left:z' class='Hip:z' axis='$Hip_Left:z:x$	$Hip_Left:z:y$	$Hip_Left:z:z$' ref = '0' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
+=======
+        <joint name='Hip_Left:x' class='Hip_Left:x' axis='$Hip_Left:x:x$	$Hip_Left:x:y$	$Hip_Left:x:z$' ref = '0' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
+        <joint name='Hip_Left:y' class='Hip_Left:y' axis='$Hip_Left:y:x$	$Hip_Left:y:y$	$Hip_Left:y:z$' ref = '0' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
+        <joint name='Hip_Left:z' class='Hip_Left:z' axis='$Hip_Left:z:x$	$Hip_Left:z:y$	$Hip_Left:z:z$' ref = '0' pos='$Hip_Left:o:x$	$Hip_Left:o:y$	$Hip_Left:o:z$'/>
+>>>>>>> ca9af544e8616bb3b9a64cdeaab8d220a9f2596a:Version-3-0/murdoc_template_toes_floating.xml
 
-    	  <geom type='mesh' name='Femur_Left' mesh='Femur_Left-Flipped' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
+    	  <geom type='mesh' mesh='Femur_Left' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
 
         <site name="GMED_Femur_Left" pos='$GMED_Femur_Left:x$	$GMED_Femur_Left:y$	$GMED_Femur_Left:z$' rgba='0 0 1 0'/>
 
@@ -183,7 +271,7 @@
 
     	  <body name='Shin_Left' pos='0 0 0' euler='0 0 0'>
 
-            <geom type='mesh' name='Shin_Left' mesh='Shin_Left-Flipped' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
+            <geom type='mesh' mesh='Shin_Left' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
 
             <site name="VAS_Tibia_Left" pos='$VAS_Tibia_Left:x$	$VAS_Tibia_Left:y$	$VAS_Tibia_Left:z$' rgba='0 0 1 0'/>
             <site name="TA_Tibia_Left" pos='$TA_Tibia_Left:x$	$TA_Tibia_Left:y$	$TA_Tibia_Left:z$' rgba='0 0 1 0'/>
@@ -191,22 +279,40 @@
             <site name="RF_Tibia_Left" pos='$RF_Tibia_Left:x$	$RF_Tibia_Left:y$	$RF_Tibia_Left:z$' rgba='0 0 1 0'/>
             <site name="BF_Tibia_Left" pos='$BF_Tibia_Left:x$	$BF_Tibia_Left:y$	$BF_Tibia_Left:z$' rgba='0 0 1 0'/>
 
+<<<<<<< HEAD:Version-3-0/murdoc_seated_template-Copy.xml
             <joint name='Knee_Left:x' class='Knee:x' axis='$Knee_Left:x:x$	$Knee_Left:x:y$	$Knee_Left:x:z$'  ref='20' pos='$Knee_Left:o:x$	$Knee_Left:o:y$	$Knee_Left:o:z$'/>
+=======
+            <joint name='Knee_Left:x' class='Knee_Left:x' axis='$Knee_Left:x:x$	$Knee_Left:x:y$	$Knee_Left:x:z$'  ref='0' pos='$Knee_Left:o:x$	$Knee_Left:o:y$	$Knee_Left:o:z$'/>
+>>>>>>> ca9af544e8616bb3b9a64cdeaab8d220a9f2596a:Version-3-0/murdoc_template_toes_floating.xml
 
     				<body name='Foot_Left' pos='0 0 0' >
 
-              <geom type='mesh' name='Foot_Left' mesh='Foot_Left-Flipped' density='2e3' pos='0 0 0' euler='0 0 0' condim='6' rgba='0.651 0.623 0.572 1'/>
+              <geom type='mesh' mesh='Foot_Left' density='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
 
               <site name="M_Left" pos='$M_Left:x$	$M_Left:y$	$M_Left:z$' rgba='0.5 0.5 0.5 1' size='5e-3'/>
               <site name="MT_Left" pos='$MT_Left:x$	$MT_Left:y$	$MT_Left:z$' rgba='0 0 1 1' size='5e-3'/>
-              <site name="T_Left" pos='$T_Left:x$	$T_Left:y$	$T_Left:z$' rgba='0 1 1 1' size='5e-3'/>
 
               <site name="TA_Ankle_Left" pos='$TA_Ankle_Left:x$	$TA_Ankle_Left:y$	$TA_Ankle_Left:z$' rgba='0 0 1 0'/>
               <site name="SOL_Ankle_Left" pos='$SOL_Ankle_Left:x$	$SOL_Ankle_Left:y$	$SOL_Ankle_Left:z$' rgba='0 0 1 0'/>
               <site name="GAS_Ankle_Left" pos='$GAS_Ankle_Left:x$	$GAS_Ankle_Left:y$	$GAS_Ankle_Left:z$' rgba='0 0 1 0'/>
 
+<<<<<<< HEAD:Version-3-0/murdoc_seated_template-Copy.xml
               <joint name='Ankle_Left:x' class='Ankle:x' axis='$Ankle_Left:x:x$	$Ankle_Left:x:y$	$Ankle_Left:x:z$'  ref='45' pos='$Ankle_Left:o:x$	$Ankle_Left:o:y$	$Ankle_Left:o:z$'/>
               <joint name='Ankle_Left:y' class='Ankle:y' axis='$Ankle_Left:y:x$	$Ankle_Left:y:y$	$Ankle_Left:y:z$'  ref='0' pos='$Ankle_Left:o:x$	$Ankle_Left:o:y$	$Ankle_Left:o:z$'/>
+=======
+              <joint name='Ankle_Left:x' class='Ankle_Left:x' axis='$Ankle_Left:x:x$	$Ankle_Left:x:y$	$Ankle_Left:x:z$'  ref='0' pos='$Ankle_Left:o:x$	$Ankle_Left:o:y$	$Ankle_Left:o:z$'/>
+              <joint name='Ankle_Left:y' class='Ankle_Left:y' axis='$Ankle_Left:y:x$	$Ankle_Left:y:y$	$Ankle_Left:y:z$'  ref='0' pos='$Ankle_Left:o:x$	$Ankle_Left:o:y$	$Ankle_Left:o:z$'/>
+              <geom name = 'Sole_Left' pos='$Sole_Left:x$ $Sole_Left:y$ $Sole_Left:z$' type = 'ellipsoid' size = '5e-2 2.5e-2 5e-3' rgba = '1 0.5 0.5 1' euler = '0 20 -10'/>
+              <site name="Sole_Tip_Left" pos='$Sole_Tip_Left:x$	$Sole_Tip_Left:y$	$Sole_Tip_Left:z$' rgba='0 1 1 1' size='5e-3'/>
+
+              <body name = 'Toes_Left' pos = '0 0 0'>
+
+              <site name="T_Left" pos='$T_Left:x$	$T_Left:y$	$T_Left:z$' rgba='0 1 1 1' size='5e-3'/>
+              <geom type='mesh' mesh='Toes_Left' mass='1' pos='0 0 0' euler='0 0 0' rgba='0.651 0.623 0.572 1'/>
+              <joint name='Toes_Left:x' class='Toes_Left:x' axis='$Toes_Left:x:x$	$Toes_Left:x:y$	$Toes_Left:x:z$'  ref='0' pos='$Toes_Left:o:x$	$Toes_Left:o:y$	$Toes_Left:o:z$'/>
+
+              </body>
+>>>>>>> ca9af544e8616bb3b9a64cdeaab8d220a9f2596a:Version-3-0/murdoc_template_toes_floating.xml
     				</body>
     				<!-- End foot
     				-->
@@ -220,114 +326,62 @@
      <!--
      End Pelvis
    -->
+
+   <!-- End Lower bod
+    </body>
+    <!-- End Lower bod
+    -->
 	</worldbody>
 
   <tendon>
     <spatial name="IL_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='IL_Pelvis_Left'/>
         <site site='IL_Femur_Left'/>
-		<!--<geom geom='Hip_L'/> 
-		<site site="Hip_Left"/>
-		<geom geom='Knee_L'/> 
-		<site site="Knee_Left"/>
-		<geom geom='Ankle_L'/> 
-		<site site="Ankle_Left"/> -->
     </spatial>
 
     <spatial name="GMED_Left" stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
       <site site='GMED_Pelvis_Left'/>
       <site site='GMED_Femur_Left'/>
-	  <!--<geom geom='Hip_L'/> 
-	  <site site="Hip_Left"/>
-	  <geom geom='Knee_L'/> 
-	  <site site="Knee_Left"/>
-	  <geom geom='Ankle_L'/> 
-	  <site site="Ankle_Left"/> -->
-    </spatial>
-	
-	<spatial name='BF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
-      <site site='BF_Pelvis_Left'/>
-      <site site='BF_Tibia_Left'/>
-	  <!--<geom geom='Hip_L'/> 
-	  <site site="Hip_Left"/>
-	  <geom geom='Knee_L'/> 
-	  <site site="Knee_Left"/>
-	  <geom geom='Ankle_L'/> 
-	  <site site="Ankle_Left"/>  -->
-    </spatial>
-	
-	<spatial name='RF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
-      <site site='RF_Pelvis_Left'/>
-      <site site='RF_Tibia_Left'/>
-	  <!--<geom geom='Hip_L'/> 
-	  <site site="Hip_Left"/>
-	  <geom geom='Knee_L'/> 
-	  <site site="Knee_Left"/>
-	  <geom geom='Ankle_L'/> 
-	  <site site="Ankle_Left"/> -->
     </spatial>
 
     <spatial name='VAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
       <site site='VAS_Femur_Left'/>
       <site site='VAS_Tibia_Left'/>
-	 <!-- <geom geom='Hip_L'/> 
-	  <site site="Hip_Left"/>
-	  <geom geom='Knee_L'/> 
-	  <site site="Knee_Left"/>
-	  <geom geom='Ankle_L'/> 
-	  <site site="Ankle_Left"/>  -->
     </spatial>
-	
-    <spatial name='GAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
-      <site site='GAS_Femur_Left'/>
-      <site site='GAS_Ankle_Left'/>
-	 <!-- <geom geom='Hip_L'/> 
-	  <site site="Hip_Left"/>
-	  <geom geom='Knee_L'/> 
-	  <site site="Knee_Left"/>
-	  <geom geom='Ankle_L'/> 
-	  <site site="Ankle_Left"/>  -->
+
+    <spatial name='TA_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+      <site site='TA_Tibia_Left'/>
+      <site site='TA_Ankle_Left'/>
     </spatial>
 
     <spatial name='SOL_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
       <site site='SOL_Tibia_Left'/>
       <site site='SOL_Ankle_Left'/>
-	  <!--<geom geom='Hip_L'/> 
-	  <site site="Hip_Left"/>
-	  <geom geom='Knee_L'/> 
-	  <site site="Knee_Left"/>
-	  <geom geom='Ankle_L'/> 
-	  <site site="Ankle_Left"/> -->
     </spatial>
-	
-	<spatial name='TA_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
-      <site site='TA_Tibia_Left'/>
-      <site site='TA_Ankle_Left'/>
-	 <!-- <geom geom='Hip_L'/> 
-	  <site site="Hip_Left"/>
-	  <geom geom='Knee_L'/> 
-	  <site site="Knee_Left"/>
-	  <geom geom='Ankle_L'/> 
-	  <site site="Ankle_Left"/> -->
+
+    <spatial name='RF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+      <site site='RF_Pelvis_Left'/>
+      <site site='RF_Tibia_Left'/>
     </spatial>
-	
-	
+
+    <spatial name='BF_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+      <site site='BF_Pelvis_Left'/>
+      <site site='BF_Tibia_Left'/>
+    </spatial>
+
+    <spatial name='GAS_Left' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+      <site site='GAS_Femur_Left'/>
+      <site site='GAS_Ankle_Left'/>
+    </spatial>
       <spatial name="IL_Right" stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
-          <site site='IL_Pelvis_Right'/>=
+          <site site='IL_Pelvis_Right'/>
           <site site='IL_Femur_Right'/>
-		  <!--<geom geom='Hip_R'/> 
-	      <site site="Hip_Right"/>
-	      <geom geom='Knee_R'/> 
-	      <site site="Knee_Right"/>
-	      <geom geom='Ankle_R'/> 
-	      <site site="Ankle_Right"/> -->
-		  
-		  
       </spatial>
 
       <spatial name="GMED_Right" stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='GMED_Pelvis_Right'/>
         <site site='GMED_Femur_Right'/>
+<<<<<<< HEAD:Version-3-0/murdoc_seated_template-Copy.xml
 		<!--<geom geom='Hip_R'/> 
 	      <site site="Hip_Right"/>
 	      <geom geom='Knee_R'/> 
@@ -357,19 +411,16 @@
 	    <site site="Knee_Right"/>
 	    <geom geom='Ankle_R'/> 
 	    <site site="Ankle_Right"/> -->
+=======
+>>>>>>> ca9af544e8616bb3b9a64cdeaab8d220a9f2596a:Version-3-0/murdoc_template_toes_floating.xml
       </spatial>
 
       <spatial name='VAS_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='VAS_Femur_Right'/>
 		<!--<geom geom='Knee_FR' sidesite='slide1'/> -->
         <site site='VAS_Tibia_Right'/>
-		<!--<geom geom='Hip_R'/> 
-	    <site site="Hip_Right"/>
-	    <geom geom='Knee_R'/> 
-	    <site site="Knee_Right"/>
-	    <geom geom='Ankle_R'/> 
-	    <site site="Ankle_Right"/> -->
       </spatial>
+<<<<<<< HEAD:Version-3-0/murdoc_seated_template-Copy.xml
 	  
 	  <spatial name='GAS_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='GAS_Femur_Right'/>
@@ -381,56 +432,71 @@
 	    <site site="Knee_Right"/>
 	    <geom geom='Ankle_R'/> 
 	    <site site="Ankle_Right"/> -->
-      </spatial>
-	  
-	  <spatial name='SOL_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
-        <site site='SOL_Tibia_Right'/>
-        <site site='SOL_Ankle_Right'/>
-		<!--<geom geom='Hip_R'/> 
-	    <site site="Hip_Right"/>
-	    <geom geom='Knee_R'/> 
-	    <site site="Knee_Right"/>
-	    <geom geom='Ankle_R'/> 
-	    <site site="Ankle_Right"/> -->
-      </spatial>
+=======
 
       <spatial name='TA_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
         <site site='TA_Tibia_Right'/>
         <site site='TA_Ankle_Right'/>
-		<!--<geom geom='Hip_R'/> 
-	    <site site="Hip_Right"/>
-	    <geom geom='Knee_R'/> 
-	    <site site="Knee_Right"/>
-	    <geom geom='Ankle_R'/> 
-	    <site site="Ankle_Right"/> -->
+>>>>>>> ca9af544e8616bb3b9a64cdeaab8d220a9f2596a:Version-3-0/murdoc_template_toes_floating.xml
       </spatial>
- 
+
+      <spatial name='SOL_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+        <site site='SOL_Tibia_Right'/>
+        <site site='SOL_Ankle_Right'/>
+      </spatial>
+
+      <spatial name='RF_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+        <site site='RF_Pelvis_Right'/>
+        <site site='RF_Tibia_Right'/>
+      </spatial>
+
+      <spatial name='BF_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+        <site site='BF_Pelvis_Right'/>
+        <site site='BF_Tibia_Right'/>
+      </spatial>
+
+      <spatial name='GAS_Right' stiffness="0" width="0.002" rgba=".95 .3 .3 $showTendons$" limited="false" range="0 0.33">
+        <site site='GAS_Femur_Right'/>
+        <site site='GAS_Ankle_Right'/>
+      </spatial>
 </tendon>
 
 <actuator>
-  
+  <general name='IL_Right'   gear='1' tendon='IL_Right'   ctrllimited='true' ctrlrange='-1 1' gainprm='642' biastype="affine" biasprm='0 0 -91'/>
   <general name='IL_Left'   gear='1' tendon='IL_Left'   ctrllimited='true' ctrlrange='-1 1' gainprm='642' biastype="affine" biasprm='0 0 -91'/>
-  <general name='GMED_Left' gear='1' tendon='GMED_Left' ctrllimited='true' ctrlrange='-1 1' gainprm='738' biastype="affine" biasprm='0 0 -91'/>
-  <general name='BF_Left'   gear='1' tendon='BF_Left'   ctrllimited='true' ctrlrange='-1 1' gainprm='804' biastype="affine" biasprm='0 0 -91'/>
-  <general name='RF_Left'   gear='1' tendon='RF_Left'   ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -100'/>
-  <general name='VAS_Left'  gear='1' tendon='VAS_Left'  ctrllimited='true' ctrlrange='-1 1' gainprm='2514' biastype="affine" biasprm='0 0 -100'/> 
-  <general name='GAS_Left'  gear='1' tendon='GAS_Left'  ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -91'/>
-  <general name='SOL_Left'  gear='1' tendon='SOL_Left'  ctrllimited='true' ctrlrange='-1 1' gainprm='822' biastype="affine" biasprm='0 0 -66'/>
-  <general name='TA_Left'   gear='1' tendon='TA_Left'   ctrllimited='true' ctrlrange='-1 1' gainprm='390' biastype="affine" biasprm='0 0 -66'/>
-  
-  <general name='IL_Right'   gear='1' tendon='IL_Right'   ctrllimited='true' ctrlrange='-1 1' gainprm='642' biastype="affine" biasprm='0 0 -91'/>  
+
   <general name='GMED_Right' gear='1' tendon='GMED_Right' ctrllimited='true' ctrlrange='-1 1' gainprm='738' biastype="affine" biasprm='0 0 -91'/>
-  <general name='BF_Right'   gear='1' tendon='BF_Right'   ctrllimited='true' ctrlrange='-1 1' gainprm='804' biastype="affine" biasprm='0 0 -91'/>
-  <general name='RF_Right'   gear='1' tendon='RF_Right'   ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -100'/>
+  <general name='GMED_Left' gear='1' tendon='GMED_Left' ctrllimited='true' ctrlrange='-1 1' gainprm='738' biastype="affine" biasprm='0 0 -91'/>
+
   <general name='VAS_Right'  gear='1' tendon='VAS_Right'  ctrllimited='true' ctrlrange='-1 1' gainprm='2514' biastype="affine" biasprm='0 0 -100'/>
-  <general name='GAS_Right'  gear='1' tendon='GAS_Right'  ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -91'/>
-  <general name='SOL_Right'  gear='1' tendon='SOL_Right'  ctrllimited='true' ctrlrange='-1 1' gainprm='822' biastype="affine" biasprm='0 0 -66'/>
+  <general name='VAS_Left'  gear='1' tendon='VAS_Left'  ctrllimited='true' ctrlrange='-1 1' gainprm='2514' biastype="affine" biasprm='0 0 -100'/>
+
   <general name='TA_Right'   gear='1' tendon='TA_Right'   ctrllimited='true' ctrlrange='-1 1' gainprm='390' biastype="affine" biasprm='0 0 -66'/>
-  
+  <general name='TA_Left'   gear='1' tendon='TA_Left'   ctrllimited='true' ctrlrange='-1 1' gainprm='390' biastype="affine" biasprm='0 0 -66'/>
+
+  <general name='SOL_Right'  gear='1' tendon='SOL_Right'  ctrllimited='true' ctrlrange='-1 1' gainprm='822' biastype="affine" biasprm='0 0 -66'/>
+  <general name='SOL_Left'  gear='1' tendon='SOL_Left'  ctrllimited='true' ctrlrange='-1 1' gainprm='822' biastype="affine" biasprm='0 0 -66'/>
+
+  <general name='RF_Right'   gear='1' tendon='RF_Right'   ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -100'/>
+  <general name='RF_Left'   gear='1' tendon='RF_Left'   ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -100'/>
+
+  <general name='BF_Right'   gear='1' tendon='BF_Right'   ctrllimited='true' ctrlrange='-1 1' gainprm='804' biastype="affine" biasprm='0 0 -91'/>
+  <general name='BF_Left'   gear='1' tendon='BF_Left'   ctrllimited='true' ctrlrange='-1 1' gainprm='804' biastype="affine" biasprm='0 0 -91'/>
+
+  <general name='GAS_Right'  gear='1' tendon='GAS_Right'  ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -91'/>
+  <general name='GAS_Left'  gear='1' tendon='GAS_Left'  ctrllimited='true' ctrlrange='-1 1' gainprm='720' biastype="affine" biasprm='0 0 -91'/>
 </actuator>
 
 <keyframe>
+<<<<<<< HEAD:Version-3-0/murdoc_seated_template-Copy.xml
 <key time="0" qpos=" 0 0 0 0 0 0 0 0 0 0 0 0" />
+=======
+  <!-- reference for Ia calculation -->
+    <key time="0" qpos="0 0 0   1 0 0 0   0 0 0   1.3 -0.6 0 -0.52   0 0 0   -1.3 0.6 0 0.52" />
+      <!-- reference for Ia calculation -->
+    <key time="0" qpos="0 0 0 1 0 0 0 0 0 0 0 0 0 0  0   -0.08 0.05 -1.5 0.2 0.1 0.52" />
+    <key time = '0' qpos = '0.05 0.07 -0.05 0.57 0.45 -0.53 0.43 -0.6 0.08 -0.05 1.55 -1.51 0.11 30 0.6 -0.08 0.05 -1.55 1.51 -0.11 -30'/>
+>>>>>>> ca9af544e8616bb3b9a64cdeaab8d220a9f2596a:Version-3-0/murdoc_template_toes_floating.xml
 </keyframe>
 
 </mujoco>

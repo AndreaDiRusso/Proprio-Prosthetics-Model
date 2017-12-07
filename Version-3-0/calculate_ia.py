@@ -13,8 +13,11 @@ parentDir = os.path.abspath(os.path.join(curDir,os.pardir)) # this will return p
 #print(parentDir)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_kinematics.pickle')
-parser.add_argument('--modelFile', default = 'murdoc_gen.xml')
+parser.add_argument('--kinematicsFile', default = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/T_1_filtered_kinematics.pickle')
+parser.add_argument('--modelFile', default = 'murdoc_template_toes_treadmill.xml')
+parser.add_argument('--whichSide', default = 'Left')
+parser.add_argument('--dt', default = '0.01')
+parser.add_argument('--meshScale', default = '1.1e-3')
 parser.add_argument('--showViewer', dest='showViewer', action='store_true')
 parser.set_defaults(showViewer = False)
 
@@ -22,54 +25,62 @@ args = parser.parse_args()
 
 kinematicsFile = args.kinematicsFile
 modelFile = args.modelFile
+meshScale = float(args.meshScale)
 showViewer = args.showViewer
-
-resourcesDir = curDir + '/Resources/Murdoc'
-tendonNames = [
-    'BF_Left',
-    'TA_Left',
-    'IL_Left',
-    'RF_Left',
-    'GMED_Left',
-    'GAS_Left',
-    'VAS_Left',
-    'SOL_Left'
-    ]
-
-with open(curDir + '/' + modelFile, 'r') as f:
-    model = load_model_from_xml(f.read())
+whichSide = args.whichSide
+dt = float(args.dt)
 
 with open(kinematicsFile, 'rb') as f:
     kinematics = pickle.load(f)
 
+resourcesDir = curDir + '/Resources/Murdoc'
+tendonNames = [
+    'BF_' + whichSide,
+    'TA_' + whichSide,
+    'IL_' + whichSide,
+    'RF_' + whichSide,
+    'GMED_' + whichSide,
+    'GAS_' + whichSide,
+    'VAS_' + whichSide,
+    'SOL_' + whichSide
+    ]
+
+resourcesDir = curDir + '/Resources/Murdoc'
+templateFilePath = curDir + '/' + modelFile
+
+fcsvFilePath = resourcesDir + '/Mobile Foot/Fiducials.fcsv'
+
+specification = fcsv_to_spec(fcsvFilePath)
+
+modelXML = populate_model(templateFilePath, specification, resourcesDir = resourcesDir,
+    meshScale = meshScale, showTendons = True)
+
+model = load_model_from_xml(modelXML)
+
+functions.mj_setTotalmass(model, 10)
 simulation = MjSim(model)
 
+gains = [0.5, 160, 380, 7]
 viewer = MjViewer(simulation)
 
 #get resting lengths
 nJoints = simulation.model.njnt
-
-allJoints = [simulation.model.joint_id2name(i) for i in range(nJoints)]
-allJoints.remove('world')
-
-keyPos = pd.Series({jointName: simulation.model.key_qpos[0][i] for i, jointName in enumerate(allJoints)})
-
-pose_model(simulation, keyPos)
-
+simulation = pose_to_key(simulation, 0)
 tendonL0 = pd.Series(index = tendonNames)
 tendonL0 = get_tendon_length(tendonL0, simulation)
 
 tendonL = pd.DataFrame(columns = tendonNames)
 for t, kinSeries in kinematics['site_pos'].iterrows():
 
-    pose_model(simulation, kinematics['qpos'].loc[t, :])
+    jointDict = series_to_dict( kinematics['qpos'].loc[t, :])
+    pose_model(simulation, jointDict)
     tendonL.loc[t, :] = get_tendon_length(tendonL0, simulation)
 
     if showViewer:
         viewer.render()
 
-tendonV = tendonL.diff(axis = 0).fillna(0)
-iARate = Ia_model(1, tendonL, tendonV,  tendonL0)
+tendonV = tendonL.diff(axis = 0).fillna(0) / dt
+iARate = Ia_model_Radu(tendonL, tendonV,  tendonL0, gains)
 
 kinematics.update(
     {

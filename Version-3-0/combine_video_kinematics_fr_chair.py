@@ -1,21 +1,21 @@
 import cv2, scipy.misc, pdb
 import numpy as np
 
-filePath = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/Starbuck Example/'
+filePath = 'W:/ENG_Neuromotion_Shared/group/Proprioprosthetics/Data/201709261100-Proprio/'
 
-animalVideoName = 'side_view_2sec.avi'
+animalVideoName = 'T_1_orig.avi'
 animalVideoPath = filePath + animalVideoName
 animalVideoPathOut = filePath + 'out_' + animalVideoName
 
-mujocoVideoName = 'T_1_interp_filtered_video.avi'
+mujocoVideoName = 'T_1_filtered_video.avi'
 mujocoVideoPath = filePath + mujocoVideoName
 mujocoVideoPathOut = filePath + 'out_mujoco_video.avi'
 
-frVideoName = 'T_1_interp_filtered_fr_animation.mp4'
+frVideoName = 'T_1_filtered_fr_animation.mp4'
 frVideoPath = filePath + frVideoName
 frVideoPathOut = filePath + 'out_fr_animation.avi'
 
-xyzVideoName = 'T_1_interp_filtered_kinematics_animation.mp4'
+xyzVideoName = 'T_1_filtered_kinematics_animation.mp4'
 xyzVideoPath = filePath + xyzVideoName
 xyzVideoPathOut = filePath + 'out_xyz_animation.avi'
 
@@ -46,16 +46,16 @@ xw = int(xyzVideo.get(cv2.CAP_PROP_FRAME_WIDTH))
 print('xyz footage. Width = %d Heigth = %d' % (xw, xh))
 
 #Cropping
-x1a = 0 # top left coordinates
+x1a = 400 # top left coordinates
 y1a = 0
-x2a = aw # botom right coordinates
+x2a = aw - 400 # botom right coordinates
 y2a = ah
 aw_prime = x2a - x1a
 ah_prime = y2a - y1a
 
-x1m = 0 # top left coordinates
+x1m = 250 # top left coordinates
 y1m = 0
-x2m = mw # botom right coordinates
+x2m = mw - 250 # botom right coordinates
 y2m = mh
 mw_prime = x2m - x1m
 mh_prime = y2m - y1m
@@ -63,7 +63,7 @@ mh_prime = y2m - y1m
 w = xw + 1800 + fw
 h = fh
 
-fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+fourcc = cv2.VideoWriter_fourcc(*'MPEG')
 fps=animalVideo.get(cv2.CAP_PROP_FPS)/4
 destinationPath = filePath + 'merged_video.avi'
 
