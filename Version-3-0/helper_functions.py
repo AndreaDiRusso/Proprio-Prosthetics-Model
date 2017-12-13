@@ -25,7 +25,6 @@ try:
 except:
     pass
 
-from constants import *
 
 def get_kinematics(kinematicsFile, selectHeaders = None, selectTime = None,
     flip = None, reIndex = None, lowCutoff = None):
@@ -208,20 +207,17 @@ def populate_model(templateFilePath, fiducialLocations, extraLocations = {},
             jointAxis = row['label'].split(':')[-1][0]
             jointName = row['label'].split(':')[0]
             originName = jointName + ':o'
-<<<<<<< HEAD
-            row['x'] = - row['x'] + specification[specification['label'] == originName]['x'].values[0]
-            row['y'] = - row['y'] + specification[specification['label'] == originName]['y'].values[0]
-            row['z'] = - row['z'] + specification[specification['label'] == originName]['z'].values[0]
-            
-        if 'Left:x' in row['label']:
-            row['x'] = - row['x']
-            row['y'] = - row['y']
-            row['z'] = - row['z']
-=======
+
             row['x'] = - row['x'] + fiducialLocations[fiducialLocations['label'] == originName]['x'].values[0]
             row['y'] = - row['y'] + fiducialLocations[fiducialLocations['label'] == originName]['y'].values[0]
             row['z'] = - row['z'] + fiducialLocations[fiducialLocations['label'] == originName]['z'].values[0]
->>>>>>> ca9af544e8616bb3b9a64cdeaab8d220a9f2596a
+            
+            if 'Left:x' in row['label']:
+                row['x'] = - row['x']
+                row['y'] = - row['y']
+                row['z'] = - row['z']
+                
+    
 
         placeHolder = '$' + row['label'] + ':' + 'x$'
         #pdb.set_trace()

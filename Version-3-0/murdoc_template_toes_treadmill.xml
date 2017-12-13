@@ -111,11 +111,11 @@
     <camera name = 'Sagittal_Right_Treadmill' mode = 'fixed' pos = '-4 0 .5' euler = '0 -80 -90' fovy = '10'/>
     <camera name = 'Sagittal_Left_Corridor' mode = 'fixed' pos = '-4 -.1 -.2' euler = '-90 -85 180' fovy = '15'/>
     <camera name = 'Sagittal_Left_Treadmill' mode = 'fixed' pos = '4 0 .5' euler = '0 80 90' fovy = '10'/>-->
-    <camera name = 'Sagittal_Right' mode = 'fixed' pos = '0 8 0' euler = '90 180 0' fovy = '10'/>
-    <camera name = 'Sagittal_Left' mode = 'fixed' pos = '0 -8 0' euler = '90 0 0' fovy = '10'/>
-    <camera name = 'Frontal' mode = 'fixed' pos = '-8 0 0' euler = '90 -90 0' fovy = '10'/>
-    <camera name = 'Back' mode = 'fixed' pos = '8 0 0' euler = '90 90 0' fovy = '10'/>
-    <camera name = 'Up' mode = 'fixed' pos = '0 0 8' euler = '0 0 90' fovy = '10'/>
+    <camera name = 'Sagittal_Right' mode = 'track' pos = '0 8 0' euler = '90 180 0' fovy = '10'/>
+    <camera name = 'Sagittal_Left' mode = 'track' pos = '0 -8 0' euler = '90 0 0' fovy = '10'/>
+    <camera name = 'Frontal' mode = 'track' pos = '-8 0 0' euler = '90 -90 0' fovy = '10'/>
+    <camera name = 'Back' mode = 'track' pos = '8 0 0' euler = '90 90 0' fovy = '10'/>
+    <camera name = 'Up' mode = 'track' pos = '0 0 8' euler = '0 0 90' fovy = '10'/>
 	
 	<geom name = "T11" pos='-0.4 0 0' type = 'sphere' size = '5e-3' rgba='0.7 0.3 0.9 1' density = '0.0002'/>
 	
