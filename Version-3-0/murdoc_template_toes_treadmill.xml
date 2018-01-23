@@ -1,7 +1,8 @@
 <mujoco model="Murdoc">
 
     <compiler inertiafromgeom='true' angle='degree'/>
-    <option gravity='0 0 -9.78'/>
+    <option gravity='0 0 -9.81' timestep='0.001'/>
+	
     <asset>
 		<!-- Sets sky rendering
 		-->
@@ -37,7 +38,12 @@
 	<default>
     <site size='0.5e-3 0.5e-3 0.5e-3' rgba='1 0 0 0'/>
     <!--<geom solref = '0.02 .04' density = '2e3'/>-->
-    <default class='Hip_Left:x'>
+	
+	<default class = 'Tread:x'>
+		<joint type='hinge' axis='1 0 0' pos='0 0 0' range='-1000 1000' stiffness='0' springref='0'/>
+	</default>
+	
+	    <default class='Hip_Left:x'>
       <joint type='hinge' axis='0 1 0' ref='0' range='-120 -40' limited='true' armature='0.0001' stiffness='0' springref='0'/>
 		</default>
 		<default class='Hip_Left:y'>
@@ -103,23 +109,27 @@
     <body name='Lower_Body' pos='0 0 0' euler='0 0 0'>-->
   
 	<body name='Treadmill'>
-	<geom name = 'Treadmill' type = 'box' size = '10. 0.5 5e-1' pos = '-9. 0 -0.9' rgba="0.3 0.3 0.3 0.3"/> 
-	<site name="Treadmill" pos='-9. 0 -0.5' rgba='0 1 1 0' size='5e-3'/>
+	<geom name = 'Treadmill' type = 'box' size = '10. 0.5 1' pos = '-9.5 0 -1.4' rgba="0.3 0.3 0.3 0.3" /> 
+	<site name="Treadmill" pos='-9.5 0 -0.15' rgba='0 1 1 0' size='5e-3'/>
+	<joint name='Tread' class = 'Tread:x' type = 'slide' ref = '0' pos='0 0 0'/>
 	</body>
 	
     <!--<camera name = 'Sagittal_Right_Corridor' mode = 'fixed' pos = '-6 -.1 -.2' euler = '-90 -85 180' fovy = '15'/>
     <camera name = 'Sagittal_Right_Treadmill' mode = 'fixed' pos = '-4 0 .5' euler = '0 -80 -90' fovy = '10'/>
     <camera name = 'Sagittal_Left_Corridor' mode = 'fixed' pos = '-4 -.1 -.2' euler = '-90 -85 180' fovy = '15'/>
     <camera name = 'Sagittal_Left_Treadmill' mode = 'fixed' pos = '4 0 .5' euler = '0 80 90' fovy = '10'/>-->
-    <camera name = 'Sagittal_Right' mode = 'track' pos = '0 8 0' euler = '90 180 0' fovy = '10'/>
-    <camera name = 'Sagittal_Left' mode = 'track' pos = '0 -8 0' euler = '90 0 0' fovy = '10'/>
-    <camera name = 'Frontal' mode = 'track' pos = '-8 0 0' euler = '90 -90 0' fovy = '10'/>
-    <camera name = 'Back' mode = 'track' pos = '8 0 0' euler = '90 90 0' fovy = '10'/>
-    <camera name = 'Up' mode = 'track' pos = '0 0 8' euler = '0 0 90' fovy = '10'/>
+    <camera name = 'Sagittal_Right' mode = 'fixed' pos = '0 8 0' euler = '90 180 0' fovy = '10'/>
+    <camera name = 'Sagittal_Left' mode = 'fixed' pos = '0 -8 0' euler = '90 0 0' fovy = '10'/>
+    <camera name = 'Frontal' mode = 'fixed' pos = '-8 0 0' euler = '90 -90 0' fovy = '10'/>
+    <camera name = 'Back' mode = 'fixed' pos = '8 0 0' euler = '90 90 0' fovy = '10'/>
+    <camera name = 'Up' mode = 'fixed' pos = '0 0 8' euler = '0 0 90' fovy = '10'/>
 	
 	<geom name = "T11" pos='-0.4 0 0' type = 'sphere' size = '5e-3' rgba='0.7 0.3 0.9 1' density = '0.0002'/>
 	
+	<body name = 'T21' pos='0.01 0 0' euler='0 0 0'>
 	<geom name = "T21" pos='0.01 0 0' type = 'sphere' size = '5e-3' rgba='0.7 0.3 0.9 1' density = '0.0002'/>
+	<site name = "T21_Tip" pos='0.01 0 0' rgba='0.7 0.3 0.9 1' size='5e-3'/>
+	</body>
 
     <body name = 'Monkey' pos='0 0 0' euler='0 0 0'>
     <joint name='World' type = 'free'/>
@@ -394,7 +404,26 @@
     <exclude body1='Toes_Right'     body2='Treadmill'/>
       <exclude body1='Toes_Left'     body2='Treadmill'/>
         <exclude body1='Foot_Right'     body2='Treadmill'/>
-          <exclude body1='Foot_Left'     body2='Treadmill'/> 
+          <exclude body1='Foot_Left'     body2='Treadmill'/>
+		  <exclude body1='Foot_Left'     body2='Toes_Left'/>
+		  <exclude body1='Foot_Right'     body2='Toes_Right'/>
+		  <exclude body1='Foot_Left'     body2='Shin_Left'/>
+		  <exclude body1='Foot_Right'     body2='Shin_Right'/>
+		  <exclude body1='Shin_Left'     body2='Leg_Left'/>
+		  <exclude body1='Shin_Right'     body2='Leg_Right'/>
+		  <exclude body1='Pelvis'     body2='Leg_Right'/>
+		  <exclude body1='Pelvis'     body2='Leg_Left'/>
+		  <exclude body1='T21'     body2='Pelvis'/>
+		  <exclude body1='Foot_Left'     body2='Toes_Right'/>
+		  <exclude body1='Foot_Right'     body2='Toes_Left'/>
+		  <exclude body1='Foot_Left'     body2='Shin_Right'/>
+		  <exclude body1='Foot_Right'     body2='Shin_Left'/>
+		  <exclude body1='Shin_Left'     body2='Leg_Right'/>
+		  <exclude body1='Shin_Right'     body2='Leg_Left'/>
+		  <exclude body1='Foot_Left'     body2='Foot_Right'/>
+		  <exclude body1='Toes_Right'     body2='Toes_Left'/>
+		  <exclude body1='Shin_Left'     body2='Shin_Right'/>
+		  <exclude body1='Leg_Right'     body2='Leg_Left'/>
           
    <!-- <exclude body1='Treadmill'     body2='Enclosure'/>
         <exclude body1='Pelvis'     body2='Enclosure'/>
@@ -546,40 +575,42 @@
 
 
 <actuator>
+	
+  <general name='Tread' joint = 'Tread' gear='1' ctrllimited='true' ctrlrange='-1 1' gainprm='10000'  biastype="affine" biasprm='0 0 0' />  
+	
+  <general name='IL_Left'    gear='1' tendon='IL_Left'    ctrllimited='true' ctrlrange='-1 0' gainprm='642'  biastype="affine" biasprm='0 0 -91' dyntype='filter'/>
+  <general name='GMED_Left'  gear='1' tendon='GMED_Left'  ctrllimited='true' ctrlrange='-1 0' gainprm='738'  biastype="affine" biasprm='0 0 -91' dyntype='filter'/>
+  <general name='GMAX_Left'  gear='1' tendon='GMAX_Left'  ctrllimited='true' ctrlrange='-1 0' gainprm='738'  biastype="affine" biasprm='0 0 -91' dyntype='filter'/>
+  <general name='BF_Left'    gear='1' tendon='BF_Left'    ctrllimited='true' ctrlrange='-1 0' gainprm='804'  biastype="affine" biasprm='0 0 -91' dyntype='filter'/>
+  <general name='RF_Left'    gear='1' tendon='RF_Left'    ctrllimited='true' ctrlrange='-1 0' gainprm='720'  biastype="affine" biasprm='0 0 -100' dyntype='filter'/>
+  <general name='VAS_Left'   gear='1' tendon='VAS_Left'   ctrllimited='true' ctrlrange='-1 0' gainprm='2514' biastype="affine" biasprm='0 0 -100' dyntype='filter'/> 
+  <general name='GAS_Left'   gear='1' tendon='GAS_Left'   ctrllimited='true' ctrlrange='-1 0' gainprm='720'  biastype="affine" biasprm='0 0 -91' dyntype='filter'/>
+  <general name='SOL_Left'   gear='1' tendon='SOL_Left'   ctrllimited='true' ctrlrange='-1 0' gainprm='822'  biastype="affine" biasprm='0 0 -66' dyntype='filter'/>
+  <general name='TA_Left'    gear='1' tendon='TA_Left'    ctrllimited='true' ctrlrange='-1 0' gainprm='390'  biastype="affine" biasprm='0 0 -66' dyntype='filter'/>
+  <general name='EDL_Left'   gear='1' tendon='EDL_Left'   ctrllimited='true' ctrlrange='-1 0' gainprm='390'  biastype="affine" biasprm='0 0 -66' dyntype='filter'/>
+  <general name='FHL_Left'   gear='1' tendon='FHL_Left'   ctrllimited='true' ctrlrange='-1 0' gainprm='390'  biastype="affine" biasprm='0 0 -66' dyntype='filter'/>
   
-  <general name='IL_Left'    gear='1' tendon='IL_Left'    ctrllimited='true' ctrlrange='-1 0' gainprm='642'  biastype="affine" biasprm='0 0 -91'/>
-  <general name='GMED_Left'  gear='1' tendon='GMED_Left'  ctrllimited='true' ctrlrange='-1 0' gainprm='738'  biastype="affine" biasprm='0 0 -91'/>
-  <general name='GMAX_Left'  gear='1' tendon='GMAX_Left'  ctrllimited='true' ctrlrange='-1 0' gainprm='738'  biastype="affine" biasprm='0 0 -91'/>
-  <general name='BF_Left'    gear='1' tendon='BF_Left'    ctrllimited='true' ctrlrange='-1 0' gainprm='804'  biastype="affine" biasprm='0 0 -91'/>
-  <general name='RF_Left'    gear='1' tendon='RF_Left'    ctrllimited='true' ctrlrange='-1 0' gainprm='720'  biastype="affine" biasprm='0 0 -100'/>
-  <general name='VAS_Left'   gear='1' tendon='VAS_Left'   ctrllimited='true' ctrlrange='-1 0' gainprm='2514' biastype="affine" biasprm='0 0 -100'/> 
-  <general name='GAS_Left'   gear='1' tendon='GAS_Left'   ctrllimited='true' ctrlrange='-1 0' gainprm='720'  biastype="affine" biasprm='0 0 -91'/>
-  <general name='SOL_Left'   gear='1' tendon='SOL_Left'   ctrllimited='true' ctrlrange='-1 0' gainprm='822'  biastype="affine" biasprm='0 0 -66'/>
-  <general name='TA_Left'    gear='1' tendon='TA_Left'    ctrllimited='true' ctrlrange='-1 0' gainprm='390'  biastype="affine" biasprm='0 0 -66'/>
-  <general name='EDL_Left'   gear='1' tendon='EDL_Left'   ctrllimited='true' ctrlrange='-1 0' gainprm='390'  biastype="affine" biasprm='0 0 -66'/>
-  <general name='FHL_Left'   gear='1' tendon='FHL_Left'   ctrllimited='true' ctrlrange='-1 0' gainprm='390'  biastype="affine" biasprm='0 0 -66'/>
-  
-  <general name='IL_Right'    gear='1' tendon='IL_Right'    ctrllimited='true' ctrlrange='-1 0' gainprm='642'  biastype="affine" biasprm='0 0 -91'/>
-  <general name='GMED_Right'  gear='1' tendon='GMED_Right'  ctrllimited='true' ctrlrange='-1 0' gainprm='738'  biastype="affine" biasprm='0 0 -91'/>
-  <general name='GMAX_Right'  gear='1' tendon='GMAX_Right'  ctrllimited='true' ctrlrange='-1 0' gainprm='738'  biastype="affine" biasprm='0 0 -91'/>
-  <general name='BF_Right'    gear='1' tendon='BF_Right'    ctrllimited='true' ctrlrange='-1 0' gainprm='804'  biastype="affine" biasprm='0 0 -91'/>
-  <general name='RF_Right'    gear='1' tendon='RF_Right'    ctrllimited='true' ctrlrange='-1 0' gainprm='720'  biastype="affine" biasprm='0 0 -100'/>
-  <general name='VAS_Right'   gear='1' tendon='VAS_Right'   ctrllimited='true' ctrlrange='-1 0' gainprm='2514' biastype="affine" biasprm='0 0 -100'/> 
-  <general name='GAS_Right'   gear='1' tendon='GAS_Right'   ctrllimited='true' ctrlrange='-1 0' gainprm='720'  biastype="affine" biasprm='0 0 -91'/>
-  <general name='SOL_Right'   gear='1' tendon='SOL_Right'   ctrllimited='true' ctrlrange='-1 0' gainprm='822'  biastype="affine" biasprm='0 0 -66'/>
-  <general name='TA_Right'    gear='1' tendon='TA_Right'    ctrllimited='true' ctrlrange='-1 0' gainprm='390'  biastype="affine" biasprm='0 0 -66'/>
-  <general name='EDL_Right'   gear='1' tendon='EDL_Right'   ctrllimited='true' ctrlrange='-1 0' gainprm='390'  biastype="affine" biasprm='0 0 -66'/>
-  <general name='FHL_Right'   gear='1' tendon='FHL_Right'   ctrllimited='true' ctrlrange='-1 0' gainprm='390'  biastype="affine" biasprm='0 0 -66'/>
+  <general name='IL_Right'    gear='1' tendon='IL_Right'    ctrllimited='true' ctrlrange='-1 0' gainprm='642'  biastype="affine" biasprm='0 0 -91' dyntype='filter'/>
+  <general name='GMED_Right'  gear='1' tendon='GMED_Right'  ctrllimited='true' ctrlrange='-1 0' gainprm='738'  biastype="affine" biasprm='0 0 -91' dyntype='filter'/>
+  <general name='GMAX_Right'  gear='1' tendon='GMAX_Right'  ctrllimited='true' ctrlrange='-1 0' gainprm='738'  biastype="affine" biasprm='0 0 -91' dyntype='filter'/>
+  <general name='BF_Right'    gear='1' tendon='BF_Right'    ctrllimited='true' ctrlrange='-1 0' gainprm='804'  biastype="affine" biasprm='0 0 -91' dyntype='filter'/>
+  <general name='RF_Right'    gear='1' tendon='RF_Right'    ctrllimited='true' ctrlrange='-1 0' gainprm='720'  biastype="affine" biasprm='0 0 -100' dyntype='filter'/>
+  <general name='VAS_Right'   gear='1' tendon='VAS_Right'   ctrllimited='true' ctrlrange='-1 0' gainprm='2514' biastype="affine" biasprm='0 0 -100' dyntype='filter'/> 
+  <general name='GAS_Right'   gear='1' tendon='GAS_Right'   ctrllimited='true' ctrlrange='-1 0' gainprm='720'  biastype="affine" biasprm='0 0 -91' dyntype='filter'/>
+  <general name='SOL_Right'   gear='1' tendon='SOL_Right'   ctrllimited='true' ctrlrange='-1 0' gainprm='822'  biastype="affine" biasprm='0 0 -66' dyntype='filter'/>
+  <general name='TA_Right'    gear='1' tendon='TA_Right'    ctrllimited='true' ctrlrange='-1 0' gainprm='390'  biastype="affine" biasprm='0 0 -66' dyntype='filter'/>
+  <general name='EDL_Right'   gear='1' tendon='EDL_Right'   ctrllimited='true' ctrlrange='-1 0' gainprm='390'  biastype="affine" biasprm='0 0 -66' dyntype='filter'/>
+  <general name='FHL_Right'   gear='1' tendon='FHL_Right'   ctrllimited='true' ctrlrange='-1 0' gainprm='390'  biastype="affine" biasprm='0 0 -66' dyntype='filter'/>
   
 </actuator>
 
 
 <keyframe>
   <!-- reference for Ia calculation -->
-    <key time="0" qpos="0 0 0   1 0 0 0   0 0 0   1.3 -0.6 0 -0.52   0 0 0   -1.3 0.6 0 0.52" />
+    <key time="0" qpos="0   0 0 0   1 0 0 0   0 0 0   1.3 -0.6 0 -0.52   0 0 0   -1.3 0.6 0 0.52" />
       <!-- reference for Ia calculation -->
-    <key time="0" qpos="0 0 0 1 0 0 0 0 0 0 0 0 0 0  0   -0.08 0.05 -1.5 0.2 0.1 0.52" />
-    <key time = '0' qpos = '0.05 0.07 -0.05 0.57 0.45 -0.53 0.43 -0.6 0.08 -0.05 1.55 -1.51 0.11 30 0.6 -0.08 0.05 -1.55 1.51 -0.11 -30'/>
+    <key time="0" qpos="0   0 0 0 1 0 0 0 0 0 0 0 0 0 0  0   -0.08 0.05 -1.5 0.2 0.1 0.52" />
+    <key time = '0' qpos = '0   0.05 0.07 -0.05 0.57 0.45 -0.53 0.43 -0.6 0.08 -0.05 1.55 -1.51 0.11 30 0.6 -0.08 0.05 -1.55 1.51 -0.11 -30'/>
 </keyframe>
 
 </mujoco>
