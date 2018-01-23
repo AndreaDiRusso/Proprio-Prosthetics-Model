@@ -154,16 +154,7 @@ joints = {
                 }
     
 sim = pose_model(sim, joints)
-    
-while (t<=0.40):
-    
-    #for act_id in range(n_act):
-    #    F_m[act_id] = Force_feed_gain(sim, act_id)
-    
-    sim.step()
-    
-    t=t+dt
-    
+
 S_stance = -0.01*np.ones(n_act)
 S_stance[[6, 17]] = -0.05*np.ones(2)
 S_stance[[3, 4, 5, 14, 15, 16]] = -0.09*np.ones(6)
@@ -211,10 +202,16 @@ Fr = [0]*Time
 p = np.zeros((Time, 1))
 Stance_R = np.zeros((Time, 1))
 Stance_L = np.zeros((Time, 1))
+    
+while (t<=0.40):
+    
+    sim.step()
+    
+    t=t+dt
 
 sim.data.ctrl[0] = 1.
 
-#viewer = MjViewer(sim)    
+viewer = MjViewer(sim)    
 
 while (t<=10):
         
@@ -262,68 +259,68 @@ while (t<=10):
     
     F_right[int(t/dt-1)] = F_r
     
-    Tau_des_swing_R =  Teta_R[int(t*dt+d_ts)] + Teta_R_dot[int(t*dt+d_ts)]
-    Tau_des_swing_L =  Teta_L[int(t*dt+d_ts)] + Teta_L_dot[int(t*dt+d_ts)]
+    Tau_des_swing_R =  Teta_R[int(t/dt+d_ts)] + Teta_R_dot[int(t/dt+d_ts)]
+    Tau_des_swing_L =  Teta_L[int(t/dt+d_ts)] + Teta_L_dot[int(t/dt+d_ts)]
     
-    Tau_des_stance_R = F_right[int(t*dt+d_ts)]*( Teta_R[int(t*dt+d_ts)] + Teta_R_dot[int(t*dt+d_ts)] - Tau_des_swing_L)
-    Tau_des_stance_L = F_left[int(t*dt+d_ts)]*( Teta_L[int(t*dt+d_ts)] + Teta_L_dot[int(t*dt+d_ts)] - Tau_des_swing_R) 
+    Tau_des_stance_R = F_right[int(t/dt+d_ts)]*( Teta_R[int(t/dt+d_ts)] + Teta_R_dot[int(t/dt+d_ts)] - Tau_des_swing_L)
+    Tau_des_stance_L = F_left[int(t/dt+d_ts)]*( Teta_L[int(t/dt+d_ts)] + Teta_L_dot[int(t/dt+d_ts)] - Tau_des_swing_R) 
             
     Dsup = stance_right*stance_left
      
     if stance_right==1:
         
-        sim.data.ctrl[12] = S_stance[12] #- Tau_des_stance_R/(F_max[12]*sim.data.ten_moment[11, 8])
-        sim.data.ctrl[13] = S_stance[13] #+ Tau_des_stance_R/(F_max[13]*sim.data.ten_moment[12, 8])
-        sim.data.ctrl[14] = S_stance[14] #+ k_bw*F_right[int(t*dt+d_ts)] - Delta_S*Dsup #positive!!
-        sim.data.ctrl[15] = S_stance[15] #+ k_bw*F_right[int(t*dt+d_ts)]
-        sim.data.ctrl[16] = S_stance[16] #+ k_bw*F_right[int(t*dt+d_ts)] + Delta_S*Dsup
-        sim.data.ctrl[17] = S_stance[17] #+ G_m[17]*F_m[int(t*dt+d_tm), 17] - k_bw*F_left[d_ts]*Dsup
-        sim.data.ctrl[18] = S_stance[18] #+ G_m[18]*F_m[int(t*dt+d_tl), 18]
-        sim.data.ctrl[19] = S_stance[19] #+ G_m[19]*F_m[int(t*dt+d_tl), 19] 
-        sim.data.ctrl[20] = S_stance[20] #+ G_m[20]*(L_ce[int(t*dt+d_tl), 20] - Loff_TA[1]) - G_m[23]*F_m[int(t*dt+d_tl), 20]
-        sim.data.ctrl[21] = S_stance[21] #+ G_m[21]*(L_ce[int(t*dt+d_tl), 21] - Loff_EDL[1]) - G_m[25]*F_m[int(t*dt+d_tl), 23]        
-        sim.data.ctrl[22] = S_stance[22] #+ G_m[22]*F_m[int(t*dt+d_tl), 22]
+        sim.data.ctrl[12] = S_stance[12] - Tau_des_stance_R/(F_max[12]*sim.data.ten_moment[11, 8])
+        sim.data.ctrl[13] = S_stance[13] + Tau_des_stance_R/(F_max[13]*sim.data.ten_moment[12, 8])
+        sim.data.ctrl[14] = S_stance[14] + k_bw*F_right[int(t/dt+d_ts)] - Delta_S*Dsup #positive!!
+        sim.data.ctrl[15] = S_stance[15] + k_bw*F_right[int(t/dt+d_ts)]
+        sim.data.ctrl[16] = S_stance[16] + k_bw*F_right[int(t/dt+d_ts)] + Delta_S*Dsup
+        sim.data.ctrl[17] = S_stance[17] + G_m[17]*F_m[int(t/dt+d_tm), 17] - k_bw*F_left[d_ts]*Dsup
+        sim.data.ctrl[18] = S_stance[18] + G_m[18]*F_m[int(t/dt+d_tl), 18]
+        sim.data.ctrl[19] = S_stance[19] + G_m[19]*F_m[int(t/dt+d_tl), 19] 
+        sim.data.ctrl[20] = S_stance[20] + G_m[20]*(L_ce[int(t/dt+d_tl), 20] - Loff_TA[1]) - G_m[23]*F_m[int(t/dt+d_tl), 19]
+        sim.data.ctrl[21] = S_stance[21] + G_m[21]*(L_ce[int(t/dt+d_tl), 21] - Loff_EDL[1]) - G_m[25]*F_m[int(t/dt+d_tl), 22]        
+        sim.data.ctrl[22] = S_stance[22] + G_m[22]*F_m[int(t/dt+d_tl), 22]
         
     elif stance_right==0:
         
-        sim.data.ctrl[12] = S_swing[12] #- Tau_des_swing_R/(F_max[12]*sim.data.ten_moment[11, 8])
-        sim.data.ctrl[13] = S_swing[13] #+ Tau_des_swing_R/(F_max[13]*sim.data.ten_moment[12, 8])
-        sim.data.ctrl[14] = S_swing[14] #+ G_m[14]*F_m[int(t*dt+d_ts), 14]
-        sim.data.ctrl[15] = S_swing[15] #+ G_m[15]*F_m[int(t*dt+d_ts), 15] 
-        sim.data.ctrl[16] = S_swing[16] #+ G_m[16]*(L_ce[int(t*dt+d_ts), 16] - Loff_RF[1]) - G_m[24]*(L_ce[int(t*dt+d_ts), 15] - Loff_BF[1])
+        sim.data.ctrl[12] = S_swing[12] - Tau_des_swing_R/(F_max[12]*sim.data.ten_moment[11, 8])
+        sim.data.ctrl[13] = S_swing[13] + Tau_des_swing_R/(F_max[13]*sim.data.ten_moment[12, 8])
+        sim.data.ctrl[14] = S_swing[14] + G_m[14]*F_m[int(t/dt+d_ts), 14]
+        sim.data.ctrl[15] = S_swing[15] + G_m[15]*F_m[int(t/dt+d_ts), 15] 
+        sim.data.ctrl[16] = S_swing[16] + G_m[16]*(L_ce[int(t/dt+d_ts), 16] - Loff_RF[1]) - G_m[24]*(L_ce[int(t/dt+d_ts), 15] - Loff_BF[1])
         sim.data.ctrl[17] = S_swing[17]
         sim.data.ctrl[18] = S_swing[18]        
         sim.data.ctrl[19] = S_swing[19]
-        sim.data.ctrl[20] = S_swing[20] #+ G_m[20]*(L_ce[int(t*dt+d_tl), 20] - Loff_TA[1])
-        sim.data.ctrl[21] = S_swing[21] #+ G_m[21]*(L_ce[int(t*dt+d_tl), 21] - Loff_EDL[1])
+        sim.data.ctrl[20] = S_swing[20] + G_m[20]*(L_ce[int(t/dt+d_tl), 20] - Loff_TA[1])
+        sim.data.ctrl[21] = S_swing[21] + G_m[21]*(L_ce[int(t/dt+d_tl), 21] - Loff_EDL[1])
         sim.data.ctrl[22] = S_swing[22]  
         
     if stance_left==1:
-                  
-        sim.data.ctrl[1] = S_stance[1] #- Tau_des_stance_L/(F_max[1]*sim.data.ten_moment[0, 15])
-        sim.data.ctrl[2] = S_stance[2] #+ Tau_des_stance_L/(F_max[2]*sim.data.ten_moment[1, 15])
-        sim.data.ctrl[3] = S_stance[3] #+ k_bw*F_left[int(t*dt+d_ts)] - Delta_S*Dsup
-        sim.data.ctrl[4] = S_stance[4] #+ k_bw*F_left[int(t*dt+d_ts)]
-        sim.data.ctrl[5] = S_stance[5] #+ k_bw*F_left[int(t*dt+d_ts)] + Delta_S*Dsup
-        sim.data.ctrl[6] = S_stance[6] #+ G_m[6]*F_m[int(t*dt+d_tm), 6] - k_bw*F_right[int(t*dt+d_ts)]*Dsup
-        sim.data.ctrl[7] = S_stance[7] #+ G_m[7]*F_m[int(t*dt+d_tl), 7] 
-        sim.data.ctrl[8] = S_stance[8] #+ G_m[8]*F_m[int(t*dt+d_tl), 8]
-        sim.data.ctrl[9] = S_stance[9] #+ G_m[9]*(L_ce[int(t*dt+d_tl), 9] - Loff_TA[0]) - G_m[23]*F_m[int(t*dt+d_tl), 8]
-        sim.data.ctrl[10] = S_stance[10] #+ G_m[10]*(L_ce[int(t*dt+d_tl), 10] - Loff_TA[0]) - G_m[25]*F_m[int(t*dt+d_tl), 11]
-        sim.data.ctrl[11] = S_stance[11] #+ G_m[11]*F_m[int(t*dt+d_tl), 11]
+        
+        sim.data.ctrl[1] = S_stance[1] - Tau_des_stance_L/(F_max[1]*sim.data.ten_moment[0, 15])
+        sim.data.ctrl[2] = S_stance[2] + Tau_des_stance_L/(F_max[2]*sim.data.ten_moment[1, 15])
+        sim.data.ctrl[3] = S_stance[3] + k_bw*F_left[int(t/dt+d_ts)] - Delta_S*Dsup
+        sim.data.ctrl[4] = S_stance[4] + k_bw*F_left[int(t/dt+d_ts)]
+        sim.data.ctrl[5] = S_stance[5] + k_bw*F_left[int(t/dt+d_ts)] + Delta_S*Dsup
+        sim.data.ctrl[6] = S_stance[6] + G_m[6]*F_m[int(t/dt+d_tm), 6] - k_bw*F_right[int(t/dt+d_ts)]*Dsup
+        sim.data.ctrl[7] = S_stance[7] + G_m[7]*F_m[int(t/dt+d_tl), 7] 
+        sim.data.ctrl[8] = S_stance[8] + G_m[8]*F_m[int(t/dt+d_tl), 8]
+        sim.data.ctrl[9] = S_stance[9] + G_m[9]*(L_ce[int(t/dt+d_tl), 9] - Loff_TA[0]) - G_m[23]*F_m[int(t/dt+d_tl), 8] #!!!
+        sim.data.ctrl[10] = S_stance[10] + G_m[10]*(L_ce[int(t/dt+d_tl), 10] - Loff_TA[0]) - G_m[25]*F_m[int(t/dt+d_tl), 11] #!!!
+        sim.data.ctrl[11] = S_stance[11] + G_m[11]*F_m[int(t/dt+d_tl), 11]
         
     elif stance_left==0:
                   
-        sim.data.ctrl[1] = S_swing[1] #- Tau_des_swing_L/(F_max[1]*sim.data.ten_moment[0, 15])
-        sim.data.ctrl[2] = S_swing[2] #+ Tau_des_swing_L/(F_max[2]*sim.data.ten_moment[1, 15])
-        sim.data.ctrl[3] = S_swing[3] #+ G_m[3]*F_m[int(t*dt+d_ts), 3]
-        sim.data.ctrl[4] = S_swing[4] #+ G_m[4]*F_m[int(t*dt+d_ts), 4]
-        sim.data.ctrl[5] = S_swing[5] #+ G_m[5]*(L_ce[int(t*dt+d_ts), 5] - Loff_RF[0]) - G_m[24]*(L_ce[int(t*dt+d_ts), 4] - Loff_BF[0])
-        sim.data.ctrl[6] = S_swing[6]        
+        sim.data.ctrl[1] = S_swing[1] - Tau_des_swing_L/(F_max[1]*sim.data.ten_moment[0, 15])
+        sim.data.ctrl[2] = S_swing[2] + Tau_des_swing_L/(F_max[2]*sim.data.ten_moment[1, 15])
+        sim.data.ctrl[3] = S_swing[3] + G_m[3]*F_m[int(t/dt+d_ts), 3]
+        sim.data.ctrl[4] = S_swing[4] + G_m[4]*F_m[int(t/dt+d_ts), 4]
+        sim.data.ctrl[5] = S_swing[5] + G_m[5]*(L_ce[int(t/dt+d_ts), 5] - Loff_RF[0]) - G_m[24]*(L_ce[int(t/dt+d_ts), 4] - Loff_BF[0])
+        sim.data.ctrl[6] = S_swing[6]      
         sim.data.ctrl[7] = S_swing[7]
         sim.data.ctrl[8] = S_swing[8]
-        sim.data.ctrl[9] = S_swing[9] #+ G_m[9]*(L_ce[int(t*dt+d_tl), 9] - Loff_TA[0])
-        sim.data.ctrl[10] = S_swing[10] #+ G_m[10]*(L_ce[int(t*dt+d_tl), 10] - Loff_EDL[0])       
+        sim.data.ctrl[9] = S_swing[9] + G_m[9]*(L_ce[int(t/dt+d_tl), 9] - Loff_TA[0]) 
+        sim.data.ctrl[10] = S_swing[10] + G_m[10]*(L_ce[int(t/dt+d_tl), 10] - Loff_EDL[0])       
         sim.data.ctrl[11] = S_swing[11]
         
     #viewer.cam.fixedcamid += 1
@@ -338,12 +335,10 @@ while (t<=10):
            
     Stance_R[int(t/dt-1)] = stance_right
     Stance_L[int(t/dt-1)] = stance_left
-           
-    p[int(t/dt-1)] = sim.data.ctrl[7]
     
     P[int(t/dt-1), :] = sim.data.ctrl
     
-    #viewer.render()
+    viewer.render()
     sim.step()
     
     t=t+dt
@@ -366,12 +361,12 @@ for i in range(len(P[:, 0])):
             B[i, j] = 0
             
 
-'''
+
 for i in range(1, len(P[0, :])):
     plt.figure(i)
     plt.plot(P[:, i]) 
     plt.show()
-'''
+
 tr = np.zeros((Time, 1))
 
 for i in range(int(0.40*dt), len(Stance_L)):
@@ -397,7 +392,7 @@ plt.plot(p)
 plt.show() 
 
 plt.figure(3)
-plt.plot(tr)
+plt.plot(G_m[7]*F_m[:, 7] )
 plt.show() 
 
 plt.figure(4)
